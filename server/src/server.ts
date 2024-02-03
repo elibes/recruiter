@@ -14,7 +14,7 @@ const app: any = express();
 
 import {ApiManager} from './api/api_manager';
 
-const apiManager = new ApiManager(app);
+const apiManager = ApiManager.getInstance(app);
 apiManager.loadAllApi();
 
 const port = process.env.PORT;

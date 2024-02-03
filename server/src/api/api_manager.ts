@@ -2,11 +2,19 @@ import {ResponseHandler} from './response_handler';
 import * as express from 'express';
 import {Index} from './index';
 class ApiManager {
-  apiList: any[];
+  private static instance : ApiManager;
+  private apiList: any[];
   responseHandler: ResponseHandler;
-  constructor(private app: any) {
+  private constructor(private app: any) {
     this.responseHandler = new ResponseHandler();
     this.apiList = [];
+  }
+
+  public static getInstance(app : express.Application): ApiManager {
+    if (!ApiManager.instance) {
+      ApiManager.instance = new ApiManager(app);
+    }
+    return ApiManager.instance;
   }
 
   loadAllApi() {
