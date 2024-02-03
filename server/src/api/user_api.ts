@@ -1,7 +1,8 @@
 import {ResponseHandler} from './response_handler';
 import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from "../utilities/validators";
-import * as express from 'express';
+import {createUserService} from "../service/user_service_factory";
+
 class UserApi {
   constructor(
     private responseHandler: ResponseHandler,
@@ -20,6 +21,8 @@ class UserApi {
         this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
         return;
       }
+      const userService = createUserService();
+      userService.handleRegistration(req.body);
       const data = {message: 'register API is up!'};
       const httpStatusCode = 200;
       this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
