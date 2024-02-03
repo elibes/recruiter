@@ -2,9 +2,13 @@ import * as express from 'express';
 
 import * as path from 'path';
 
+import * as dotenv from 'dotenv-safe';
+
+import * as cors from 'cors';
+
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
-import * as dotenv from 'dotenv-safe';
+
 dotenv.config({
   path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
@@ -19,6 +23,11 @@ apiManager.defineRoutes();
 
 app.use(express.json());
 //app.use(express.urlencoded());
+app.use(cors({
+  origin: 'http://localhost', //placeholder
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], //REST methods
+  credentials: true, //for auth cookies
+}));
 
 apiManager.createAllApis();
 
