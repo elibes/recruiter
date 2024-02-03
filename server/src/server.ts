@@ -6,6 +6,8 @@ import * as dotenv from 'dotenv-safe';
 
 import * as cors from 'cors';
 
+import * as cookieParser from 'cookie-parser';
+
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
 
@@ -22,7 +24,8 @@ const apiManager = ApiManager.getInstance(app);
 apiManager.defineRoutes();
 
 app.use(express.json());
-//app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost', //placeholder
   methods: ['GET', 'POST', 'PUT', 'DELETE'], //REST methods
