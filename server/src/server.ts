@@ -16,7 +16,12 @@ import {ApiManager} from './api/api_manager';
 
 const apiManager = ApiManager.getInstance(app);
 apiManager.defineRoutes();
+
+app.use(express.json());
+//app.use(express.urlencoded());
+
 apiManager.createAllApis();
+
 
 const port = process.env.PORT;
 const host = process.env.HOST;
