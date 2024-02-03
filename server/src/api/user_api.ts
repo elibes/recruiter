@@ -2,6 +2,7 @@ import {ResponseHandler} from './response_handler';
 import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from "../utilities/validators";
 import {createUserService} from "../service/user_service_factory";
+import {userRegistrationData} from "../utilities/data_interfaces";
 
 class UserApi {
   constructor(
@@ -22,7 +23,8 @@ class UserApi {
         return;
       }
       const userService = createUserService();
-      userService.handleRegistration(req.body);
+      const registrationData = this.registrationDataPacker(req.body);
+      userService.handleRegistration(registrationData);
       const data = {message: 'register API is up!'};
       const httpStatusCode = 200;
       this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
@@ -36,6 +38,17 @@ class UserApi {
       const httpStatusCode = 200;
       this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
     });
+  }
+
+  registrationDataPacker(body : any) {
+    const data : userRegistrationData = {
+      firstName: body.firstName,
+      lastName: body.lastName,
+      password: body.password,
+      personalNumber: body.personalNumber,
+      email: body.email
+    }
+    return data
   }
 }
 
@@ -89,6 +102,7 @@ const validationSchemaPost:any = {
 
   personalNumber: {
     ...baseSanitizationSchema,
+    toInt: true,
     notEmpty: {
       errorMessage: 'Personal number is required'
     },
