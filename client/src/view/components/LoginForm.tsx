@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
 import Button from './Button';
+import useLoginViewModel from '../../viewmodel/useLoginViewModel';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // add login logic using viewmodel hook
-    alert(`Login successful!`);
-  }
+  const{
+    username,
+    setUsername,
+    password,
+    setPassword,
+    error,
+    handleSubmit,
+  } = useLoginViewModel();
 
   return (
     <form onSubmit={handleSubmit}>
-      <InputField label="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <InputField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button text="Login" onClick={handleSubmit} />
+      {error && <p>{error}</p>}
+      <InputField label="Username" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+      <InputField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+      <Button text="Login" onClick={() => {}}/>
     </form>
   );
-}
+};
 
 export default LoginForm;
