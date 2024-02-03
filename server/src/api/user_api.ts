@@ -1,4 +1,3 @@
-import {ResponseHandler} from './response_handler';
 import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
@@ -6,7 +5,8 @@ import {userRegistrationData} from '../utilities/data_interfaces';
 
 class UserApi {
   constructor(
-    private responseHandler: ResponseHandler,
+    private responseHandler: any,
+    private errorHandler: any,
     private router: any
   ) {}
 
@@ -14,14 +14,18 @@ class UserApi {
     this.router.post(
       '/register',
       checkSchema(validationSchemaPost),
-      (req: any, res: any) => {
-        console.log(req.body);
+      this.errorHandler.asyncErrorWrapper(async (req: any, res: any) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
           console.log('errors');
           const httpStatusCode = 400;
           const data = {errors: errors.array()};
-          this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
+          this.responseHandler.sendHttpResponse(
+            res,
+            httpStatusCode,
+            data,
+            false
+          );
           return;
         }
         const userService = createUserService();
@@ -29,16 +33,18 @@ class UserApi {
         userService.handleRegistration(registrationData);
         const data = {message: 'register API is up!'};
         const httpStatusCode = 200;
-        this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
+        this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
         return;
-      }
+      })
     );
 
-    this.router.get('/', (req: any, res: any) => {
-      const data = {message: 'user API is up!'};
-      const httpStatusCode = 200;
-      this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
-    });
+    this.errorHandler.asyncErrorWrapper(
+      this.router.get('/', (req: any, res: any) => {
+        const data = {message: 'user API is up!'};
+        const httpStatusCode = 200;
+        this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+      })
+    );
   }
 
   registrationDataPacker(body: any) {

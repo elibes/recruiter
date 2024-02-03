@@ -2,12 +2,14 @@ import * as express from 'express';
 
 class ResponseHandler {
   sendHttpResponse(
-    response: express.Response,
+    response: any,
     httpStatusCode: number,
-    responseBody: any
+    responseBody: any,
+    error: any
   ) {
     //add validation here
-    const responseConclusion = 'success';
+
+    const responseConclusion = error ? 'error' : 'success';
     response.status(httpStatusCode).json({[responseConclusion]: responseBody});
   }
 }

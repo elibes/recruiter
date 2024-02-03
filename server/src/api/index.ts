@@ -1,16 +1,19 @@
-import {ResponseHandler} from './response_handler';
 class Index {
   constructor(
-    private responseHandler: ResponseHandler,
+    private responseHandler: any,
+    private errorHandler: any,
     private router: any
   ) {}
 
   async setupRequestHandling() {
-    this.router.get('/', (req: any, res: any) => {
-      const data = {message: 'API is up and running!'};
-      const httpStatusCode = 200;
-      this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
-    });
+    this.router.get(
+      '/',
+      this.errorHandler.asyncErrorWrapper((req: any, res: any) => {
+        const data = {message: 'API is up and running!'};
+        const httpStatusCode = 200;
+        this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+      })
+    );
   }
 }
 

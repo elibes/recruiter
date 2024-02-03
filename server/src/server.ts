@@ -8,6 +8,8 @@ import * as cors from 'cors';
 
 import * as cookieParser from 'cookie-parser';
 
+import {ErrorHandler} from './api/error_handler';
+
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
 dotenv.config({
