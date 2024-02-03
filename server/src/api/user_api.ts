@@ -2,6 +2,8 @@ import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
 import {userRegistrationData} from '../utilities/data_interfaces';
+import {ValidationError} from 'sequelize';
+import {ValidationSanitizationError} from '../utilities/custom_errors';
 
 class UserApi {
   constructor(
@@ -17,16 +19,12 @@ class UserApi {
       this.errorHandler.asyncErrorWrapper(async (req: any, res: any) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          console.log('errors');
-          const httpStatusCode = 400;
-          const data = {errors: errors.array()};
-          this.responseHandler.sendHttpResponse(
-            res,
-            httpStatusCode,
-            data,
-            false
+          throw new ValidationSanitizationError(
+            errors
+              .array()
+              .map(err => err.msg)
+              .join(', ')
           );
-          return;
         }
         const userService = createUserService();
         const registrationData = this.registrationDataPacker(req.body);

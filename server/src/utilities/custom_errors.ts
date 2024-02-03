@@ -4,3 +4,10 @@ export class ConflictError extends Error {
     this.name = 'NotFoundError';
   }
 }
+export class ValidationSanitizationError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
