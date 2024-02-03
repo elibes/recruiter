@@ -1,8 +1,8 @@
 import {ResponseHandler} from './response_handler';
 import {checkSchema, validationResult} from 'express-validator';
-import {baseSanitizationSchema} from "../utilities/validators";
-import {createUserService} from "../service/user_service_factory";
-import {userRegistrationData} from "../utilities/data_interfaces";
+import {baseSanitizationSchema} from '../utilities/validators';
+import {createUserService} from '../service/user_service_factory';
+import {userRegistrationData} from '../utilities/data_interfaces';
 
 class UserApi {
   constructor(
@@ -11,27 +11,28 @@ class UserApi {
   ) {}
 
   async setupRequestHandling() {
-    this.router.post('/register', checkSchema(validationSchemaPost), (req: any, res: any) =>
-    {
-      console.log(req.body);
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        console.log("errors");
-        const httpStatusCode = 400;
-        const data = { errors: errors.array() };
+    this.router.post(
+      '/register',
+      checkSchema(validationSchemaPost),
+      (req: any, res: any) => {
+        console.log(req.body);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          console.log('errors');
+          const httpStatusCode = 400;
+          const data = {errors: errors.array()};
+          this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
+          return;
+        }
+        const userService = createUserService();
+        const registrationData = this.registrationDataPacker(req.body);
+        userService.handleRegistration(registrationData);
+        const data = {message: 'register API is up!'};
+        const httpStatusCode = 200;
         this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
         return;
       }
-      const userService = createUserService();
-      const registrationData = this.registrationDataPacker(req.body);
-      userService.handleRegistration(registrationData);
-      const data = {message: 'register API is up!'};
-      const httpStatusCode = 200;
-      this.responseHandler.sendHttpResponse(res, httpStatusCode, data);
-      return;
-    }
     );
-
 
     this.router.get('/', (req: any, res: any) => {
       const data = {message: 'user API is up!'};
@@ -40,39 +41,39 @@ class UserApi {
     });
   }
 
-  registrationDataPacker(body : any) {
-    const data : userRegistrationData = {
+  registrationDataPacker(body: any) {
+    const data: userRegistrationData = {
       firstName: body.firstName,
       lastName: body.lastName,
       password: body.password,
       personalNumber: body.personalNumber,
-      email: body.email
-    }
-    return data
+      email: body.email,
+    };
+    return data;
   }
 }
 
-const validationSchemaPost:any = {
-  firstName : {
+const validationSchemaPost: any = {
+  firstName: {
     ...baseSanitizationSchema,
     notEmpty: {
       errorMessage: 'First name is required',
     },
     isLength: {
-      options: { min: 1 },
+      options: {min: 1},
       errorMessage: 'First name must be at least 1 characters',
-    }
+    },
   },
 
-  lastName : {
+  lastName: {
     ...baseSanitizationSchema,
     notEmpty: {
       errorMessage: 'Last name is required',
     },
     isLength: {
-      options: { min: 1 },
+      options: {min: 1},
       errorMessage: 'Last name must be at least 1 characters',
-    }
+    },
   },
 
   userName: {
@@ -84,9 +85,9 @@ const validationSchemaPost:any = {
       errorMessage: 'Username must be alphanumeric',
     },
     isLength: {
-      options: { min: 1 },
+      options: {min: 1},
       errorMessage: 'Username must be at least 1 characters',
-    }
+    },
   },
 
   password: {
@@ -95,7 +96,7 @@ const validationSchemaPost:any = {
       errorMessage: 'Password is required',
     },
     isLength: {
-      options: { min: 6 },
+      options: {min: 6},
       errorMessage: 'Password must be stronger',
     },
   },
@@ -104,17 +105,18 @@ const validationSchemaPost:any = {
     ...baseSanitizationSchema,
     toInt: true,
     notEmpty: {
-      errorMessage: 'Personal number is required'
+      errorMessage: 'Personal number is required',
     },
     isNumeric: {
-      errorMessage: 'Personal number must be a number'
+      errorMessage: 'Personal number must be a number',
     },
     isLength: {
       options: {
-        min: 12, max: 12
+        min: 12,
+        max: 12,
       },
-      errorMessage: 'Personal number must be 12 digits'
-    }
+      errorMessage: 'Personal number must be 12 digits',
+    },
   },
 
   email: {
@@ -122,8 +124,8 @@ const validationSchemaPost:any = {
     isEmail: {
       errorMessage: 'Invalid email',
     },
-    normalizeEmail: true
-  }
-}
+    normalizeEmail: true,
+  },
+};
 
 export {UserApi};

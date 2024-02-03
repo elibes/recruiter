@@ -1,7 +1,7 @@
 import {ResponseHandler} from './response_handler';
 import * as express from 'express';
 import {Index} from './index';
-import {UserApi} from "./user_api";
+import {UserApi} from './user_api';
 class ApiManager {
   private static instance: ApiManager;
   private apiList: any[];
@@ -20,19 +20,17 @@ class ApiManager {
   }
 
   defineRoutes() {
-    this.apiList.push({route: "", class: Index});
-    this.apiList.push({route: "/user", class: UserApi});
+    this.apiList.push({route: '', class: Index});
+    this.apiList.push({route: '/user', class: UserApi});
   }
 
   createAllApis() {
-    this.apiList.forEach(
-      (entry: any) => {
-        const entryRoute = express.Router();
-        const entryInstance = new entry.class(this.responseHandler, entryRoute);
-        entryInstance.setupRequestHandling();
-        this.app.use(entry.route, entryRoute);
-      }
-    )
+    this.apiList.forEach((entry: any) => {
+      const entryRoute = express.Router();
+      const entryInstance = new entry.class(this.responseHandler, entryRoute);
+      entryInstance.setupRequestHandling();
+      this.app.use(entry.route, entryRoute);
+    });
   }
 }
 

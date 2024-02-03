@@ -10,7 +10,6 @@ import * as cookieParser from 'cookie-parser';
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
-
 dotenv.config({
   path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
@@ -24,16 +23,17 @@ const apiManager = ApiManager.getInstance(app);
 apiManager.defineRoutes();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(cors({
-  origin: 'http://localhost', //placeholder
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], //REST methods
-  credentials: true, //for auth cookies
-}));
+app.use(
+  cors({
+    origin: 'http://localhost', //placeholder
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], //REST methods
+    credentials: true, //for auth cookies
+  })
+);
 
 apiManager.createAllApis();
-
 
 const port = process.env.PORT;
 const host = process.env.HOST;
