@@ -1,3 +1,8 @@
+/**
+ * This is the startup / main file for the server.
+ * It also configures and starts some global middleware
+ */
+
 import * as express from 'express';
 
 import * as path from 'path';
@@ -21,9 +26,6 @@ const app: any = express();
 
 import {ApiManager} from './api/api_manager';
 
-const apiManager = ApiManager.getInstance(app);
-apiManager.defineRoutes();
-
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -35,6 +37,7 @@ app.use(
   })
 );
 
+const apiManager = ApiManager.getInstance(app);
 apiManager.createAllApis();
 
 const port = process.env.PORT;

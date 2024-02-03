@@ -2,16 +2,28 @@ import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
 import {userRegistrationData} from '../utilities/data_interfaces';
-import {ValidationError} from 'sequelize';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
 
+/**
+ * This class represents the api logic used for user related requests.
+ */
 class UserApi {
+  /**
+   * Dependencies needed for api operation are injected via this constructor.
+   * @param responseHandler a handler used for formatting and sending HTTP responses.
+   * @param errorHandler a handler used for enabling error handling.
+   * @param router the express route associated with this class.
+   */
   constructor(
     private responseHandler: any,
     private errorHandler: any,
     private router: any
   ) {}
 
+  /**
+   * This function sets up the handling used for each operation or action defined for this route
+   * , it will be called only once, by the api manager.
+   */
   async setupRequestHandling() {
     this.router.post(
       '/register',
@@ -45,6 +57,11 @@ class UserApi {
     );
   }
 
+  /**
+   * This helper function packs the data after validation and sanitization into a defined interface object to be sent
+   * to the service layer.
+   * @param body
+   */
   registrationDataPacker(body: any) {
     const data: userRegistrationData = {
       firstName: body.firstName,
@@ -57,6 +74,10 @@ class UserApi {
   }
 }
 
+/**
+ * This object represents the validation and sanitization schema for the registration POST operation.
+ * It is used with the checkSchema function defined in the express validation package.
+ */
 const validationSchemaPost: any = {
   firstName: {
     ...baseSanitizationSchema,
