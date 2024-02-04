@@ -7,12 +7,12 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const InputField: React.FC<Props> = ({label,type,value,onChange})=>{
+const InputField: React.FC<Props> = ({label, type, value, onChange}) => {
   return (
     <div>
       <label>
         {label}:
-        <input type={type} value={value} onChange={onChange} required/>
+        <input type={type} value={value} onChange={onChange} required />
       </label>
     </div>
   );

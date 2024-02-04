@@ -16,13 +16,13 @@ const useLoginViewModel = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if(!validateForm()) return;
+    if (!validateForm()) return;
     // TODO: send request to backend to authenticate the user
-    console.log('Subitting', {username, password})
+    console.log('Subitting', {username, password});
     // TODO: on successful login, clear the form or redirect the user
   };
 
-  return{
+  return {
     username,
     setUsername,
     password,
@@ -33,4 +33,3 @@ const useLoginViewModel = () => {
 };
 
 export default useLoginViewModel;
-

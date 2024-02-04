@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import LoginForm from './components/LoginForm';
 
 const LoginView = () => {
@@ -6,8 +6,8 @@ const LoginView = () => {
     <div>
       <h1>Login Page</h1>
       <LoginForm></LoginForm>
-        {/* NavigationButton to go back*/}
+      {/* NavigationButton to go back*/}
     </div>
   );
-}
+};
 export default LoginView;

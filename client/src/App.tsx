@@ -5,7 +5,7 @@ import LoginView from './view/LoginView';
 function App() {
   return (
     <div className="App">
-          <LoginView/>
+      <LoginView />
     </div>
   );
 }
