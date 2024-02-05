@@ -1,4 +1,5 @@
 import {Dialect, Sequelize} from 'sequelize';
+import User from "../model/User";
 
 class Database {
   database: Sequelize;
@@ -29,7 +30,8 @@ class Database {
   async createTables() {
     try {
       await this.database.authenticate();
-      await this.database.sync({force: false});
+      await User.sync();
+      //await this.database.sync({force: false});
     } catch (error) {
       console.error('Error connecting or syncing database:', error);
       throw new Error('Connection to the database failed!');

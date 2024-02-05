@@ -80,11 +80,12 @@ class UserDAO {
         userModel.personalIdentificationNumber,
         userModel.username,
         userModel.passwordHash,
-        userModel.loggedInUntil,
-        userModel.isRecrtuiter,
-        userModel.createdAt,
-        userModel.updatedAt,
-        userModel.deletedAt
+        userModel.role
+        //userModel.loggedInUntil,
+        //userModel.isRecrtuiter,
+        //userModel.createdAt,
+        //userModel.updatedAt,
+        //userModel.deletedAt
       );
     }
   }

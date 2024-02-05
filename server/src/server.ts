@@ -26,6 +26,19 @@ const app: any = express();
 
 import {ApiManager} from './api/api_manager';
 
+import Database from "./integration/Database";
+import UserDAO from "./integration/UserDAO";
+import {Sequelize} from "sequelize";
+import UserDTO from "./service/UserDTO";
+
+const db = new Database();
+db.createTables();
+const userDAO = new UserDAO(db.database);
+
+//userDAO.findUserByUsername('JoelleWilkinson').then((obj :any) => console.log(obj));
+
+
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());

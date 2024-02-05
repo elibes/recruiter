@@ -14,7 +14,9 @@ export class UserService {
   handleRegistration(data: userRegistrationData) {
     console.log('registration handler called with data:');
     console.log(data);
-    throw new ConflictError('There is conflicting data in the system');
+
+
+    //throw new ConflictError('There is conflicting data in the system');
     //biz logic goes here
   }
 }
