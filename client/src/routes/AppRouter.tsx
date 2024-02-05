@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -7,6 +8,7 @@ import {
 } from 'react-router-dom';
 import LoginView from '../view/LoginView';
 import RegistrationView from '../view/RegistrationView';
+import NotFoundView from '../view/NotFoundView';
 
 /**
  * AppRouter returns a Router component with three Route components, rendering different views based on the path.
@@ -18,7 +20,9 @@ const AppRouter = () => {
       <Routes>
         <Route path="/login" element={<LoginView />} />
         <Route path="/register" element={<RegistrationView />} />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/login" />} exact />
+        <Route path={'*'} element={<NotFoundView />} />
+        {/* Catch-all route */}
       </Routes>
     </Router>
   );

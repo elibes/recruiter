@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import LoginView from './view/LoginView';
+import AppRouter from './routes/AppRouter';
 
 function App() {
   return (
     <div className="App">
-      <LoginView />
+      <AppRouter />
     </div>
   );
 }
