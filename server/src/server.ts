@@ -13,7 +13,11 @@ import * as cors from 'cors';
 
 import * as cookieParser from 'cookie-parser';
 
-import {ErrorHandler} from './api/error_handler';
+import {Database} from "./integration/Database";
+
+import {ApiManager} from './api/api_manager';
+import {UserDAO} from "./integration/UserDAO";
+
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
@@ -21,23 +25,14 @@ dotenv.config({
   path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
 });
-
 const app: any = express();
 
-import {ApiManager} from './api/api_manager';
-
-import Database from "./integration/Database";
-import UserDAO from "./integration/UserDAO";
-import {Sequelize} from "sequelize";
-import UserDTO from "./service/UserDTO";
-
-const db = new Database();
-db.createTables();
-const userDAO = new UserDAO(db.database);
-
-//userDAO.findUserByUsername('JoelleWilkinson').then((obj :any) => console.log(obj));
-
-
+//Setting up the database
+const db = Database.getInstance();
+db.connectToDatabase();
+db.setupDatabaseModels();
+//UserDAO.getInstance(db.database).findUserByUsername("JoelleWilkinson").then((res) => {console.log(res)})
+//db.createTables(); //catch some errors here later
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -58,3 +53,5 @@ const host = process.env.HOST;
 app.listen(port, host, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+export{db};

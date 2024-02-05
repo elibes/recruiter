@@ -1,10 +1,18 @@
 import {Dialect, Sequelize} from 'sequelize';
-import User from "../model/User";
+import {User} from "../model/User";
 
 class Database {
-  database: Sequelize;
+  private static instance: Database;
+  public database: Sequelize;
 
-  constructor() {
+  public static getInstance(): Database {
+    if (!Database.instance) {
+      Database.instance = new Database();
+    }
+    return Database.instance;
+  }
+
+  private constructor() {
     this.database = new Sequelize({
       database: process.env.DB_NAME,
       username: process.env.DB_USER,
@@ -22,20 +30,49 @@ class Database {
     return this.database;
   }
 
+
+  /**
+   * Attempts to connect to the database.
+   */
+  async connectToDatabase() {
+    try {
+      await this.database.authenticate();
+      console.log('Database connected!');
+    }
+    catch(error){
+      console.error('Error connecting or syncing database:', error);
+    }
+  }
+
+  async setupDatabaseModels() {
+    try {
+      User.createModel(this.database);
+      console.log('Database models created!');
+    }
+    catch (error) {
+      console.error('Error setting up database models:', error);
+    }
+  }
+
   /**
    * Creates non-existing tables, existing tables are not touched.
    *
    * @throws Throws an exception if the database could not be created.
    */
+  /*
   async createTables() {
     try {
       await this.database.authenticate();
-      await User.sync();
       //await this.database.sync({force: false});
     } catch (error) {
       console.error('Error connecting or syncing database:', error);
       throw new Error('Connection to the database failed!');
     }
   }
+*/
+
+
 }
-export default Database;
+
+
+export {Database};

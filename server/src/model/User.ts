@@ -1,5 +1,4 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
-import UserDTO from '../service/UserDTO';
 
 /**
  * A user of the recruiter website.
@@ -28,8 +27,8 @@ class User extends Model {
 
   /**
    * Creates a user model.
-   * @param sequelize The sequalize object.
-   * @return A sequalize model representing a user.
+   * @param sequelize The Sequelize object.
+   * @return A Sequelize model representing a user.
    * */
   static createModel(sequelize: Sequelize) {
     User.init(
@@ -100,4 +99,4 @@ class User extends Model {
   }
 }
 
-export default User;
+export {User};

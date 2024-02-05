@@ -1,18 +1,31 @@
 import {Sequelize} from 'sequelize';
-import User from '../model/User';
+import {User} from "../model/User";
 import UserRegistrationDTO from '../service/UserRegistrationDTO';
 import UserDTO from '../service/UserDTO';
+import * as express from "express";
 
 /**
  * The class responsible for communicating with the database regarding users.
  * */
 class UserDAO {
+  private static instance: UserDAO;
   database: Sequelize;
+
+  /**
+   * Gets the singleton instance of this class.
+   * @param database the Sequelize instance.
+   */
+  public static getInstance(database: Sequelize): UserDAO {
+    if (!UserDAO.instance) {
+      UserDAO.instance = new UserDAO(database);
+    }
+    return UserDAO.instance;
+  }
 
   /**
    * Creates the DAO and connects to the database.
    * */
-  constructor(database: Sequelize) {
+  private constructor(database: Sequelize) {
     this.database = database;
     User.createModel(this.database);
   }
@@ -56,7 +69,13 @@ class UserDAO {
       const user = await User.findOne({
         where: {username: username},
       });
-      return this.createUserDTO(user);
+
+      if(user === null) {
+        return null;
+      } else {
+        return this.createUserDTO(user);
+      }
+
     } catch (error) {
       console.log('Error finding a user:', error);
       throw new Error('Could not search the database for a user!');
@@ -91,4 +110,4 @@ class UserDAO {
   }
 }
 
-export default UserDAO;
+export {UserDAO};

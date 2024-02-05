@@ -40,10 +40,8 @@ class UserApi {
         }
         const userService = createUserService();
         const registrationData = this.registrationDataPacker(req.body);
-        userService.handleRegistration(registrationData);
-        const data = {message: 'register API is up!'};
-        const httpStatusCode = 200;
-        this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+        const data = await userService.handleRegistration(registrationData);
+        this.responseHandler.sendHttpResponse(res, 200, data, false);
         return;
       })
     );
@@ -66,6 +64,7 @@ class UserApi {
     const data: userRegistrationData = {
       firstName: body.firstName,
       lastName: body.lastName,
+      username: body.userName,
       password: body.password,
       personalNumber: body.personalNumber,
       email: body.email,
@@ -131,9 +130,6 @@ const validationSchemaPost: any = {
     toInt: true,
     notEmpty: {
       errorMessage: 'Personal number is required',
-    },
-    isNumeric: {
-      errorMessage: 'Personal number must be a number',
     },
     isLength: {
       options: {
