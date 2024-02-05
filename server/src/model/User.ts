@@ -37,40 +37,40 @@ class User extends Model {
           type: DataTypes.INTEGER,
           autoIncrement: true,
           primaryKey: true,
-          field: 'person_id'
+          field: 'person_id',
         },
         firstName: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: 'name'
+          field: 'name',
         },
         lastName: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: 'surname'
+          field: 'surname',
         },
         email: {
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
-          field: 'email'
+          field: 'email',
         },
         personalIdentificationNumber: {
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
-          field: 'pnr'
+          field: 'pnr',
         },
         username: {
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
-          field: 'username'
+          field: 'username',
         },
         passwordHash: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: 'password'
+          field: 'password',
         },
         /*
         loggedInUntil: {
@@ -83,7 +83,7 @@ class User extends Model {
           type: DataTypes.INTEGER,
           allowNull: false,
           //defaultValue: false,
-          field: 'role_id'
+          field: 'role_id',
         },
       },
       {

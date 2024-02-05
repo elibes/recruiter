@@ -127,16 +127,15 @@ const validationSchemaPost: any = {
 
   personalNumber: {
     ...baseSanitizationSchema,
-    toInt: true,
     notEmpty: {
       errorMessage: 'Personal number is required',
     },
     isLength: {
       options: {
-        min: 12,
-        max: 12,
+        min: 13,
+        max: 13,
       },
-      errorMessage: 'Personal number must be 12 digits',
+      errorMessage: 'Personal number must be 13 digits',
     },
   },
 

@@ -1,8 +1,8 @@
 import {Sequelize} from 'sequelize';
-import {User} from "../model/User";
-import UserRegistrationDTO from '../service/UserRegistrationDTO';
+import {User} from '../model/User';
 import UserDTO from '../service/UserDTO';
-import * as express from "express";
+import {userRegistrationData} from '../utilities/data_interfaces';
+import * as express from 'express';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -31,22 +31,22 @@ class UserDAO {
   }
 
   /**
-   * Creates a new user in the database
+   * Creates a new regular user in the database (with role_id 2)
    * @param registrationDetails A DTO containing the information to be stored about
    *                            the user wanting to register an account.
    * @return A DTO containing information about the user, otherwise throws an error.
    * @todo Use validators to sanitise the input.
    * */
-  async createUser(registrationDetails: UserRegistrationDTO) {
+  async createUser(registrationDetails: userRegistrationData) {
     try {
       const user = await User.create({
         firstName: registrationDetails.firstName,
         lastName: registrationDetails.lastName,
         email: registrationDetails.email,
-        personalIdentificationNumber:
-          registrationDetails.personalIdentificationNumber,
+        personalIdentificationNumber: registrationDetails.personalNumber,
         username: registrationDetails.username,
-        passwordHash: registrationDetails.passwordHash,
+        passwordHash: registrationDetails.password,
+        role: 2,
       });
       return this.createUserDTO(user);
     } catch (error) {
@@ -70,12 +70,11 @@ class UserDAO {
         where: {username: username},
       });
 
-      if(user === null) {
+      if (user === null) {
         return null;
       } else {
         return this.createUserDTO(user);
       }
-
     } catch (error) {
       console.log('Error finding a user:', error);
       throw new Error('Could not search the database for a user!');

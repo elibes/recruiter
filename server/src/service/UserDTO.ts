@@ -28,7 +28,7 @@ class UserDTO {
     username: string,
     passwordHash: string,
     //loggedInUntil: Date,
-    role: boolean,
+    role: boolean
     //createdAt: Date,
     //updatedAt: Date,
     //deletedAt: Date

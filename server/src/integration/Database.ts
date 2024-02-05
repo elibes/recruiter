@@ -1,5 +1,5 @@
 import {Dialect, Sequelize} from 'sequelize';
-import {User} from "../model/User";
+import {User} from '../model/User';
 
 class Database {
   private static instance: Database;
@@ -30,7 +30,6 @@ class Database {
     return this.database;
   }
 
-
   /**
    * Attempts to connect to the database.
    */
@@ -38,8 +37,7 @@ class Database {
     try {
       await this.database.authenticate();
       console.log('Database connected!');
-    }
-    catch(error){
+    } catch (error) {
       console.error('Error connecting or syncing database:', error);
     }
   }
@@ -48,8 +46,7 @@ class Database {
     try {
       User.createModel(this.database);
       console.log('Database models created!');
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error setting up database models:', error);
     }
   }
@@ -70,9 +67,6 @@ class Database {
     }
   }
 */
-
-
 }
-
 
 export {Database};
