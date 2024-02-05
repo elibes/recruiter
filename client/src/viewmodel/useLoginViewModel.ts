@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import axios from 'axios';
 
 const useLoginViewModel = () => {
   const [username, setUsername] = useState('');
@@ -26,10 +27,19 @@ const useLoginViewModel = () => {
    */
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!validateForm()) return;
-    // TODO: send request to backend to authenticate the user
-    console.log('Submitting', {username, password});
-    // TODO: on successful login, clear the form or redirect the user
+
+    try {
+      const response = await axios.post('api/login', {username, password});
+      // Handle response, e.g., storing auth tokens, redirecting
+      console.log('Login successful', response.data);
+      // Reset error state
+      setError('');
+      // Redirect user or update UI accordingly
+    } catch (error: any) {
+      // Handle error, e.g. show login failure message
+      setError('Invalid username or password');
+      console.log('Login failed', error.response?.data || error.message);
+    }
   };
 
   return {
