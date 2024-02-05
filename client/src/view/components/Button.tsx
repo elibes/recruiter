@@ -5,8 +5,8 @@ interface Props {
   text: string;
 }
 
-const Button: React.FC<Props> = ({onClick, text}) => {
+const Button: React.FC<Props> = React.memo(({onClick, text}) => {
   return <button onClick={onClick}>{text}</button>;
-};
+});
 
 export default Button;
