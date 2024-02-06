@@ -1,5 +1,5 @@
 import {Dialect, Sequelize} from 'sequelize';
-import {User} from '../model/User';
+import {User} from '../model/user';
 
 class Database {
   private static instance: Database;
@@ -24,13 +24,6 @@ class Database {
   }
 
   /**
-   * @return database Returns the sequelize database object.
-   * */
-  getTransactionMgr() {
-    return this.database;
-  }
-
-  /**
    * Attempts to connect to the database.
    */
   async connectToDatabase() {
@@ -50,23 +43,6 @@ class Database {
       console.error('Error setting up database models:', error);
     }
   }
-
-  /**
-   * Creates non-existing tables, existing tables are not touched.
-   *
-   * @throws Throws an exception if the database could not be created.
-   */
-  /*
-  async createTables() {
-    try {
-      await this.database.authenticate();
-      //await this.database.sync({force: false});
-    } catch (error) {
-      console.error('Error connecting or syncing database:', error);
-      throw new Error('Connection to the database failed!');
-    }
-  }
-*/
 }
 
 export {Database};

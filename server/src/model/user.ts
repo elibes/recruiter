@@ -4,18 +4,14 @@ import {DataTypes, Model, Sequelize} from 'sequelize';
  * A user of the recruiter website.
  * */
 class User extends Model {
-  id!: number;
-  firstName!: string;
-  lastName!: string;
-  email!: string;
-  personalIdentificationNumber!: string;
-  username!: string;
-  passwordHash!: string;
-  role!: any;
-
-  //readonly createdAt!: Date;
-  //readonly updatedAt!: Date;
-  //readonly deletedAt!: Date;
+  declare id: number;
+  declare firstName: string;
+  declare lastName: string;
+  declare email: string;
+  declare personalIdentificationNumber: string;
+  declare username: string;
+  declare passwordHash: string;
+  declare role: number;
 
   /**
    * The name of the model.
@@ -72,17 +68,9 @@ class User extends Model {
           allowNull: false,
           field: 'password',
         },
-        /*
-        loggedInUntil: {
-          type: DataTypes.DATE,
-          allowNull: false,
-          defaultValue: 0,
-        },
-        */
         role: {
           type: DataTypes.INTEGER,
           allowNull: false,
-          //defaultValue: false,
           field: 'role_id',
         },
       },

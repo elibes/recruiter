@@ -1,7 +1,7 @@
 import {userRegistrationData} from '../utilities/data_interfaces';
 import {ConflictError} from '../utilities/custom_errors';
-import {Database} from '../integration/Database';
-import {UserDAO} from '../integration/UserDAO';
+import {Database} from '../integration/database';
+import {UserDAO} from '../integration/userDAO';
 import {AuthenticationService} from './authentication_service';
 
 /**

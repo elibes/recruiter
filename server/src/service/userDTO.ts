@@ -9,11 +9,7 @@ class UserDTO {
   public readonly personalIdentificationNumber!: string;
   public readonly username!: string;
   public readonly passwordHash!: string;
-  //public readonly loggedInUntil!: Date;
-  public readonly role!: boolean;
-  //public readonly createdAt!: Date;
-  //public readonly updatedAt!: Date;
-  //public readonly deletedAt!: Date;
+  public readonly role!: number;
 
   /**
    * Creates the DTO.
@@ -27,11 +23,7 @@ class UserDTO {
     personalIdentificationNumber: string,
     username: string,
     passwordHash: string,
-    //loggedInUntil: Date,
-    role: boolean
-    //createdAt: Date,
-    //updatedAt: Date,
-    //deletedAt: Date
+    role: number
   ) {
     this.id = id;
     this.firstName = firstName;
@@ -40,11 +32,7 @@ class UserDTO {
     this.personalIdentificationNumber = personalIdentificationNumber;
     this.username = username;
     this.passwordHash = passwordHash;
-    //this.loggedInUntil = loggedInUntil;
     this.role = role;
-    //this.createdAt = createdAt;
-    //this.updatedAt = updatedAt;
-    //this.deletedAt = deletedAt;
   }
 }
 

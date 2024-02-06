@@ -1,8 +1,7 @@
 import {Sequelize} from 'sequelize';
-import {User} from '../model/User';
-import UserDTO from '../service/UserDTO';
+import {User} from '../model/user';
+import UserDTO from '../service/userDTO';
 import {userRegistrationData} from '../utilities/data_interfaces';
-import * as express from 'express';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -62,7 +61,7 @@ class UserDAO {
    * @param username The username of the user to search for as a string.
    * @return A DTO containing the user's information if found,
    *          otherwise null.
-   * @todo User validators to sanitise the data before searching the database.
+   * @todo Use validators to sanitise the data before searching the database.
    * */
   async findUserByUsername(username: string) {
     try {
@@ -99,11 +98,6 @@ class UserDAO {
         userModel.username,
         userModel.passwordHash,
         userModel.role
-        //userModel.loggedInUntil,
-        //userModel.isRecrtuiter,
-        //userModel.createdAt,
-        //userModel.updatedAt,
-        //userModel.deletedAt
       );
     }
   }

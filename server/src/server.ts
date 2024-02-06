@@ -13,10 +13,10 @@ import * as cors from 'cors';
 
 import * as cookieParser from 'cookie-parser';
 
-import {Database} from './integration/Database';
+import {Database} from './integration/database';
 
 import {ApiManager} from './api/api_manager';
-import {UserDAO} from './integration/UserDAO';
+import {UserDAO} from './integration/userDAO';
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
