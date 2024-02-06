@@ -3,6 +3,15 @@ import './RegistrationView.css';
 import RegistrationViewModel from '../viewModel/RegistrationViewModel';
 import PasswordComparison from '../util/PasswordComparison';
 
+/**
+ * RegistrationView component renders the user registration form interface.
+ * It uses the RegistrationViewModel to manage form state and handle changes and submissions.
+ * The form includes fields for first name, last name, username, password, personal number, and email.
+ * It also integrates the PasswordComparison component to handle password and confirmation input.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered registration form component.
+ */
 const RegistrationView: FC = () => {
   const {
     firstName,

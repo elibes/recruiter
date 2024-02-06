@@ -7,6 +7,13 @@ import {
 } from '../util/PersonNumberValidator';
 import {allowSubmit} from '../util/Helper';
 
+/**
+ * A ViewModel hook for managing state and interactions within the RegistrationView component.
+ * It uses the `useReducer` hook for state management, with actions dispatched to the `userReducer` for handling.
+ * This ViewModel provides handlers for changes in form inputs and the registration submission action, incorporating validation and submission logic.
+ *
+ * @returns An object containing the current state values, input change handlers, and the registration submission handler.
+ */
 const RegistrationViewModel = () => {
   const [
     {
