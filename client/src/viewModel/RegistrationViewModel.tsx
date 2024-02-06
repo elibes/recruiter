@@ -12,10 +12,10 @@ const RegistrationViewModel = () => {
     {
       firstName,
       lastName,
-      email,
-      pnr,
-      username,
+      userName,
       password,
+      personalNumber,
+      email,
       passwordConfirm,
       resultMsg,
       isSubmitDisabled,
@@ -24,10 +24,10 @@ const RegistrationViewModel = () => {
   ] = useReducer(userReducer, {
     firstName: '',
     lastName: '',
-    email: '',
-    pnr: '',
-    username: '',
+    userName: '',
     password: '',
+    personalNumber: '',
+    email: '',
     passwordConfirm: '',
     resultMsg: '',
     isSubmitDisabled: true,
@@ -46,7 +46,7 @@ const RegistrationViewModel = () => {
     else allowSubmit(dispatch, '', false);
   };
   const onChangePersonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'pnr'});
+    dispatch({payload: e.target.value, type: 'personalNumber'});
     const pnrCheck: PersonNumberTestResult = isPersonNumberValid(
       e.target.value
     );
@@ -56,7 +56,7 @@ const RegistrationViewModel = () => {
     }
   };
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'username'});
+    dispatch({payload: e.target.value, type: 'userName'});
     if (!e.target.value)
       allowSubmit(dispatch, 'Username cannot be empty', true);
     else allowSubmit(dispatch, '', false);
@@ -73,16 +73,20 @@ const RegistrationViewModel = () => {
     e.preventDefault();
     // registration logic
     try {
-      const result = await registrationModel(
+      const response = await registrationModel(
         firstName,
         lastName,
-        email,
-        pnr,
-        username,
-        password
+        userName,
+        password,
+        personalNumber,
+        email
       );
-      console.log('register result', result);
-      dispatch({payload: 'Registration successful', type: 'resultMsg'});
+      if ('error' in response) {
+        console.error(response.error);
+      } else {
+        dispatch({payload: 'Registration successful', type: 'resultMsg'});
+        console.log(response.message); // Successfully registered
+      }
     } catch (ex) {
       console.log(ex);
     }
@@ -91,10 +95,10 @@ const RegistrationViewModel = () => {
   return {
     firstName,
     lastName,
-    email,
-    pnr,
-    username,
+    userName,
     password,
+    personalNumber,
+    email,
     passwordConfirm,
     resultMsg,
     isSubmitDisabled,

@@ -7,10 +7,10 @@ const RegistrationView: FC = () => {
   const {
     firstName,
     lastName,
-    email,
-    pnr,
-    username,
+    userName,
     password,
+    personalNumber,
+    email,
     passwordConfirm,
     resultMsg,
     isSubmitDisabled,
@@ -38,16 +38,8 @@ const RegistrationView: FC = () => {
             <input type="text" value={lastName} onChange={onChangeLastName} />
           </div>
           <div>
-            <label>person number</label>
-            <input type="text" value={pnr} onChange={onChangePersonNumber} />
-          </div>
-          <div>
             <label>username</label>
-            <input type="text" value={username} onChange={onChangeUsername} />
-          </div>
-          <div>
-            <label>email</label>
-            <input type="text" value={email} onChange={onChangeEmail} />
+            <input type="text" value={userName} onChange={onChangeUsername} />
           </div>
           <div>
             <PasswordComparison
@@ -55,6 +47,19 @@ const RegistrationView: FC = () => {
               password={password}
               passwordConfirm={passwordConfirm}
             />
+          </div>
+          <div>
+            <label>person number</label>
+            <input
+              type="text"
+              value={personalNumber}
+              onChange={onChangePersonNumber}
+              placeholder="YYYYMMDD-XXXX"
+            />
+          </div>
+          <div>
+            <label>email</label>
+            <input type="text" value={email} onChange={onChangeEmail} />
           </div>
         </div>
         <div className="form-buttons">

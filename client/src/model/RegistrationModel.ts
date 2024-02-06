@@ -1,36 +1,49 @@
+interface RegistrationSuccessResponse {
+  message: string; // Success message
+}
+
+interface RegistrationErrorResponse {
+  error: string; // Error message
+}
+
+type RegistrationResponse =
+  | RegistrationSuccessResponse
+  | RegistrationErrorResponse;
 async function registrationModel(
   firstName: string,
   lastName: string,
-  email: string,
-  pnr: string,
-  username: string,
-  password: string
-): Promise<any> {
+  userName: string,
+  password: string,
+  personalNumber: string,
+  email: string
+): Promise<RegistrationResponse> {
+  const url = 'http://localhost:3001/user/register'; // API endpoint
+  const payload = {
+    firstName,
+    lastName,
+    userName,
+    password,
+    personalNumber,
+    email,
+  };
+
   try {
-    const response = await fetch('', {
+    const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        pnr,
-        username,
-        password,
-      }),
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const errorText = await response.text();
+      throw new Error(`HTTP error ${response.status}: ${errorText}`);
     }
 
-    const data = await response.json();
+    const data: RegistrationResponse = await response.json();
     return data;
   } catch (error) {
-    console.error('There was a problem with the fetch operation: ', error);
-    throw error;
+    console.error('Fetch operation failed:', error);
+    throw new Error('Registration failed');
   }
 }
 

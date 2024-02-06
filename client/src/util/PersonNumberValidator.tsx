@@ -9,16 +9,12 @@ export const isPersonNumberValid = (pnr: string): PersonNumberTestResult => {
     isValid: true,
   };
 
-  if (pnr.length !== 12) {
-    personNumberTestResult.message = 'Personal number must be 12 digits';
-    personNumberTestResult.isValid = false;
-    return personNumberTestResult;
-  }
+  const personNumberPattern =
+    /^\d{4}(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])-\d{4}$/;
 
-  const personNumberDigit = new RegExp('^[0-9](?=.{12,})');
-  if (!personNumberDigit.test(pnr)) {
+  if (!personNumberPattern.test(pnr)) {
     personNumberTestResult.message =
-      'Person number must consist of only digits';
+      'Person number must be in the format YYYYMMDD-XXXX';
     personNumberTestResult.isValid = false;
   }
 
