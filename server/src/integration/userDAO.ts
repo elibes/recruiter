@@ -85,19 +85,19 @@ class UserDAO {
    * @return A DTO containing all information from the provided user object, or null
    *         if the provided user is null.
    * */
-  createUserDTO(userModel: User | null) {
-    if (userModel === null) {
+  createUserDTO(user: User | null) {
+    if (user === null) {
       return null;
     } else {
       return new UserDTO(
-        userModel.id,
-        userModel.firstName,
-        userModel.lastName,
-        userModel.email,
-        userModel.personalIdentificationNumber,
-        userModel.username,
-        userModel.passwordHash,
-        userModel.role
+        user.id,
+        user.firstName,
+        user.lastName,
+        user.email,
+        user.personalIdentificationNumber,
+        user.username,
+        user.passwordHash,
+        user.role
       );
     }
   }
