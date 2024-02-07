@@ -8,6 +8,9 @@ import {
 } from 'react-router-dom';
 const LoginView = React.lazy(() => import('../view/LoginView'));
 const RegistrationView = React.lazy(() => import('../view/RegistrationView'));
+const RegistrationViewRef = React.lazy(
+  () => import('../view/RegistrationViewRefactor')
+);
 const NotFoundView = React.lazy(() => import('../view/NotFoundView'));
 
 /**
@@ -34,6 +37,14 @@ const AppRouter = () => {
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
               <RegistrationView />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/register-ref"
+          element={
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <RegistrationViewRef />
             </React.Suspense>
           }
         />
