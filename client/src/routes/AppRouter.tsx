@@ -9,9 +9,13 @@ import {
 const LoginView = React.lazy(() => import('../view/LoginView'));
 const RegistrationView = React.lazy(() => import('../view/RegistrationView'));
 const NotFoundView = React.lazy(() => import('../view/NotFoundView'));
+
 /**
- * AppRouter returns a Router component with three Route components, rendering different views based on the path.
- * @returns A Router component containing three Route components.
+ * AppRouter component handles routing and rendering different views based on the path.
+ * It uses the `react-router-dom` package to define routes and render components based on the URL path.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered AppRouter component.
  */
 const AppRouter = () => {
   return (

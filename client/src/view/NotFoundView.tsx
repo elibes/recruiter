@@ -1,6 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
+/**
+ * Renders a 404 - Not Found view with a message and a link to the login page.
+ * @returns {JSX.Element} A 404 - Not Found view with a message and a link to the login page.
+ */
 const NotFoundView = () => {
   return (
     <div style={{textAlign: 'center', marginTop: '50px'}}>

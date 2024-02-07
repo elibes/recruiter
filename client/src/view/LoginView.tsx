@@ -2,8 +2,11 @@ import React from 'react';
 import LoginForm from './components/LoginForm';
 
 /**
- * The LoginView component renders a login page with a heading, a login form, and a navigation button.
- * @returns The LoginView component is returning a JSX element.
+ * LoginView component renders the user login form interface.
+ * It uses the LoginForm component to render the form and handle submissions.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered login form component.
  */
 const LoginView = () => {
   return (

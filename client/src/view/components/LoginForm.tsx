@@ -4,6 +4,15 @@ import Button from './Button';
 import useLoginViewModel from '../../viewmodel/useLoginViewModel';
 import '../styles/LoginForm.css';
 
+/**
+ * LoginForm component renders a login form interface.
+ * It uses the useLoginViewModel to manage form state and handle changes and submissions.
+ * The form includes fields for username and password.
+ * It also includes a submit button.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered login form component.
+ */
 const LoginForm = () => {
   const {username, setUsername, password, setPassword, error, handleSubmit} =
     useLoginViewModel();
