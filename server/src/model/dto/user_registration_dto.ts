@@ -1,5 +1,5 @@
 /**
- * A DTO containing the information needed to register a user. This is used from the api to service layer.
+ * A DTO containing the information needed to register a user.
  * */
 export interface UserRegistrationDTO {
   readonly firstName: string;

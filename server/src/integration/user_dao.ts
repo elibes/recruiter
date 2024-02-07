@@ -1,7 +1,7 @@
 import {Sequelize} from 'sequelize';
 import {User} from '../model/user';
 import {UserDTO} from '../model/dto/user_dto';
-import {UserRegistrationDTO} from "../model/dto/user_registration_dto";
+import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -33,13 +33,16 @@ class UserDAO {
   /**
    * Creates a new regular user in the database (with role_id 2)
    * @param {UserRegistrationDTO} registrationDetails A DTO containing the information to be stored about
-   *                            the user wanting to register an account.
+   * the user wanting to register an account.
    * @param {number} role this it the role_id for the user, a fk to the role table.
    * @return {UserDTO} A DTO containing information about the user, otherwise throws an error.
    * @async
    * @todo Use validators to sanitise the input.
    * */
-  async createUser(registrationDetails: UserRegistrationDTO, role: number): Promise<UserDTO | null> {
+  async createUser(
+    registrationDetails: UserRegistrationDTO,
+    role: number
+  ): Promise<UserDTO | null> {
     try {
       const user = await User.create({
         firstName: registrationDetails.firstName,
@@ -101,8 +104,8 @@ class UserDAO {
         personalIdentificationNumber: user.personalIdentificationNumber,
         username: user.username,
         passwordHash: user.passwordHash,
-        role: user.role
-      }
+        role: user.role,
+      };
     }
   }
 }

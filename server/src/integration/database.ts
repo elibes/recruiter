@@ -43,8 +43,7 @@ class Database {
     try {
       await this.database.authenticate();
     } catch (error) {
-      console.log("Failed to authenticate database connection!", error);
-      throw new Error('Error connecting or syncing database:');
+      throw new Error('Error connecting/authenticating database');
     }
   }
 
@@ -56,9 +55,7 @@ class Database {
   async setupDatabaseModels() {
     try {
       User.createModel(this.database);
-      console.log('Database models created!');
     } catch (error) {
-      console.log("Failed to set up model!", error);
       throw new Error('Error setting up database models:');
     }
   }

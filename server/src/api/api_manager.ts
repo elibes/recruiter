@@ -1,17 +1,18 @@
 import {ResponseHandler} from './response_handler';
 import * as express from 'express';
-import {Index} from './index';
+import {RootApi} from './root_api';
 import {UserApi} from './user_api';
 import {ErrorHandler} from './error_handler';
-import {ROOT_API_ROUTE} from "../utilities/configurations";
-import {USER_API_ROUTE} from "../utilities/configurations";
+import {ROOT_API_ROUTE} from '../utilities/configurations';
+import {USER_API_ROUTE} from '../utilities/configurations';
+import {NextFunction, Request, Response} from 'express';
 
 /**
  * This class is singleton manager responsible for setting up all apis, only one instance should be created.
  */
 class ApiManager {
   private static instance: ApiManager;
-  private apiList: any[];
+  private apiList: ApiRoute<any>[];
   responseHandler: ResponseHandler;
   errorHandler: ErrorHandler;
 
@@ -23,7 +24,7 @@ class ApiManager {
    * @param app this is the express app, needed to define routes.
    * @private
    */
-  private constructor(private app: express.Application){
+  private constructor(private app: express.Application) {
     this.responseHandler = new ResponseHandler();
     this.errorHandler = new ErrorHandler(this.responseHandler);
     this.apiList = [];
@@ -47,7 +48,7 @@ class ApiManager {
    * New routes should be added in the configurations file and imported for use here.
    */
   defineRoutes(): void {
-    this.apiList.push({route: ROOT_API_ROUTE, class: Index});
+    this.apiList.push({route: ROOT_API_ROUTE, class: RootApi});
     this.apiList.push({route: USER_API_ROUTE, class: UserApi});
   }
 
@@ -60,7 +61,7 @@ class ApiManager {
    */
   createAllApis() {
     this.defineRoutes();
-    this.apiList.forEach((entry: any) => {
+    this.apiList.forEach((entry: ApiRoute<any>) => {
       const entryRoute = express.Router();
       const entryInstance = new entry.class(
         this.responseHandler,
@@ -71,10 +72,21 @@ class ApiManager {
       this.app.use(entry.route, entryRoute);
     });
 
-    this.app.use((err: any, req: any, res: any, next: any) => {
-      this.errorHandler.handleError(err, req, res, next);
-    });
+    this.app.use(
+      (err: Error, req: Request, res: Response, next: NextFunction) => {
+        this.errorHandler.handleError(err, req, res, next);
+      }
+    );
   }
+}
+
+/**
+ * This is an interface representing the type of object expected in the apiList attribute, a route representing the
+ * string and a class to handle that route.
+ */
+interface ApiRoute<T> {
+  route: string;
+  class: T;
 }
 
 export {ApiManager};

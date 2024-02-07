@@ -1,11 +1,11 @@
 import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
-import {UserRegistrationDTO} from "../model/dto/user_registration_dto";
+import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
-import {ErrorHandler} from "./error_handler";
-import {ResponseHandler} from "./response_handler";
-import {Router} from "express";
+import {ErrorHandler} from './error_handler';
+import {ResponseHandler} from './response_handler';
+import {Request, Response, Router} from 'express';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -21,8 +21,7 @@ class UserApi {
     private responseHandler: ResponseHandler,
     private errorHandler: ErrorHandler,
     private router: Router
-  ) {
-  }
+  ) {}
 
   /**
    * This function sets up the handling used for each operation or action defined for this route.
@@ -32,36 +31,49 @@ class UserApi {
     this.router.post(
       '/register',
       checkSchema(validationSchemaRegistrationPost),
-      this.errorHandler.asyncErrorWrapper(async (req: any, res: any) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          throw new ValidationSanitizationError(
-            errors
-              .array()
-              .map(err => err.msg)
-              .join(', ')
-          );
+      this.errorHandler.asyncErrorWrapper(
+        async (req: Request, res: Response) => {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            throw new ValidationSanitizationError(
+              errors
+                .array()
+                .map(err => err.msg)
+                .join(', ')
+            );
+          }
+          const userService = createUserService();
+          const registrationData = this.registrationDataPacker(req.body);
+          const state = await userService.handleRegistration(registrationData);
+          if (state) {
+            const data = 'Registration successful';
+            this.responseHandler.sendHttpResponse(res, 200, data, false);
+          } else {
+            console.log(
+              'handleRegistration did not return true without throwing an error'
+            );
+            throw new Error('server error');
+          }
+          return;
         }
-        const userService = createUserService();
-        const registrationData = this.registrationDataPacker(req.body);
-        const state = await userService.handleRegistration(registrationData);
-        if (state) {
-          const data = 'Registration successful';
-          this.responseHandler.sendHttpResponse(res, 200, data, false);
-        } else {
-          console.log('something has gone horribly wrong')
-          throw new Error('server error');
-        }
-        return;
-      })
+      )
     );
 
-    this.errorHandler.asyncErrorWrapper(
-      this.router.get('/', (req: any, res: any) => {
-        const data = {message: 'user API is up!'};
-        const httpStatusCode = 200;
-        this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
-      })
+    this.router.get(
+      '/',
+      this.errorHandler.asyncErrorWrapper(
+        async (req: Request, res: Response) => {
+          const data = {message: 'user API is up!'};
+          const httpStatusCode = 200;
+          this.responseHandler.sendHttpResponse(
+            res,
+            httpStatusCode,
+            data,
+            false
+          );
+          return;
+        }
+      )
     );
   }
 

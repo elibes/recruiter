@@ -1,16 +1,14 @@
-import {UserRegistrationDTO} from "../model/dto/user_registration_dto";
+import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ConflictError} from '../utilities/custom_errors';
 import {Database} from '../integration/database';
 import {UserDAO} from '../integration/user_dao';
 import {AuthenticationService} from './authentication_service';
-import {APPLICANT_ROLE_ID} from "../utilities/configurations";
+import {APPLICANT_ROLE_ID} from '../utilities/configurations';
 
 /**
  * This class implements the logic for handling user related operations.
  */
 export class UserService {
-
-
   constructor() {}
 
   /**
@@ -19,7 +17,7 @@ export class UserService {
    * @return {boolean} A promise that will be true if the registration was successful and handled by the api layer.
    * @async
    */
-  async handleRegistration(data: UserRegistrationDTO) : Promise<boolean> {
+  async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
     const db = Database.getInstance().database;
     const dataRollbackState = {...data};
 
@@ -31,16 +29,18 @@ export class UserService {
       if (result !== null) {
         throw new ConflictError('That username already exists');
       }
-      const hashedPassword = await AuthenticationService.hashPassword(data.password);
+      const hashedPassword = await AuthenticationService.hashPassword(
+        data.password
+      );
 
-      const regData : UserRegistrationDTO = {
+      const regData: UserRegistrationDTO = {
         firstName: data.firstName,
         lastName: data.lastName,
         username: data.username,
         password: hashedPassword,
         personalNumber: data.personalNumber,
-        email: data.email
-      }
+        email: data.email,
+      };
       await userDAO.createUser(regData, APPLICANT_ROLE_ID);
       await transaction.commit();
       return true;

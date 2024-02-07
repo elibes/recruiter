@@ -30,13 +30,17 @@ dotenv.config({
 
 const db = Database.getInstance();
 try {
-  db.connectToDatabase().then(() => {console.log('Database connected!')});
-  db.setupDatabaseModels().then(() => {console.log('Database models created!')});
+  db.connectToDatabase().then(() => {
+    console.log('Database connected!');
+  });
+  db.setupDatabaseModels().then(() => {
+    console.log('Database models created!');
+  });
 } catch (error) {
   console.log(error);
 }
 
-const app: any = express();
+const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -51,8 +55,15 @@ app.use(
 const apiManager = ApiManager.getInstance(app);
 apiManager.createAllApis();
 
-const port = process.env.PORT;
-const host = process.env.HOST;
+let port: number;
+if (process.env.PORT === undefined) {
+  port = 3001;
+} else {
+  port = +process.env.PORT;
+}
+
+const host = process.env.HOST || 'localhost';
+
 app.listen(port, host, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
