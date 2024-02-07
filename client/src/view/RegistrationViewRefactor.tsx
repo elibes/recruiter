@@ -4,7 +4,7 @@ import Button from './components/Button';
 import RegistrationViewModel from '../viewmodel/RegistrationViewModel';
 import './styles/RegistrationView.css';
 
-const RegistrationView = () => {
+const RegistrationViewRef = () => {
   const {
     firstName,
     lastName,
