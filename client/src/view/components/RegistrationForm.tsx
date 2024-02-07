@@ -1,5 +1,5 @@
 import React, {FC, useReducer} from 'react';
-import RegistrationViewModel from '../../viewModel/RegistrationViewModel';
+import RegistrationViewModel from '../../viewmodel/RegistrationViewModel';
 import PasswordComparison from '../../util/PasswordComparison';
 import '../styles/RegistrationForm.css';
 
