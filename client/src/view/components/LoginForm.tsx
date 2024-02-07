@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import InputField from './InputField';
 import Button from './Button';
-import useLoginViewModel from '../../viewmodel/useLoginViewModel';
+import loginViewModel from '../../viewmodel/LoginViewModel';
 import '../styles/LoginForm.css';
 
 /**
  * LoginForm component renders a login form interface.
- * It uses the useLoginViewModel to manage form state and handle changes and submissions.
+ * It uses the loginViewModel to manage form state and handle changes and submissions.
  * The form includes fields for username and password.
  * It also includes a submit button.
  *
@@ -15,7 +15,7 @@ import '../styles/LoginForm.css';
  */
 const LoginForm = () => {
   const {username, setUsername, password, setPassword, error, handleSubmit} =
-    useLoginViewModel();
+    loginViewModel();
 
   return (
     <form onSubmit={handleSubmit} className="login-form">
@@ -37,6 +37,9 @@ const LoginForm = () => {
         />
       </div>
       <Button text="Login" onClick={() => {}} className="login-button" />
+      <div className="registered-user-link">
+        Need to registered? <a href="/register">Register</a>
+      </div>
     </form>
   );
 };

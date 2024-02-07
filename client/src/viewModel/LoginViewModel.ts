@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import axios from 'axios';
 
-const useLoginViewModel = () => {
+const loginViewModel = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -52,4 +52,4 @@ const useLoginViewModel = () => {
   };
 };
 
-export default useLoginViewModel;
+export default loginViewModel;
