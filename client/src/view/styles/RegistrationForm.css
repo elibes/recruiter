@@ -1,0 +1,108 @@
+/* /path/to/RegistrationView.css */
+.registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: cornflowerblue;
+}
+
+form {
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+.reg-inputs > div {
+  margin-bottom: 1em;
+}
+
+label {
+  display: block;
+  margin-bottom: .5em;
+  color: #333;
+  font-size: 0.9em;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
+  padding: 0.5em;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+  outline: none;
+  border-bottom: 2px solid #007bff;
+}
+
+.action-btn {
+  background: cornflowerblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.action-btn:disabled {
+  background-color: #ccc;
+}
+
+.action-btn:not(:disabled):hover {
+  background-color: #0056b3;
+}
+
+.form-btn-left {
+  text-align: left;
+}
+
+.result-message {
+  display: block;
+  text-align: center;
+  color: red;
+  margin-top: 1em;
+}
+
+.registered-user-link {
+  display: block;
+  text-align: center;
+  margin-top: 2em;
+  font-size: 0.9em;
+}
+
+.registered-user-link a {
+  color: cornflowerblue;
+  text-decoration: none;
+}
+
+.registered-user-link a:hover {
+  text-decoration: underline;
+}
+
+.brand-logo,
+h3 {
+  text-align: center; /* Center the text of brand-logo and h3 within their containers */
+  width: 100%; /* Ensure they span the width of their container */
+}
+
+.brand-logo {
+  background-color: black;
+  color: white;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
