@@ -10,7 +10,7 @@ class ErrorHandler {
   /**
    * Used to wrap a route so that both async and sync errors will be handled by the next middleware
    * (the next middleware should be an error handling middleware.)
-   * @param fn a function (route) to wrap
+   * @param fn a function (route endpoint) to wrap
    */
   asyncErrorWrapper(fn: any) {
     return async (req: any, res: any, next: any) => {
@@ -34,17 +34,16 @@ class ErrorHandler {
    * @param next the next middleware to be called
    */
   handleError(err: any, req: any, res: any, next: any) {
-    //this should be called last by next
     let httpStatusCode;
     let message;
     if (err instanceof ConflictError) {
-      httpStatusCode = 409; //Conflict
+      httpStatusCode = 409;
       message = 'That user already exists';
     } else if (err instanceof ValidationSanitizationError) {
-      httpStatusCode = 400; //Bad request
+      httpStatusCode = 400;
       message = err.message;
     } else {
-      httpStatusCode = 500; //Internal server error
+      httpStatusCode = 500;
     }
     this.responseHandler.sendHttpResponse(res, httpStatusCode, message, true);
     return;

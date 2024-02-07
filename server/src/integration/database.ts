@@ -1,10 +1,18 @@
 import {Dialect, Sequelize} from 'sequelize';
 import {User} from '../model/user';
 
+/**
+ * The class responsible for creating the connection to the database.
+ * Is used before retrieving data from the database.
+ * */
 class Database {
   private static instance: Database;
   public database: Sequelize;
 
+  /**
+   * Gets a singleton instance of the Database class.
+   * @return {Database} A singleton instance of the class.
+   * */
   public static getInstance(): Database {
     if (!Database.instance) {
       Database.instance = new Database();
@@ -12,6 +20,9 @@ class Database {
     return Database.instance;
   }
 
+  /**
+   * Creates new instance using .env variables.
+   * */
   private constructor() {
     this.database = new Sequelize({
       database: process.env.DB_NAME,
@@ -25,22 +36,30 @@ class Database {
 
   /**
    * Attempts to connect to the database.
+   * @throws {Error} When failing to authenticate the database connection.
+   * @async
    */
   async connectToDatabase() {
     try {
       await this.database.authenticate();
-      console.log('Database connected!');
     } catch (error) {
-      console.error('Error connecting or syncing database:', error);
+      console.log("Failed to authenticate database connection!", error);
+      throw new Error('Error connecting or syncing database:');
     }
   }
 
+  /**
+   * Creates all sequelize objects representing tables in the database.
+   * @throws {Error} When setting up a model fails
+   * @async
+   * */
   async setupDatabaseModels() {
     try {
       User.createModel(this.database);
       console.log('Database models created!');
     } catch (error) {
-      console.error('Error setting up database models:', error);
+      console.log("Failed to set up model!", error);
+      throw new Error('Error setting up database models:');
     }
   }
 }

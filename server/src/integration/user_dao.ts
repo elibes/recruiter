@@ -1,7 +1,7 @@
 import {Sequelize} from 'sequelize';
 import {User} from '../model/user';
-import UserDTO from '../service/userDTO';
-import {userRegistrationData} from '../utilities/data_interfaces';
+import {UserDTO} from '../model/dto/user_dto';
+import {UserRegistrationDTO} from "../model/dto/user_registration_dto";
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -12,7 +12,8 @@ class UserDAO {
 
   /**
    * Gets the singleton instance of this class.
-   * @param database the Sequelize instance.
+   * @param {Sequelize} database the Sequelize instance.
+   * @return {UserDAO} A singleton instance of the class.
    */
   public static getInstance(database: Sequelize): UserDAO {
     if (!UserDAO.instance) {
@@ -31,12 +32,14 @@ class UserDAO {
 
   /**
    * Creates a new regular user in the database (with role_id 2)
-   * @param registrationDetails A DTO containing the information to be stored about
+   * @param {UserRegistrationDTO} registrationDetails A DTO containing the information to be stored about
    *                            the user wanting to register an account.
-   * @return A DTO containing information about the user, otherwise throws an error.
+   * @param {number} role this it the role_id for the user, a fk to the role table.
+   * @return {UserDTO} A DTO containing information about the user, otherwise throws an error.
+   * @async
    * @todo Use validators to sanitise the input.
    * */
-  async createUser(registrationDetails: userRegistrationData) {
+  async createUser(registrationDetails: UserRegistrationDTO, role: number): Promise<UserDTO | null> {
     try {
       const user = await User.create({
         firstName: registrationDetails.firstName,
@@ -45,7 +48,7 @@ class UserDAO {
         personalIdentificationNumber: registrationDetails.personalNumber,
         username: registrationDetails.username,
         passwordHash: registrationDetails.password,
-        role: 2,
+        role: role,
       });
       return this.createUserDTO(user);
     } catch (error) {
@@ -58,12 +61,13 @@ class UserDAO {
 
   /**
    * Searches the database for any entry matching the provided username.
-   * @param username The username of the user to search for as a string.
-   * @return A DTO containing the user's information if found,
-   *          otherwise null.
+   * @param {string} username The username of the user to search for as a string.
+   * @return {UserDTO} A DTO containing the user's information if found,
+   *                   otherwise null.
+   * @async
    * @todo Use validators to sanitise the data before searching the database.
    * */
-  async findUserByUsername(username: string) {
+  async findUserByUsername(username: string): Promise<UserDTO | null> {
     try {
       const user = await User.findOne({
         where: {username: username},
@@ -82,23 +86,23 @@ class UserDAO {
 
   /**
    * Converts a sequelize user object into a readonly UserDTO containing the same data.
-   * @return A DTO containing all information from the provided user object, or null
+   * @return {UserDTO} A DTO containing all information from the provided user object, or null
    *         if the provided user is null.
    * */
-  createUserDTO(user: User | null) {
+  createUserDTO(user: User | null): UserDTO | null {
     if (user === null) {
       return null;
     } else {
-      return new UserDTO(
-        user.id,
-        user.firstName,
-        user.lastName,
-        user.email,
-        user.personalIdentificationNumber,
-        user.username,
-        user.passwordHash,
-        user.role
-      );
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        personalIdentificationNumber: user.personalIdentificationNumber,
+        username: user.username,
+        passwordHash: user.passwordHash,
+        role: user.role
+      }
     }
   }
 }

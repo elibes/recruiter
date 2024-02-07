@@ -1,6 +1,10 @@
 /**
- * This is the startup / main file for the server.
- * It also configures and starts some global middleware
+ * @fileoverview This is the startup / main file for the server, it does some basic setup of dotenv,
+ * the express app and the database
+ * It also configures and starts some global middleware, which will be used in handling all incoming request.
+ *
+ * Note that the order of app.use() calls will affect the order the middleware are used,
+ * so moving these statements can have unintended consequences.
  */
 
 import * as express from 'express';
@@ -16,7 +20,6 @@ import * as cookieParser from 'cookie-parser';
 import {Database} from './integration/database';
 
 import {ApiManager} from './api/api_manager';
-import {UserDAO} from './integration/userDAO';
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
@@ -24,23 +27,24 @@ dotenv.config({
   path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
 });
-const app: any = express();
 
-//Setting up the database
 const db = Database.getInstance();
-db.connectToDatabase();
-db.setupDatabaseModels();
-//UserDAO.getInstance(db.database).findUserByUsername("JoelleWilkinson").then((res) => {console.log(res)})
-//db.createTables(); //catch some errors here later
+try {
+  db.connectToDatabase().then(() => {console.log('Database connected!')});
+  db.setupDatabaseModels().then(() => {console.log('Database models created!')});
+} catch (error) {
+  console.log(error);
+}
 
+const app: any = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost', //placeholder
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], //REST methods
-    credentials: true, //for auth cookies
+    origin: 'http://localhost',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
   })
 );
 

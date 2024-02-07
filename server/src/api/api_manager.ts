@@ -3,6 +3,8 @@ import * as express from 'express';
 import {Index} from './index';
 import {UserApi} from './user_api';
 import {ErrorHandler} from './error_handler';
+import {ROOT_API_ROUTE} from "../utilities/configurations";
+import {USER_API_ROUTE} from "../utilities/configurations";
 
 /**
  * This class is singleton manager responsible for setting up all apis, only one instance should be created.
@@ -21,15 +23,16 @@ class ApiManager {
    * @param app this is the express app, needed to define routes.
    * @private
    */
-  private constructor(private app: express.Application) {
+  private constructor(private app: express.Application){
     this.responseHandler = new ResponseHandler();
     this.errorHandler = new ErrorHandler(this.responseHandler);
     this.apiList = [];
   }
 
   /**
-   * This is the method to create the single instance required of this class.
+   * This method returns the global instance of the class.
    * @param app The express app to be passed into the constructor.
+   * @return the global instance of the ApiManager class.
    */
   public static getInstance(app: express.Application): ApiManager {
     if (!ApiManager.instance) {
@@ -39,12 +42,13 @@ class ApiManager {
   }
 
   /**
-   * This helper function defines each main route type in the app by adding the route name and the corresponding
-   * api class to the apiList attribute.
+   * This helper function defines each main route type in the app. The route member represents the endpoint path of
+   * a route (as configured in the configurations file) and the class is the api handler class that handles that route.
+   * New routes should be added in the configurations file and imported for use here.
    */
-  defineRoutes() {
-    this.apiList.push({route: '', class: Index});
-    this.apiList.push({route: '/user', class: UserApi});
+  defineRoutes(): void {
+    this.apiList.push({route: ROOT_API_ROUTE, class: Index});
+    this.apiList.push({route: USER_API_ROUTE, class: UserApi});
   }
 
   /**

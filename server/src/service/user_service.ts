@@ -1,20 +1,25 @@
-import {userRegistrationData} from '../utilities/data_interfaces';
+import {UserRegistrationDTO} from "../model/dto/user_registration_dto";
 import {ConflictError} from '../utilities/custom_errors';
 import {Database} from '../integration/database';
-import {UserDAO} from '../integration/userDAO';
+import {UserDAO} from '../integration/user_dao';
 import {AuthenticationService} from './authentication_service';
+import {APPLICANT_ROLE_ID} from "../utilities/configurations";
 
 /**
  * This class implements the logic for handling user related operations.
  */
 export class UserService {
+
+
   constructor() {}
 
   /**
    * This function handles the register user operation.
-   * @param data the validated and sanitized registration data passed through the presentation layer.
+   * @param {UserRegistrationDTO} data the validated and sanitized registration data passed through the presentation layer.
+   * @return {boolean} A promise that will be true if the registration was successful and handled by the api layer.
+   * @async
    */
-  async handleRegistration(data: userRegistrationData) {
+  async handleRegistration(data: UserRegistrationDTO) : Promise<boolean> {
     const db = Database.getInstance().database;
     const dataRollbackState = {...data};
 
@@ -26,10 +31,19 @@ export class UserService {
       if (result !== null) {
         throw new ConflictError('That username already exists');
       }
-      data.password = await AuthenticationService.hashPassword(data.password);
-      await userDAO.createUser(data);
+      const hashedPassword = await AuthenticationService.hashPassword(data.password);
+
+      const regData : UserRegistrationDTO = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.username,
+        password: hashedPassword,
+        personalNumber: data.personalNumber,
+        email: data.email
+      }
+      await userDAO.createUser(regData, APPLICANT_ROLE_ID);
       await transaction.commit();
-      return 'Registration successful!';
+      return true;
     } catch (error) {
       await transaction.rollback();
       data = dataRollbackState;

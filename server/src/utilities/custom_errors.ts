@@ -1,5 +1,5 @@
 /**
- * This file defines some custom errors that can be thrown by the application.
+ * @fileoverview This file defines some custom errors that can be thrown by the application.
  */
 
 /**
