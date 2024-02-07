@@ -1,6 +1,6 @@
 import React, {FC, useReducer} from 'react';
 import './RegistrationView.css';
-import RegistrationViewModel from '../viewModel/RegistrationViewModel';
+import RegistrationViewModel from '../viewmodel/RegistrationViewModel';
 import PasswordComparison from '../util/PasswordComparison';
 
 /**
