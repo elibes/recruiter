@@ -5,7 +5,8 @@
 export interface userRegistrationData {
   firstName: string;
   lastName: string;
+  username: string;
   password: string;
-  personalNumber: number;
+  personalNumber: string;
   email: string;
 }
