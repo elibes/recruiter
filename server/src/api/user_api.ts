@@ -1,8 +1,11 @@
 import {checkSchema, validationResult} from 'express-validator';
 import {baseSanitizationSchema} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
-import {userRegistrationData} from '../utilities/data_interfaces';
+import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
+import {ErrorHandler} from './error_handler';
+import {ResponseHandler} from './response_handler';
+import {Request, Response, Router} from 'express';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -15,43 +18,62 @@ class UserApi {
    * @param router the express route associated with this class.
    */
   constructor(
-    private responseHandler: any,
-    private errorHandler: any,
-    private router: any
+    private responseHandler: ResponseHandler,
+    private errorHandler: ErrorHandler,
+    private router: Router
   ) {}
 
   /**
-   * This function sets up the handling used for each operation or action defined for this route
-   * , it will be called only once, by the api manager.
+   * This function sets up the handling used for each operation or action defined for this route.
+   * it should only be called once, by the api manager.
    */
   async setupRequestHandling() {
     this.router.post(
       '/register',
-      checkSchema(validationSchemaPost),
-      this.errorHandler.asyncErrorWrapper(async (req: any, res: any) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          throw new ValidationSanitizationError(
-            errors
-              .array()
-              .map(err => err.msg)
-              .join(', ')
-          );
+      checkSchema(validationSchemaRegistrationPost),
+      this.errorHandler.asyncErrorWrapper(
+        async (req: Request, res: Response) => {
+          const errors = validationResult(req);
+          if (!errors.isEmpty()) {
+            throw new ValidationSanitizationError(
+              errors
+                .array()
+                .map(err => err.msg)
+                .join(', ')
+            );
+          }
+          const userService = createUserService();
+          const registrationData = this.registrationDataPacker(req.body);
+          const state = await userService.handleRegistration(registrationData);
+          if (state) {
+            const data = 'Registration successful';
+            this.responseHandler.sendHttpResponse(res, 200, data, false);
+          } else {
+            console.log(
+              'handleRegistration did not return true without throwing an error'
+            );
+            throw new Error('server error');
+          }
+          return;
         }
-        const userService = createUserService();
-        const registrationData = this.registrationDataPacker(req.body);
-        const data = await userService.handleRegistration(registrationData);
-        this.responseHandler.sendHttpResponse(res, 200, data, false);
-        return;
-      })
+      )
     );
 
-    this.errorHandler.asyncErrorWrapper(
-      this.router.get('/', (req: any, res: any) => {
-        const data = {message: 'user API is up!'};
-        const httpStatusCode = 200;
-        this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
-      })
+    this.router.get(
+      '/',
+      this.errorHandler.asyncErrorWrapper(
+        async (req: Request, res: Response) => {
+          const data = {message: 'user API is up!'};
+          const httpStatusCode = 200;
+          this.responseHandler.sendHttpResponse(
+            res,
+            httpStatusCode,
+            data,
+            false
+          );
+          return;
+        }
+      )
     );
   }
 
@@ -61,7 +83,7 @@ class UserApi {
    * @param body
    */
   registrationDataPacker(body: any) {
-    const data: userRegistrationData = {
+    const data: UserRegistrationDTO = {
       firstName: body.firstName,
       lastName: body.lastName,
       username: body.userName,
@@ -77,7 +99,7 @@ class UserApi {
  * This object represents the validation and sanitization schema for the registration POST operation.
  * It is used with the checkSchema function defined in the express validation package.
  */
-const validationSchemaPost: any = {
+const validationSchemaRegistrationPost: any = {
   firstName: {
     ...baseSanitizationSchema,
     notEmpty: {

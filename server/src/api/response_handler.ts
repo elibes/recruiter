@@ -1,3 +1,5 @@
+import {Response} from 'express';
+
 /**
  * This class is a handler responsible for formatting and returning HTTP responses to the client.
  */
@@ -12,7 +14,7 @@ class ResponseHandler {
    * @param error a boolean flag to inform if an error has happened during processing.
    */
   sendHttpResponse(
-    response: any,
+    response: Response,
     httpStatusCode: number,
     responseBody: any,
     error: boolean

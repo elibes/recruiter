@@ -1,5 +1,5 @@
 /**
- * This file defines some custom errors that can be thrown by the application.
+ * @fileoverview This file defines some custom errors that can be thrown by the application.
  */
 
 /**
@@ -8,17 +8,17 @@
 export class ConflictError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'NotFoundError';
+    this.name = 'ConflictError';
   }
 }
 
 /**
- * This error shall be thrown when a validation or sanitization check fails.
+ * This error shall be thrown when a sanitization rule or validation check fails.
  */
 export class ValidationSanitizationError extends Error {
   static message: string;
   constructor(message: string) {
     super(message);
-    this.name = 'ValidationError';
+    this.name = 'ValidationSanitizationError';
   }
 }
