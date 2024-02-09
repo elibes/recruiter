@@ -26,6 +26,18 @@ const userReducer = (state: any, action: any) => {
       return {...state, resultMsg: action.payload};
     case 'isSubmitDisabled':
       return {...state, isSubmitDisabled: action.payload};
+    case 'isFirstNameInvalid':
+      return {...state, isFirstNameInvalid: action.payload};
+    case 'isLastNameInvalid':
+      return {...state, isLastNameInvalid: action.payload};
+    case 'isUsernameInvalid':
+      return {...state, isUsernameInvalid: action.payload};
+    case 'isPasswordInvalid':
+      return {...state, isPasswordInvalid: action.payload};
+    case 'isPersonalNumberInvalid':
+      return {...state, isPersonalNumberInvalid: action.payload};
+    case 'isEmailInvalid':
+      return {...state, isEmailInvalid: action.payload};
     default:
       return {...state, resultMsg: 'A failure has occurred.'};
   }
