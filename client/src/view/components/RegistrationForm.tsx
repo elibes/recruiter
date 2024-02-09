@@ -2,6 +2,7 @@ import React, {FC, useReducer} from 'react';
 import RegistrationViewModel from '../../viewmodel/RegistrationViewModel';
 import PasswordComparison from '../../util/PasswordComparison';
 import '../styles/RegistrationForm.css';
+import {allowSubmit} from '../../util/Helper';
 
 /**
  * RegistrationForm component renders the user registration form interface.
@@ -29,6 +30,7 @@ const RegistrationForm: FC = () => {
     onChangeUsername,
     onChangeEmail,
     onClickRegister,
+    checkFormValidity,
     dispatch,
   } = RegistrationViewModel();
 
@@ -54,6 +56,7 @@ const RegistrationForm: FC = () => {
               dispatch={dispatch}
               password={password}
               passwordConfirm={passwordConfirm}
+              checkFormValidity={checkFormValidity}
             />
           </div>
           <div>
@@ -62,7 +65,6 @@ const RegistrationForm: FC = () => {
               type="text"
               value={personalNumber}
               onChange={onChangePersonNumber}
-              placeholder="YYYYMMDD-XXXX"
             />
           </div>
           <div>

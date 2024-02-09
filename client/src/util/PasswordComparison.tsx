@@ -10,6 +10,7 @@ interface PasswordComparisonProps {
   dispatch: React.Dispatch<any>;
   password: string;
   passwordConfirm: string;
+  checkFormValidity: () => void;
 }
 
 /**
@@ -23,6 +24,7 @@ const PasswordComparison: FC<PasswordComparisonProps> = ({
   dispatch,
   password,
   passwordConfirm,
+  checkFormValidity,
 }) => {
   const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({payload: e.target.value, type: 'password'});
@@ -59,7 +61,8 @@ const PasswordComparison: FC<PasswordComparisonProps> = ({
       allowSubmit(dispatch, 'Passwords do not match', true);
       return false;
     } else {
-      allowSubmit(dispatch, '', false);
+      dispatch({payload: false, type: 'isPasswordInvalid'});
+      checkFormValidity();
       return true;
     }
   };

@@ -26,6 +26,12 @@ const RegistrationViewModel = () => {
       passwordConfirm,
       resultMsg,
       isSubmitDisabled,
+      isFirstNameInvalid,
+      isLastNameInvalid,
+      isUsernameInvalid,
+      isPasswordInvalid,
+      isPersonalNumberInvalid,
+      isEmailInvalid,
     },
     dispatch,
   ] = useReducer(userReducer, {
@@ -38,19 +44,43 @@ const RegistrationViewModel = () => {
     passwordConfirm: '',
     resultMsg: '',
     isSubmitDisabled: true,
+    isFirstNameInvalid: true,
+    isLastNameInvalid: true,
+    isUsernameInvalid: true,
+    isPasswordInvalid: true,
+    isPersonalNumberInvalid: true,
+    isEmailInvalid: true,
   });
+
+  const checkFormValidity = () => {
+    if (
+      !isFirstNameInvalid &&
+      !isLastNameInvalid &&
+      !isUsernameInvalid &&
+      !isPasswordInvalid &&
+      !isPersonalNumberInvalid &&
+      !isEmailInvalid
+    )
+      allowSubmit(dispatch, '', false);
+  };
 
   const onChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({payload: e.target.value, type: 'firstName'});
     if (!e.target.value)
       allowSubmit(dispatch, 'First name cannot be empty', true);
-    else allowSubmit(dispatch, '', false);
+    else {
+      dispatch({payload: false, type: 'isFirstNameInvalid'});
+      checkFormValidity();
+    }
   };
   const onChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({payload: e.target.value, type: 'lastName'});
     if (!e.target.value)
       allowSubmit(dispatch, 'Last name cannot be empty', true);
-    else allowSubmit(dispatch, '', false);
+    else {
+      dispatch({payload: false, type: 'isLastNameInvalid'});
+      checkFormValidity();
+    }
   };
   const onChangePersonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({payload: e.target.value, type: 'personalNumber'});
@@ -60,18 +90,27 @@ const RegistrationViewModel = () => {
     if (!pnrCheck.isValid) {
       allowSubmit(dispatch, pnrCheck.message, true);
       return;
+    } else {
+      dispatch({payload: false, type: 'isPersonalNumberInvalid'});
+      checkFormValidity();
     }
   };
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({payload: e.target.value, type: 'userName'});
     if (!e.target.value)
-      allowSubmit(dispatch, 'Username cannot be empty', true);
-    else allowSubmit(dispatch, '', false);
+      allowSubmit(dispatch, 'User name cannot be empty', true);
+    else {
+      dispatch({payload: false, type: 'isUsernameInvalid'});
+      checkFormValidity();
+    }
   };
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({payload: e.target.value, type: 'email'});
     if (!e.target.value) allowSubmit(dispatch, 'Email cannot be empty', true);
-    else allowSubmit(dispatch, '', false);
+    else {
+      dispatch({payload: false, type: 'isEmailInvalid'});
+      checkFormValidity();
+    }
   };
 
   const onClickRegister = async (
@@ -91,8 +130,8 @@ const RegistrationViewModel = () => {
       if ('error' in response) {
         console.error(response.error);
       } else {
-        dispatch({payload: 'Registration successful', type: 'resultMsg'});
-        console.log(response.message); // Successfully registered
+        dispatch({payload: response.success.toString(), type: 'resultMsg'});
+        console.log(response); // Successfully registered
       }
     } catch (ex) {
       console.log(ex);
@@ -109,12 +148,19 @@ const RegistrationViewModel = () => {
     passwordConfirm,
     resultMsg,
     isSubmitDisabled,
+    isFirstNameInvalid,
+    isLastNameInvalid,
+    isUsernameInvalid,
+    isPasswordInvalid,
+    isPersonalNumberInvalid,
+    isEmailInvalid,
     onChangeFirstName,
     onChangeLastName,
     onChangePersonNumber,
     onChangeUsername,
     onChangeEmail,
     onClickRegister,
+    checkFormValidity,
     dispatch,
   };
 };
