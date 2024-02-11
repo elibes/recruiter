@@ -1,5 +1,7 @@
 import {Dialect, Sequelize} from 'sequelize';
 import {User} from '../model/user';
+import {Competence} from "../model/competence";
+import {CompetenceProfile} from "../model/competence_profile";
 
 /**
  * The class responsible for creating the connection to the database.
@@ -55,6 +57,10 @@ class Database {
   async setupDatabaseModels() {
     try {
       User.createModel(this.database);
+      Competence.createModel(this.database);
+      CompetenceProfile.createModel(this.database);
+
+
     } catch (error) {
       throw new Error('Error setting up database models:');
     }
