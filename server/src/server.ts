@@ -23,23 +23,15 @@ import {ApiManager} from './api/api_manager';
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
+
 dotenv.config({
   path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
 });
 
-const db = Database.getInstance();
-try {
-  db.connectToDatabase().then(() => {
-    console.log('Database connected!');
-  });
-  db.setupDatabaseModels().then(() => {
-    console.log('Database models created!');
-  });
-} catch (error) {
-  console.log(error);
-}
 
+const db = Database.getInstance();
+Promise.all([db.connectToDatabase(), db.setupDatabaseModels()]).then(() => {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -67,5 +59,7 @@ const host = process.env.HOST || 'localhost';
 app.listen(port, host, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+}).catch((error) => {console.log('database error', error)} )
 
 export {db};
