@@ -1,16 +1,18 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
 
-
+/**
+ * A specification of a time period a particular applicant are available to work.
+ */
 class Availability extends Model {
   declare id: number;
   declare personId: number;
-  declare from_date: Date;
-  declare to_date: Date;
+  declare fromDate: Date;
+  declare toDate: Date;
 
   /**
-   * Creates a competence model.
+   * Creates a availability model.
    * @param sequelize The Sequelize object.
-   * @return A Sequelize model representing a competence.
+   * @return A Sequelize model representing a availability.
    * */
   static createModel(sequelize: Sequelize) {
     Availability.init(
@@ -30,21 +32,21 @@ class Availability extends Model {
             key: 'person_id'
           }
         },
-        from_date: {
+        fromDate: {
           type: DataTypes.DATE,
           allowNull: false,
-          field: 'name',
+          field: 'from_date',
         },
-        to_date: {
+        toDate: {
           type: DataTypes.DATE,
           allowNull: false,
-          field: 'name',
+          field: 'to_date',
         },
       },
       {
         sequelize,
-        modelName: 'competence',
-        tableName: 'competence',
+        modelName: 'availability',
+        tableName: 'availability',
         timestamps: false,
       }
     );

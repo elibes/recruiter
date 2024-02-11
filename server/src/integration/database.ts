@@ -2,6 +2,7 @@ import {Dialect, Sequelize} from 'sequelize';
 import {User} from '../model/user';
 import {Competence} from "../model/competence";
 import {CompetenceProfile} from "../model/competence_profile";
+import {Availability} from "../model/availability";
 
 /**
  * The class responsible for creating the connection to the database.
@@ -50,7 +51,7 @@ class Database {
   }
 
   /**
-   * Creates all sequelize objects representing tables in the database.
+   * Creates all sequelize objects representing tables in the database. Also establishes associations between them.
    * @throws {Error} When setting up a model fails
    * @async
    * */
@@ -59,7 +60,16 @@ class Database {
       User.createModel(this.database);
       Competence.createModel(this.database);
       CompetenceProfile.createModel(this.database);
+      Availability.createModel(this.database);
 
+      Availability.belongsTo(User, { foreignKey: 'personId' });
+      User.hasMany(Availability);
+
+      CompetenceProfile.belongsTo(User, { foreignKey: 'personId' });
+      User.hasMany(CompetenceProfile);
+
+      CompetenceProfile.hasOne(Competence, {foreignKey: 'competenceId'});
+      Competence.hasMany(CompetenceProfile);
 
     } catch (error) {
       throw new Error('Error setting up database models:');

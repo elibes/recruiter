@@ -1,6 +1,8 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
 
-
+/**
+ * A profile linking an applicant with the competence they have, and they years of experience with that competence.
+ * */
 class CompetenceProfile extends Model {
   declare id: number;
   declare personId : number;
