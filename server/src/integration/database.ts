@@ -1,8 +1,8 @@
 import {Dialect, Sequelize} from 'sequelize';
 import {User} from '../model/user';
-import {Competence} from "../model/competence";
-import {CompetenceProfile} from "../model/competence_profile";
-import {Availability} from "../model/availability";
+import {Competence} from '../model/competence';
+import {CompetenceProfile} from '../model/competence_profile';
+import {Availability} from '../model/availability';
 
 /**
  * The class responsible for creating the connection to the database.
@@ -62,15 +62,23 @@ class Database {
       CompetenceProfile.createModel(this.database);
       Availability.createModel(this.database);
 
-      Availability.belongsTo(User, { foreignKey: 'personId' });
-      User.hasMany(Availability);
+      User.hasMany(Availability, {
+        foreignKey: 'person_id',
+        as: 'personInAvailability',
+      });
+      Availability.belongsTo(User, {foreignKey: 'person_id'});
 
-      CompetenceProfile.belongsTo(User, { foreignKey: 'personId' });
-      User.hasMany(CompetenceProfile);
+      User.hasMany(CompetenceProfile, {
+        foreignKey: 'person_id',
+        as: 'personInProfile',
+      });
+      CompetenceProfile.belongsTo(User, {foreignKey: 'person_id'});
 
-      CompetenceProfile.hasOne(Competence, {foreignKey: 'competenceId'});
-      Competence.hasMany(CompetenceProfile);
-
+      Competence.hasMany(CompetenceProfile, {
+        foreignKey: 'competence_id',
+        as: 'competence',
+      });
+      CompetenceProfile.belongsTo(Competence, {foreignKey: 'competence_id'});
     } catch (error) {
       throw new Error('Error setting up database models:');
     }

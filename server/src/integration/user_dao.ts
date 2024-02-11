@@ -23,11 +23,10 @@ class UserDAO {
   }
 
   /**
-   * Creates the DAO and connects to the database.
+   * Creates the DAO.
    * */
   private constructor(database: Sequelize) {
     this.database = database;
-    User.createModel(this.database);
   }
 
   /**

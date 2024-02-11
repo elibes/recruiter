@@ -1,6 +1,9 @@
 import {Sequelize} from 'sequelize';
-import {AvailabilitiesDTO, AvailabilityDTO} from "../model/dto/availabilities_dto";
-import {Availability} from "../model/availability";
+import {
+  AvailabilitiesDTO,
+  AvailabilityDTO,
+} from '../model/dto/availabilities_dto';
+import {Availability} from '../model/availability';
 
 class AvailabilityDAO {
   private static instance: AvailabilityDAO;
@@ -21,32 +24,29 @@ class AvailabilityDAO {
     this.database = database;
   }
 
-  async createAvailabilities(data: AvailabilitiesDTO){
-    for(const entry of data.availabilities) {
+  async createAllAvailabilities(data: AvailabilitiesDTO) {
+    for (const entry of data.availabilities) {
       const result = await this.createAvailability(entry);
-      if(result === null) {
+      if (result === null) {
         return null;
       }
     }
     return true;
   }
 
-  async createAvailability(entry : AvailabilityDTO) {
+  async createAvailability(entry: AvailabilityDTO) {
     try {
-      await Availability.create(
-        {personId: entry.personId,
+      await Availability.create({
+        personId: entry.personId,
         fromDate: entry.fromDate,
-      toDate: entry.toDate}
-      )
+        toDate: entry.toDate,
+      });
       return true;
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error updating the database:', error);
-      throw new Error(
-        `Could not add availability: ${entry} to the database!`
-      );
+      throw new Error(`Could not add availability: ${entry} to the database!`);
     }
   }
 }
 
-export {AvailabilityDAO}
+export {AvailabilityDAO};

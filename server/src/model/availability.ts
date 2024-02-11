@@ -27,10 +27,10 @@ class Availability extends Model {
           type: DataTypes.STRING,
           allowNull: false,
           field: 'person_id',
-          references : {
+          references: {
             model: 'user',
-            key: 'person_id'
-          }
+            key: 'person_id',
+          },
         },
         fromDate: {
           type: DataTypes.DATE,

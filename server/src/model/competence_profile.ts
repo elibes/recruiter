@@ -1,13 +1,14 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
+import Decimal from 'decimal.js';
 
 /**
  * A profile linking an applicant with the competence they have, and they years of experience with that competence.
  * */
 class CompetenceProfile extends Model {
   declare id: number;
-  declare personId : number;
+  declare personId: number;
   declare competenceId: number;
-  declare yearOfExperience: number;
+  declare yearsOfExperience: Decimal;
 
   /**
    * Creates a competence profile model.
@@ -27,22 +28,22 @@ class CompetenceProfile extends Model {
           type: DataTypes.STRING,
           allowNull: false,
           field: 'person_id',
-          references : {
+          references: {
             model: 'user',
-            key: 'person_id'
-          }
+            key: 'person_id',
+          },
         },
         competenceId: {
           type: DataTypes.STRING,
           allowNull: false,
           field: 'competence_id',
-          references : {
+          references: {
             model: 'competence',
-            key: 'competence_id'
-          }
+            key: 'competence_id',
+          },
         },
-        yearOfExperience: {
-          type: DataTypes.DECIMAL(4,2),
+        yearsOfExperience: {
+          type: DataTypes.DECIMAL(4, 2),
           allowNull: false,
           field: 'years_of_experience',
         },

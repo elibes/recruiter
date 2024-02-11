@@ -23,43 +23,44 @@ import {ApiManager} from './api/api_manager';
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
-
 dotenv.config({
   path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
 });
 
-
 const db = Database.getInstance();
-Promise.all([db.connectToDatabase(), db.setupDatabaseModels()]).then(() => {
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(cookieParser());
-app.use(
-  cors({
-    origin: 'http://localhost',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
+Promise.all([db.connectToDatabase(), db.setupDatabaseModels()])
+  .then(() => {
+    const app = express();
+    app.use(express.json());
+    app.use(express.urlencoded({extended: true}));
+    app.use(cookieParser());
+    app.use(
+      cors({
+        origin: 'http://localhost',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true,
+      })
+    );
+
+    const apiManager = ApiManager.getInstance(app);
+    apiManager.createAllApis();
+
+    let port: number;
+    if (process.env.PORT === undefined) {
+      port = 3001;
+    } else {
+      port = +process.env.PORT;
+    }
+
+    const host = process.env.HOST || 'localhost';
+
+    app.listen(port, host, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
   })
-);
-
-const apiManager = ApiManager.getInstance(app);
-apiManager.createAllApis();
-
-let port: number;
-if (process.env.PORT === undefined) {
-  port = 3001;
-} else {
-  port = +process.env.PORT;
-}
-
-const host = process.env.HOST || 'localhost';
-
-app.listen(port, host, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-}).catch((error) => {console.log('database error', error)} )
+  .catch(error => {
+    console.log('database error', error);
+  });
 
 export {db};
