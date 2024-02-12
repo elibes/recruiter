@@ -49,7 +49,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
