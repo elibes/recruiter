@@ -1,6 +1,6 @@
-import {ConflictError} from '../utilities/custom_errors';
-import {ValidationSanitizationError} from '../utilities/custom_errors';
-import {ResponseHandler} from './response_handler';
+import {ConflictError} from './custom_errors';
+import {ValidationSanitizationError} from './custom_errors';
+import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 
 /**
@@ -8,24 +8,6 @@ import {NextFunction, Request, Response} from 'express';
  */
 class ErrorHandler {
   constructor(private responseHandler: ResponseHandler) {}
-
-  /**
-   * Used to wrap a route so that both async and sync errors will be handled by the next middleware
-   * (the next middleware should be an error handling middleware.)
-   * @param fn a function (route endpoint) to wrap
-   */
-  asyncErrorWrapper(
-    fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
-  ) {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        await fn(req, res, next);
-      } catch (err) {
-        next(err);
-      }
-    };
-  }
-
   /**
    * This is a middleware to handle errors.
    *
@@ -53,6 +35,7 @@ class ErrorHandler {
       message = err.message;
     } else {
       httpStatusCode = 500;
+      message = "something went wrong on the server"
     }
     this.responseHandler.sendHttpResponse(res, httpStatusCode, message, true);
     return;

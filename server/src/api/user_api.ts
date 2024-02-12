@@ -3,7 +3,6 @@ import {baseSanitizationSchema} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
-import {ErrorHandler} from './error_handler';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
 
@@ -14,12 +13,10 @@ class UserApi {
   /**
    * Dependencies needed for api operation are injected via this constructor.
    * @param responseHandler a handler used for formatting and sending HTTP responses.
-   * @param errorHandler a handler used for enabling error handling.
    * @param router the express route associated with this class.
    */
   constructor(
     private responseHandler: ResponseHandler,
-    private errorHandler: ErrorHandler,
     private router: Router
   ) {}
 
@@ -31,7 +28,6 @@ class UserApi {
     this.router.post(
       '/register',
       checkSchema(validationSchemaRegistrationPost),
-      this.errorHandler.asyncErrorWrapper(
         async (req: Request, res: Response) => {
           const errors = validationResult(req);
           if (!errors.isEmpty()) {
@@ -56,12 +52,10 @@ class UserApi {
           }
           return;
         }
-      )
-    );
+      );
 
     this.router.get(
       '/',
-      this.errorHandler.asyncErrorWrapper(
         async (req: Request, res: Response) => {
           const data = {message: 'user API is up!'};
           const httpStatusCode = 200;
@@ -73,7 +67,6 @@ class UserApi {
           );
           return;
         }
-      )
     );
   }
 

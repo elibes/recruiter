@@ -21,6 +21,9 @@ import {Database} from './integration/database';
 
 import {ApiManager} from './api/api_manager';
 
+require('express-async-errors');
+
+
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
 dotenv.config({
