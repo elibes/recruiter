@@ -20,19 +20,11 @@ class RootApi {
    * ,by the api manager.
    */
   async setupRequestHandling() {
-    this.router.get(
-      '/',
-        async (req: Request, res: Response) => {
-          const data = 'API is up and running!';
-          const httpStatusCode = 200;
-          this.responseHandler.sendHttpResponse(
-            res,
-            httpStatusCode,
-            data,
-            false
-          );
-        }
-    );
+    this.router.get('/', async (req: Request, res: Response) => {
+      const data = 'API is up and running!';
+      const httpStatusCode = 200;
+      this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+    });
   }
 }
 

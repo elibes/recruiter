@@ -28,46 +28,38 @@ class UserApi {
     this.router.post(
       '/register',
       checkSchema(validationSchemaRegistrationPost),
-        async (req: Request, res: Response) => {
-          const errors = validationResult(req);
-          if (!errors.isEmpty()) {
-            throw new ValidationSanitizationError(
-              errors
-                .array()
-                .map(err => err.msg)
-                .join(', ')
-            );
-          }
-          const userService = createUserService();
-          const registrationData = this.registrationDataPacker(req.body);
-          const state = await userService.handleRegistration(registrationData);
-          if (state) {
-            const data = 'Registration successful';
-            this.responseHandler.sendHttpResponse(res, 200, data, false);
-          } else {
-            console.log(
-              'handleRegistration did not return true without throwing an error'
-            );
-            throw new Error('server error');
-          }
-          return;
-        }
-      );
-
-    this.router.get(
-      '/',
-        async (req: Request, res: Response) => {
-          const data= 'user API is up!';
-          const httpStatusCode = 200;
-          this.responseHandler.sendHttpResponse(
-            res,
-            httpStatusCode,
-            data,
-            false
+      async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          throw new ValidationSanitizationError(
+            errors
+              .array()
+              .map(err => err.msg)
+              .join(', ')
           );
-          return;
         }
+        const userService = createUserService();
+        const registrationData = this.registrationDataPacker(req.body);
+        const state = await userService.handleRegistration(registrationData);
+        if (state) {
+          const data = 'Registration successful';
+          this.responseHandler.sendHttpResponse(res, 200, data, false);
+        } else {
+          console.log(
+            'handleRegistration did not return true without throwing an error'
+          );
+          throw new Error('server error');
+        }
+        return;
+      }
     );
+
+    this.router.get('/', async (req: Request, res: Response) => {
+      const data = 'user API is up!';
+      const httpStatusCode = 200;
+      this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+      return;
+    });
   }
 
   /**

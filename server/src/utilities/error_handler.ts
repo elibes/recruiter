@@ -2,6 +2,8 @@ import {ConflictError} from './custom_errors';
 import {ValidationSanitizationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
+import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken';
+import {ConnectionRefusedError} from 'sequelize';
 
 /**
  * This class acts as a centralized error handler for the entire application.
@@ -18,7 +20,8 @@ class ErrorHandler {
   /**
    * This is a middleware to handle errors.
    *
-   * It will receive an error, @param err, set the appropriate http status code and then construct an errorMessage,
+   * It will receive any error thrown on a route automatically
+   * in @param err, set the appropriate http status code and then construct an errorMessage,
    * to then be sent to response handler.
    *
    * eslint is disabled to not complain about unused req and next, which are mandatory in an express
@@ -33,9 +36,9 @@ class ErrorHandler {
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
     let httpStatusCode;
-    let errorMessage : ErrorMessage = {message: 'none'}
+    const errorMessage: ErrorMessage = {message: 'none'};
 
-    switch(err.constructor) {
+    switch (err.constructor) {
       case ConflictError:
         httpStatusCode = 409;
         errorMessage.message = 'That user already exists';
@@ -43,15 +46,35 @@ class ErrorHandler {
 
       case ValidationSanitizationError:
         httpStatusCode = 400;
-        errorMessage.message = err.message
+        errorMessage.message = err.message;
+        break;
+
+      case JsonWebTokenError:
+        httpStatusCode = 401;
+        errorMessage.message = 'Unauthorized';
+        break;
+
+      case TokenExpiredError:
+        httpStatusCode = 401;
+        errorMessage.message = 'Unauthorized';
+        break;
+
+      case ConnectionRefusedError:
+        httpStatusCode = 503;
+        errorMessage.message = 'Service is currently unavailable';
         break;
 
       default:
         httpStatusCode = 500;
-        errorMessage.message = 'Something went wrong with the server'
+        errorMessage.message = 'Sever error';
         break;
     }
-    this.responseHandler.sendHttpResponse(res, httpStatusCode, errorMessage, true);
+    this.responseHandler.sendHttpResponse(
+      res,
+      httpStatusCode,
+      errorMessage,
+      true
+    );
     return;
   }
 }
@@ -60,9 +83,9 @@ class ErrorHandler {
  * This interface defines a standard error message to be sent as a response to the client.
  */
 export interface ErrorMessage {
-  message: string,
-  code?: string,
-  details?: string
+  message: string;
+  code?: string;
+  details?: string;
 }
 
 export {ErrorHandler};

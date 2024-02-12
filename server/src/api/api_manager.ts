@@ -63,10 +63,7 @@ class ApiManager {
     this.defineRoutes();
     this.apiList.forEach((entry: ApiRoute<any>) => {
       const entryRoute = express.Router();
-      const entryInstance = new entry.class(
-        this.responseHandler,
-        entryRoute
-      );
+      const entryInstance = new entry.class(this.responseHandler, entryRoute);
       entryInstance.setupRequestHandling();
       this.app.use(entry.route, entryRoute);
     });

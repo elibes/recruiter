@@ -23,7 +23,6 @@ import {ApiManager} from './api/api_manager';
 
 require('express-async-errors');
 
-
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
 dotenv.config({
@@ -31,6 +30,14 @@ dotenv.config({
   example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
 });
 
+const app = express();
+
+// final error fallback
+process.on('uncaughtException', err => {
+  console.error('Uncaught Exception:', err);
+  // eslint-disable-next-line
+  process.exit(1);
+});
 const db = Database.getInstance();
 try {
   db.connectToDatabase().then(() => {
@@ -43,7 +50,6 @@ try {
   console.log(error);
 }
 
-const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());

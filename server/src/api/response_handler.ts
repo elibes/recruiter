@@ -1,5 +1,5 @@
 import {Response} from 'express';
-import {ErrorMessage} from "../utilities/error_handler";
+import {ErrorMessage} from '../utilities/error_handler';
 
 /**
  * This class is a handler responsible for formatting and returning HTTP responses to the client.
@@ -20,15 +20,14 @@ class ResponseHandler {
     responseBody: any,
     error: boolean
   ) {
-
-    let apiResponse : APIResponse<any>;
-    if(error) {
-      apiResponse = {success:false, error:responseBody as ErrorMessage}
+    let apiResponse: APIResponse<any>;
+    if (error) {
+      apiResponse = {success: false, error: responseBody as ErrorMessage};
     } else {
       if (!Array.isArray(responseBody)) {
         responseBody = [responseBody];
       }
-      apiResponse = {success:true, data:responseBody as any[]}
+      apiResponse = {success: true, data: responseBody as any[]};
     }
     response.status(httpStatusCode).json(apiResponse);
   }
