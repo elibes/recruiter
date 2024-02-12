@@ -33,14 +33,27 @@ class ResponseHandler {
     response.status(httpStatusCode).json(apiResponse);
   }
 }
+
+/**
+ * This interface defines the shape of a success response to be sent back to the client, the data
+ * should be an array of any type.
+ */
 interface SuccessResponse<T> {
   success: true;
   data: T[];
 }
+
+/**
+ * This interface defines the shape of an error response to be sent back to the client.
+ */
 interface ErrorResponse {
   success: false;
   error: ErrorMessage;
 }
+
+/**
+ * This is a union type of the two different response types, to define a single type for the api response.
+ */
 type APIResponse<T> = SuccessResponse<T> | ErrorResponse;
 
 export {ResponseHandler};

@@ -4,7 +4,13 @@ import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 
 /**
- * The purpose of this class is to facilitate error handling in the api layer.
+ * This class acts as a centralized error handler for the entire application.
+ * It does/shall:
+ * Log comprehensive error data,
+ * Standardize error responses,
+ * Decide what to do with the error: attempting recovery when appropriate/possible or
+ * composing informative error messages, masking sensitive or technical information.
+ *
  */
 class ErrorHandler {
   constructor(private responseHandler: ResponseHandler) {}
@@ -12,8 +18,8 @@ class ErrorHandler {
   /**
    * This is a middleware to handle errors.
    *
-   * It will receive an error, @param err, and set an appropriate code and message for the response,
-   * depending on the error type. Then it calls another handler to send the response.
+   * It will receive an error, @param err, set the appropriate http status code and then construct an errorMessage,
+   * to then be sent to response handler.
    *
    * eslint is disabled to not complain about unused req and next, which are mandatory in an express
    * error handling middleware.
@@ -49,6 +55,10 @@ class ErrorHandler {
     return;
   }
 }
+
+/**
+ * This interface defines a standard error message to be sent as a response to the client.
+ */
 export interface ErrorMessage {
   message: string,
   code?: string,
