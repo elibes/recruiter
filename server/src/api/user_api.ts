@@ -57,7 +57,7 @@ class UserApi {
     this.router.get(
       '/',
         async (req: Request, res: Response) => {
-          const data = {message: 'user API is up!'};
+          const data= 'user API is up!';
           const httpStatusCode = 200;
           this.responseHandler.sendHttpResponse(
             res,

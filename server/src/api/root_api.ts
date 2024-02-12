@@ -23,7 +23,7 @@ class RootApi {
     this.router.get(
       '/',
         async (req: Request, res: Response) => {
-          const data = {message: 'API is up and running!'};
+          const data = 'API is up and running!';
           const httpStatusCode = 200;
           this.responseHandler.sendHttpResponse(
             res,

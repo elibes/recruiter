@@ -8,6 +8,7 @@ import {NextFunction, Request, Response} from 'express';
  */
 class ErrorHandler {
   constructor(private responseHandler: ResponseHandler) {}
+
   /**
    * This is a middleware to handle errors.
    *
@@ -21,25 +22,37 @@ class ErrorHandler {
    * @param req the express request
    * @param res the express response
    * @param next the next middleware to be called
+   * @todo Add full error logging here later.
    */
-
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
     let httpStatusCode;
-    let message;
-    if (err instanceof ConflictError) {
-      httpStatusCode = 409;
-      message = 'That user already exists';
-    } else if (err instanceof ValidationSanitizationError) {
-      httpStatusCode = 400;
-      message = err.message;
-    } else {
-      httpStatusCode = 500;
-      message = "something went wrong on the server"
+    let errorMessage : ErrorMessage = {message: 'none'}
+
+    switch(err.constructor) {
+      case ConflictError:
+        httpStatusCode = 409;
+        errorMessage.message = 'That user already exists';
+        break;
+
+      case ValidationSanitizationError:
+        httpStatusCode = 400;
+        errorMessage.message = err.message
+        break;
+
+      default:
+        httpStatusCode = 500;
+        errorMessage.message = 'Something went wrong with the server'
+        break;
     }
-    this.responseHandler.sendHttpResponse(res, httpStatusCode, message, true);
+    this.responseHandler.sendHttpResponse(res, httpStatusCode, errorMessage, true);
     return;
   }
+}
+export interface ErrorMessage {
+  message: string,
+  code?: string,
+  details?: string
 }
 
 export {ErrorHandler};
