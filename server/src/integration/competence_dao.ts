@@ -1,5 +1,6 @@
 import {Competence} from '../model/competence';
 import {CompetenciesDTO} from '../model/dto/competencies_dto';
+import {Transaction} from 'sequelize';
 
 class CompetenceDAO {
   private static instance: CompetenceDAO;
@@ -20,9 +21,9 @@ class CompetenceDAO {
    * */
   private constructor() {}
 
-  async getAllCompetencies() {
+  async getAllCompetencies(transaction: Transaction) {
     try {
-      const result = await Competence.findAll();
+      const result = await Competence.findAll({transaction});
       return this.createCompetenceDTO(result);
     } catch (error) {
       console.error('Error fetching from the database:', error);
