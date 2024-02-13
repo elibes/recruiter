@@ -2,8 +2,8 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUsername, setPassword, login} from '../../util/loginSlice';
 import {RootState} from '../../store';
-import InputField from './InputField'; // Assume this is a reusable component
-import Button from './Button'; // Assume this is a reusable component
+import InputField from './InputField';
+import Button from './Button';
 
 const LoginForm: React.FC = () => {
   const dispatch = useDispatch();

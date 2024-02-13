@@ -11,7 +11,10 @@ export const login = async (
   password: string
 ): Promise<LoginResponse> => {
   try {
-    const response = await axios.post('/api/user/login', {username, password});
+    const response = await axios.post('http://localhost:3001/user/register', {
+      username,
+      password,
+    });
     return {success: true, token: response.data.token};
   } catch (error: any) {
     return {
