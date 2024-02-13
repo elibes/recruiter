@@ -1,33 +1,22 @@
+import axios from 'axios';
+
 interface LoginResponse {
-  token: string;
-  role: 'Recruiter' | 'Applicant';
+  success: boolean;
+  token?: string;
+  error?: string;
 }
 
-interface LoginError {
-  message: string;
-}
-
-export async function login(
+export const login = async (
   username: string,
   password: string
-): Promise<LoginResponse | LoginError> {
+): Promise<LoginResponse> => {
   try {
-    const response = await fetch('/api/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({username, password}),
-    });
-
-    if (response.ok) {
-      const data: LoginResponse = await response.json();
-      return data;
-    } else {
-      const errorData: LoginError = await response.json();
-      return errorData;
-    }
-  } catch (error) {
-    return {message: 'Network error, please try again later.'};
+    const response = await axios.post('/api/user/login', {username, password});
+    return {success: true, token: response.data.token};
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'An error occurred during login.',
+    };
   }
-}
+};

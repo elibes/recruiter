@@ -1,11 +1,14 @@
-import {
-  SET_LOGIN_DETAILS,
-  LOGIN_SUCCESS,
-  LOGIN_FAILURE,
-  SET_ERROR_MESSAGE,
-} from './loginActions';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-const initialState = {
+interface LoginState {
+  username: string;
+  password: string;
+  userInfo: {userId: string; role: string} | null;
+  error: string;
+  isLoggedIn: boolean;
+}
+
+const initialState: LoginState = {
   username: '',
   password: '',
   userInfo: null,
@@ -13,28 +16,34 @@ const initialState = {
   isLoggedIn: false,
 };
 
-const loginReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_LOGIN_DETAILS:
-      return {
-        ...state,
-        username: action.payload.username,
-        password: action.payload.password,
-      };
-    case LOGIN_SUCCESS:
-      return {...state, userInfo: action.payload, isLoggedIn: true, error: ''};
-    case LOGIN_FAILURE:
-      return {
-        ...state,
-        error: action.payload,
-        userInfo: null,
-        isLoggedIn: false,
-      };
-    case SET_ERROR_MESSAGE:
-      return {...state, error: action.payload};
-    default:
-      return state;
-  }
-};
+const loginSlice = createSlice({
+  name: 'login',
+  initialState,
+  reducers: {
+    setLoginDetails(
+      state,
+      action: PayloadAction<{username: string; password: string}>
+    ) {
+      const {username, password} = action.payload;
+      state.username = username;
+      state.password = password;
+    },
+    loginSuccess(state, action: PayloadAction<{userId: string; role: string}>) {
+      state.userInfo = action.payload;
+      state.isLoggedIn = true;
+      state.error = '';
+    },
+    loginFailure(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+      state.userInfo = null;
+      state.isLoggedIn = false;
+    },
+    setErrorMessage(state, action: PayloadAction<string>) {
+      state.error = action.payload;
+    },
+  },
+});
 
-export default loginReducer;
+export const {setLoginDetails, loginSuccess, loginFailure, setErrorMessage} =
+  loginSlice.actions;
+export default loginSlice.reducer;
