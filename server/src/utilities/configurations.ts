@@ -7,3 +7,5 @@ export const APPLICANT_ROLE_ID = 2;
 
 export const ROOT_API_ROUTE = '';
 export const USER_API_ROUTE = '/user';
+
+export const APPLICATION_API_ROUTE = '/application';

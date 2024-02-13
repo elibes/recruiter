@@ -1,0 +1,3 @@
+class ApplicationApi {}
+
+export {ApplicationApi};
