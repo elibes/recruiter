@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import * as React from 'react';
+import {useState} from 'react';
 import InputField from './InputField';
 import Button from './Button';
 import loginViewModel from '../../viewmodel/LoginViewModel';
