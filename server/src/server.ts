@@ -11,7 +11,7 @@ import * as express from 'express';
 
 import * as path from 'path';
 
-import * as dotenv from 'dotenv-safe';
+import { config } from 'dotenv-safe';
 
 import * as cors from 'cors';
 
@@ -23,10 +23,7 @@ import {ApiManager} from './api/api_manager';
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
-dotenv.config({
-  path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
-  example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
-});
+config();
 
 const db = Database.getInstance();
 try {
