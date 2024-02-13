@@ -2,7 +2,7 @@ import {ResponseHandler} from './response_handler';
 import * as express from 'express';
 import {RootApi} from './root_api';
 import {UserApi} from './user_api';
-import {ErrorHandler} from './error_handler';
+import {ErrorHandler} from '../utilities/error_handler';
 import {ROOT_API_ROUTE} from '../utilities/configurations';
 import {USER_API_ROUTE} from '../utilities/configurations';
 import {NextFunction, Request, Response} from 'express';
@@ -63,11 +63,7 @@ class ApiManager {
     this.defineRoutes();
     this.apiList.forEach((entry: ApiRoute<any>) => {
       const entryRoute = express.Router();
-      const entryInstance = new entry.class(
-        this.responseHandler,
-        this.errorHandler,
-        entryRoute
-      );
+      const entryInstance = new entry.class(this.responseHandler, entryRoute);
       entryInstance.setupRequestHandling();
       this.app.use(entry.route, entryRoute);
     });
