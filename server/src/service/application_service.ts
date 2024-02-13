@@ -8,7 +8,11 @@ import {ConflictError} from '../utilities/custom_errors';
 export class ApplicationService {
   constructor() {}
   async handleApplication(application: fullApplicationDTO) {
+    console.log(application);
     const db = Database.getInstance().database;
+    if (application.userRole != 2) {
+      throw new Error('Only users can post applications');
+    }
     try {
       return await db.transaction(async transaction => {
         const userDAO = UserDAO.getInstance();
@@ -18,6 +22,7 @@ export class ApplicationService {
         if (user === null) {
           throw new ConflictError('That user does not exist');
         }
+
         await availabilityDAO.createAllAvailabilities(
           application.availabilities,
           transaction

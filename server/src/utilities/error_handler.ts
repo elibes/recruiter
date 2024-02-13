@@ -35,6 +35,7 @@ class ErrorHandler {
    */
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
+    console.log(err);
     let httpStatusCode;
     const errorMessage: ErrorMessage = {message: 'none'};
 

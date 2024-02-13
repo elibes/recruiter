@@ -20,7 +20,7 @@ class ApplicationApi {
    */
   async setupRequestHandling() {
     this.router.post('/', async (req: Request, res: Response) => {
-      const userInfo = {userId: 1015, userRole: 2}; //temp, remove later, get from JWT
+      const userInfo = {userId: 1018, userRole: 2}; //temp, remove later, get from JWT
       const applicationData = this.applicationDataPacker(req.body, userInfo);
       const result =
         await createApplicationService().handleApplication(applicationData);
@@ -38,25 +38,29 @@ class ApplicationApi {
    * @param userInfo the information extracted from the JWT
    */
   applicationDataPacker(body: any, userInfo: any) {
-    const availabilitiesDTO: AvailabilitiesDTO = body.availabilities.map(
-      (entry: {fromDate: string; toDate: string}) => {
-        return {
-          personId: userInfo.userId,
-          fromDate: new Date(entry.fromDate),
-          toDate: new Date(entry.toDate),
-        };
-      }
-    );
+    const availabilitiesDTO: AvailabilitiesDTO = {
+      availabilities: body.availabilities.map(
+        (entry: {fromDate: string; toDate: string}) => {
+          return {
+            personId: userInfo.userId,
+            fromDate: new Date(entry.fromDate),
+            toDate: new Date(entry.toDate),
+          };
+        }
+      ),
+    };
 
-    const competenciesDTO: CompetenceProfilesDTO = body.competencies.map(
-      (entry: {competenceId: string; yearsOfExperience: string}) => {
-        return {
-          personId: userInfo.userId,
-          competenceId: entry.competenceId,
-          yearsOfExperience: new Decimal(entry.yearsOfExperience),
-        };
-      }
-    );
+    const competenciesDTO: CompetenceProfilesDTO = {
+      competenceProfiles: body.competencies.map(
+        (entry: {competenceId: string; yearsOfExperience: string}) => {
+          return {
+            personId: userInfo.userId,
+            competenceId: entry.competenceId,
+            yearsOfExperience: new Decimal(entry.yearsOfExperience),
+          };
+        }
+      ),
+    };
 
     const fullApplication: fullApplicationDTO = {
       userId: userInfo.userId,
