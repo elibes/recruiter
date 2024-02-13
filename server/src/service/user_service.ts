@@ -18,14 +18,16 @@ export class UserService {
    * @async
    */
   async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
-
     const db = Database.getInstance().database;
     const dataRollbackState = {...data};
 
     try {
-      return await db.transaction(async (transaction) => {
+      return await db.transaction(async transaction => {
         const userDAO = UserDAO.getInstance();
-        const result = await userDAO.findUserByUsername(data.username, transaction);
+        const result = await userDAO.findUserByUsername(
+          data.username,
+          transaction
+        );
         if (result !== null) {
           throw new ConflictError('That username already exists');
         }
@@ -54,6 +56,5 @@ export class UserService {
         throw error;
       }
     }
-
   }
 }
