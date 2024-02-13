@@ -1,45 +1,45 @@
-import React, {useState} from 'react';
-import InputField from './InputField';
-import Button from './Button';
-import loginViewModel from '../../viewmodel/LoginViewModel';
-import '../styles/LoginForm.css';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUsername, setPassword, login} from '../../util/loginSlice';
+import {RootState} from '../../store';
+import InputField from './InputField'; // Assume this is a reusable component
+import Button from './Button'; // Assume this is a reusable component
 
-/**
- * LoginForm component renders a login form interface.
- * It uses the loginViewModel to manage form state and handle changes and submissions.
- * The form includes fields for username and password.
- * It also includes a submit button.
- *
- * @component
- * @returns {JSX.Element} The rendered login form component.
- */
-const LoginForm = () => {
-  const {username, setUsername, password, setPassword, error, handleSubmit} =
-    loginViewModel();
+const LoginForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const {username, password, error} = useSelector(
+    (state: RootState) => state.login
+  );
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPassword(e.target.value));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(login({username, password}));
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
-      {error && <p>{error}</p>}
-      <div className="form-group">
-        <InputField
-          label="Username"
-          type="text"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <InputField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-      </div>
-      <Button text="Login" onClick={() => {}} className="login-button" />
-      <div className="registered-user-link">
-        Need to registered? <a href="/register">Register</a>
-      </div>
+    <form onSubmit={handleSubmit}>
+      <InputField
+        label="Username"
+        type="text"
+        value={username}
+        onChange={handleUsernameChange}
+      />
+      <InputField
+        label="Password"
+        type="password"
+        value={password}
+        onChange={handlePasswordChange}
+      />
+      {error && <div className="error">{error}</div>}
+      <Button text="Login" onClick={handleSubmit} />
     </form>
   );
 };
