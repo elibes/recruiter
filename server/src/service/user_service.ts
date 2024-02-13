@@ -14,7 +14,7 @@ export class UserService {
   /**
    * This function handles the register user operation.
    * @param {UserRegistrationDTO} data the validated and sanitized registration data passed through the presentation layer.
-   * @return {boolean} A promise that will be true if the registration was successful and handled by the api layer.
+   * @return {Promise<boolean>} A promise that will be true if the registration was successful and handled by the api layer.
    * @async
    */
   async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
