@@ -20,7 +20,9 @@ async function registrationModel(
   personalNumber: string,
   email: string
 ): Promise<any> {
-  const url = 'http://localhost:3001/user/register'; // API endpoint
+  const host: string = process.env.REACT_APP_SERVER_HOST || 'localhost';
+  const port: string = process.env.REACT_APP_SERVER_PORT || '3001';
+  const url = 'http://' + host + ':' + port + '/user/register'; // API endpoint
   const payload = {
     firstName,
     lastName,

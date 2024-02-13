@@ -65,7 +65,7 @@ if (process.env.PORT === undefined) {
 const host = process.env.HOST || 'localhost';
 
 app.listen(port, host, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://${host}:${port}`);
 });
 
 export {db};
