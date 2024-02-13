@@ -18,34 +18,33 @@ export class UserService {
    * @async
    */
   async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
+
     const db = Database.getInstance().database;
     const dataRollbackState = {...data};
 
-    const transaction = await db.transaction();
-
     try {
-      const userDAO = UserDAO.getInstance();
-      const result = await userDAO.findUserByUsername(data.username);
-      if (result !== null) {
-        throw new ConflictError('That username already exists');
-      }
-      const hashedPassword = await AuthenticationService.hashPassword(
-        data.password
-      );
+      return await db.transaction(async (transaction) => {
+        const userDAO = UserDAO.getInstance();
+        const result = await userDAO.findUserByUsername(data.username, transaction);
+        if (result !== null) {
+          throw new ConflictError('That username already exists');
+        }
+        const hashedPassword = await AuthenticationService.hashPassword(
+          data.password
+        );
 
-      const regData: UserRegistrationDTO = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        username: data.username,
-        password: hashedPassword,
-        personalNumber: data.personalNumber,
-        email: data.email,
-      };
-      await userDAO.createUser(regData, APPLICANT_ROLE_ID);
-      await transaction.commit();
-      return true;
+        const regData: UserRegistrationDTO = {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          username: data.username,
+          password: hashedPassword,
+          personalNumber: data.personalNumber,
+          email: data.email,
+        };
+        await userDAO.createUser(regData, APPLICANT_ROLE_ID, transaction);
+        return true;
+      });
     } catch (error) {
-      await transaction.rollback();
       data = dataRollbackState;
       console.error('Transaction failed:', error);
       if (error instanceof ConflictError) {
@@ -55,5 +54,6 @@ export class UserService {
         throw error;
       }
     }
+
   }
 }

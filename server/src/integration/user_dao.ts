@@ -1,6 +1,7 @@
 import {User} from '../model/user';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
+import {Transaction} from "sequelize";
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -29,13 +30,15 @@ class UserDAO {
    * @param {UserRegistrationDTO} registrationDetails A DTO containing the information to be stored about
    * the user wanting to register an account.
    * @param {number} role this it the role_id for the user, a fk to the role table.
+   * @param transaction the sequelize transaction
    * @return {UserDTO} A DTO containing information about the user, otherwise throws an error.
    * @async
    * @todo Use validators to sanitise the input.
    * */
   async createUser(
     registrationDetails: UserRegistrationDTO,
-    role: number
+    role: number,
+    transaction?: Transaction
   ): Promise<UserDTO | null> {
     try {
       const user = await User.create({
@@ -46,7 +49,7 @@ class UserDAO {
         username: registrationDetails.username,
         passwordHash: registrationDetails.password,
         role: role,
-      });
+      }, {transaction});
       return this.createUserDTO(user);
     } catch (error) {
       console.error('Error updating the database:', error);
@@ -59,16 +62,16 @@ class UserDAO {
   /**
    * Searches the database for any entry matching the provided username.
    * @param {string} username The username of the user to search for as a string.
+   * @param transaction the sequelize transaction.
    * @return {UserDTO} A DTO containing the user's information if found,
    *                   otherwise null.
    * @async
    * @todo Use validators to sanitise the data before searching the database.
    * */
-  async findUserByUsername(username: string): Promise<UserDTO | null> {
+  async findUserByUsername(username: string, transaction? : Transaction): Promise<UserDTO | null> {
     try {
       const user = await User.findOne({
-        where: {username: username},
-      });
+        where: {username: username}, transaction});
 
       if (user === null) {
         return null;
