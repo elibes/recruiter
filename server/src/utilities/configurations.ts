@@ -9,3 +9,4 @@ export const ROOT_API_ROUTE = '';
 export const USER_API_ROUTE = '/user';
 
 export const APPLICATION_API_ROUTE = '/application';
+export const COMPETENCE_API_ROUTE = '/competence';

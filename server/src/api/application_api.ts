@@ -31,6 +31,12 @@ class ApplicationApi {
     });
   }
 
+  /**
+   * This helper function tries to build a full_application_DTO to send to the service layer handler from,
+   * the JWT and form data in req.
+   * @param body the body of the request
+   * @param userInfo the information extracted from the JWT
+   */
   applicationDataPacker(body: any, userInfo: any) {
     const availabilitiesDTO: AvailabilitiesDTO = body.availabilities.map(
       (entry: {fromDate: string; toDate: string}) => {

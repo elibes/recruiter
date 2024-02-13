@@ -5,11 +5,13 @@ import {UserApi} from './user_api';
 import {ErrorHandler} from '../utilities/error_handler';
 import {
   APPLICATION_API_ROUTE,
+  COMPETENCE_API_ROUTE,
   ROOT_API_ROUTE,
 } from '../utilities/configurations';
 import {USER_API_ROUTE} from '../utilities/configurations';
 import {NextFunction, Request, Response} from 'express';
 import {ApplicationApi} from './application_api';
+import {CompetenceApi} from './competence_api';
 
 /**
  * This class is singleton manager responsible for setting up all apis, only one instance should be created.
@@ -55,6 +57,7 @@ class ApiManager {
     this.apiList.push({route: ROOT_API_ROUTE, class: RootApi});
     this.apiList.push({route: USER_API_ROUTE, class: UserApi});
     this.apiList.push({route: APPLICATION_API_ROUTE, class: ApplicationApi});
+    this.apiList.push({route: COMPETENCE_API_ROUTE, class: CompetenceApi});
   }
 
   /**
