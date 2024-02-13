@@ -22,3 +22,20 @@ export class ValidationSanitizationError extends Error {
     this.name = 'ValidationSanitizationError';
   }
 }
+
+export class UserNotFoundError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'UserNotFoundError';
+  }
+}
+
+export class LoginPasswordNotMatchError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'LoginPasswordNotMatchError';
+  }
+}
+
