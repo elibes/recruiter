@@ -1,4 +1,3 @@
-import {Sequelize} from 'sequelize';
 import {User} from '../model/user';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
@@ -8,16 +7,14 @@ import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
  * */
 class UserDAO {
   private static instance: UserDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
-   * @param {Sequelize} database the Sequelize instance.
    * @return {UserDAO} A singleton instance of the class.
    */
-  public static getInstance(database: Sequelize): UserDAO {
+  public static getInstance(): UserDAO {
     if (!UserDAO.instance) {
-      UserDAO.instance = new UserDAO(database);
+      UserDAO.instance = new UserDAO();
     }
     return UserDAO.instance;
   }
@@ -25,9 +22,7 @@ class UserDAO {
   /**
    * Creates the DAO.
    * */
-  private constructor(database: Sequelize) {
-    this.database = database;
-  }
+  private constructor() {}
 
   /**
    * Creates a new regular user in the database (with role_id 2)

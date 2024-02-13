@@ -1,4 +1,3 @@
-import {Sequelize} from 'sequelize';
 import {
   AvailabilitiesDTO,
   AvailabilityDTO,
@@ -7,22 +6,18 @@ import {Availability} from '../model/availability';
 
 class AvailabilityDAO {
   private static instance: AvailabilityDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
-   * @param {Sequelize} database the Sequelize instance.
    * @return {AvailabilityDAO} A singleton instance of the class.
    */
-  public static getInstance(database: Sequelize): AvailabilityDAO {
+  public static getInstance(): AvailabilityDAO {
     if (!AvailabilityDAO.instance) {
-      AvailabilityDAO.instance = new AvailabilityDAO(database);
+      AvailabilityDAO.instance = new AvailabilityDAO();
     }
     return AvailabilityDAO.instance;
   }
-  private constructor(database: Sequelize) {
-    this.database = database;
-  }
+  private constructor() {}
 
   async createAllAvailabilities(data: AvailabilitiesDTO) {
     for (const entry of data.availabilities) {

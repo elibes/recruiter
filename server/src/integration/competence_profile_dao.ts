@@ -1,4 +1,3 @@
-import {Sequelize} from 'sequelize';
 import {
   CompetenceProfileDTO,
   CompetenceProfilesDTO,
@@ -7,22 +6,18 @@ import {CompetenceProfile} from '../model/competence_profile';
 
 class CompetenceProfileDAO {
   private static instance: CompetenceProfileDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
-   * @param {Sequelize} database the Sequelize instance.
    * @return {CompetenceProfileDAO} A singleton instance of the class.
    */
-  public static getInstance(database: Sequelize): CompetenceProfileDAO {
+  public static getInstance(): CompetenceProfileDAO {
     if (!CompetenceProfileDAO.instance) {
-      CompetenceProfileDAO.instance = new CompetenceProfileDAO(database);
+      CompetenceProfileDAO.instance = new CompetenceProfileDAO();
     }
     return CompetenceProfileDAO.instance;
   }
-  private constructor(database: Sequelize) {
-    this.database = database;
-  }
+  private constructor() {}
 
   async createAllCompetenceProfiles(data: CompetenceProfilesDTO) {
     for (const entry of data.competenceProfiles) {

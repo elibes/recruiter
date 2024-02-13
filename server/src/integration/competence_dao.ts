@@ -1,19 +1,16 @@
-import {Sequelize} from 'sequelize';
 import {Competence} from '../model/competence';
 import {CompetenciesDTO} from '../model/dto/competencies_dto';
 
 class CompetenceDAO {
   private static instance: CompetenceDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
-   * @param {Sequelize} database the Sequelize instance.
    * @return {CompetenceDAO} A singleton instance of the class.
    */
-  public static getInstance(database: Sequelize): CompetenceDAO {
+  public static getInstance(): CompetenceDAO {
     if (!CompetenceDAO.instance) {
-      CompetenceDAO.instance = new CompetenceDAO(database);
+      CompetenceDAO.instance = new CompetenceDAO();
     }
     return CompetenceDAO.instance;
   }
@@ -21,9 +18,7 @@ class CompetenceDAO {
   /**
    * Creates the DAO
    * */
-  private constructor(database: Sequelize) {
-    this.database = database;
-  }
+  private constructor() {}
 
   async getAllCompetencies() {
     try {

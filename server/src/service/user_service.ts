@@ -24,7 +24,7 @@ export class UserService {
     const transaction = await db.transaction();
 
     try {
-      const userDAO = UserDAO.getInstance(db);
+      const userDAO = UserDAO.getInstance();
       const result = await userDAO.findUserByUsername(data.username);
       if (result !== null) {
         throw new ConflictError('That username already exists');
