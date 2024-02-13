@@ -1,7 +1,7 @@
 import {User} from '../model/user';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {Transaction} from "sequelize";
+import {Transaction} from 'sequelize';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -41,15 +41,18 @@ class UserDAO {
     transaction?: Transaction
   ): Promise<UserDTO | null> {
     try {
-      const user = await User.create({
-        firstName: registrationDetails.firstName,
-        lastName: registrationDetails.lastName,
-        email: registrationDetails.email,
-        personalIdentificationNumber: registrationDetails.personalNumber,
-        username: registrationDetails.username,
-        passwordHash: registrationDetails.password,
-        role: role,
-      }, {transaction});
+      const user = await User.create(
+        {
+          firstName: registrationDetails.firstName,
+          lastName: registrationDetails.lastName,
+          email: registrationDetails.email,
+          personalIdentificationNumber: registrationDetails.personalNumber,
+          username: registrationDetails.username,
+          passwordHash: registrationDetails.password,
+          role: role,
+        },
+        {transaction}
+      );
       return this.createUserDTO(user);
     } catch (error) {
       console.error('Error updating the database:', error);
@@ -68,10 +71,43 @@ class UserDAO {
    * @async
    * @todo Use validators to sanitise the data before searching the database.
    * */
-  async findUserByUsername(username: string, transaction? : Transaction): Promise<UserDTO | null> {
+  async findUserByUsername(
+    username: string,
+    transaction?: Transaction
+  ): Promise<UserDTO | null> {
     try {
       const user = await User.findOne({
-        where: {username: username}, transaction});
+        where: {username: username},
+        transaction,
+      });
+
+      if (user === null) {
+        return null;
+      } else {
+        return this.createUserDTO(user);
+      }
+    } catch (error) {
+      console.log('Error finding a user:', error);
+      throw new Error('Could not search the database for a user!');
+    }
+  }
+
+  /**
+   * Searches the database for any entry matching the provided id.
+   * @param {number} id The id of the user to search for as a string.
+   * @param transaction the sequelize transaction.
+   * @return {UserDTO} A DTO containing the user's information if found, otherwise null.
+   * @async
+   */
+  async findUserById(
+    id: number,
+    transaction?: Transaction
+  ): Promise<UserDTO | null> {
+    try {
+      const user = await User.findOne({
+        where: {id: id},
+        transaction,
+      });
 
       if (user === null) {
         return null;
