@@ -3,9 +3,13 @@ import * as express from 'express';
 import {RootApi} from './root_api';
 import {UserApi} from './user_api';
 import {ErrorHandler} from '../utilities/error_handler';
-import {ROOT_API_ROUTE} from '../utilities/configurations';
+import {
+  APPLICATION_API_ROUTE,
+  ROOT_API_ROUTE,
+} from '../utilities/configurations';
 import {USER_API_ROUTE} from '../utilities/configurations';
 import {NextFunction, Request, Response} from 'express';
+import {ApplicationApi} from './application_api';
 
 /**
  * This class is singleton manager responsible for setting up all apis, only one instance should be created.
@@ -50,6 +54,7 @@ class ApiManager {
   defineRoutes(): void {
     this.apiList.push({route: ROOT_API_ROUTE, class: RootApi});
     this.apiList.push({route: USER_API_ROUTE, class: UserApi});
+    this.apiList.push({route: APPLICATION_API_ROUTE, class: ApplicationApi});
   }
 
   /**
