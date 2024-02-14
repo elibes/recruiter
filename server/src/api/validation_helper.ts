@@ -61,7 +61,7 @@ const userNamePasswordValidationSchema: any = {
     passwordValidator: {
       custom: Validators.passwordValidator,
       errorMessage:
-        'Must be stronger: 8 or more characters and at least one each of, number, symbol, uppercase- and lowercase letters',
+        'Must be stronger: 8 or more characters and at least one each of number and symbol and capital letter',
     },
   },
 };
@@ -75,6 +75,7 @@ export const userRegistrationValidationSchema: any = {
   email: {
     emailValidator: {
       custom: Validators.emailValidator,
+      errorMessage: 'Must be a valid email',
     },
   },
   personalNumber: {

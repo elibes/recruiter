@@ -17,7 +17,7 @@ class Validators {
   static passwordValidator(s: string) {
     return validator.isStrongPassword(s, {
       minLength: 8,
-      minLowercase: 1,
+      minLowercase: 0,
       minUppercase: 1,
       minNumbers: 1,
       minSymbols: 1,
@@ -37,8 +37,13 @@ class Validators {
   }
 
   static personalNumberValidator(s: string) {
-    validator.isLength(s, {min: 13, max: 13});
-    return true;
+    const pattern = /^\d{8}-\d{4}$/;
+    if (validator.matches(s, pattern)) {
+      const date =
+        s.substring(0, 4) + '-' + s.substring(4, 6) + '-' + s.substring(6, 8);
+      return validator.isDate(date);
+    }
+    return false;
   }
 }
 
