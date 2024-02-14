@@ -14,18 +14,24 @@ import '../styles/LoginForm.css';
  * @returns {JSX.Element} The rendered login form component.
  */
 const LoginForm = () => {
-  const {username, setUsername, password, setPassword, error, handleSubmit} =
-    loginViewModel();
+  const {
+    userName,
+    password,
+    onChangeUsername,
+    onChangePassword,
+    handleSubmit,
+    resultMsg,
+    validateForm,
+  } = loginViewModel();
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
-      {error && <p>{error}</p>}
+    <form className="login-form">
       <div className="form-group">
         <InputField
           label="Username"
           type="text"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          value={userName}
+          onChange={onChangeUsername}
         />
       </div>
       <div className="form-group">
@@ -33,13 +39,14 @@ const LoginForm = () => {
           label="Password"
           type="password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={onChangePassword}
         />
       </div>
-      <Button text="Login" onClick={() => {}} className="login-button" />
+      <Button text="Login" onClick={handleSubmit} className="login-button" />
       <div className="registered-user-link">
         Need to registered? <a href="/register">Register</a>
       </div>
+      <div>{resultMsg}</div>
     </form>
   );
 };

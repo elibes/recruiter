@@ -1,22 +1,35 @@
-import {useState} from 'react';
-import axios from 'axios';
+import {useReducer} from 'react';
+import userReducer from '../util/userReducer';
+import {loginModel} from '../model/loginModel';
 
 const loginViewModel = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [{userName, password, resultMsg}, dispatch] = useReducer(userReducer, {
+    userName: '',
+    password: '',
+    resultMsg: '',
+  });
 
   /**
    * The function `validateForm` checks if the username and password fields are filled out.
    * @returns `true` if both `username` and `password` are provided; otherwise, `false` with an error message.
    */
   const validateForm = () => {
-    if (!username || !password) {
-      setError('Username and password are required');
+    if (!userName || !password) {
+      dispatch({
+        payload: 'Username and password are required',
+        type: 'resultMsg',
+      });
       return false;
     }
-    setError('');
     return true;
+  };
+
+  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({payload: e.target.value, type: 'userName'});
+  };
+
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({payload: e.target.value, type: 'password'});
   };
 
   /**
@@ -25,30 +38,32 @@ const loginViewModel = () => {
    * It contains information about the event, such as the target element and the event type.
    * It is used to prevent the default form submission behavior and handle the form submission manually.
    */
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    // registration logic
     try {
-      const response = await axios.post('api/login', {username, password});
-      // Handle response, e.g., storing auth tokens, redirecting
-      console.log('Login successful', response.data);
-      // Reset error state
-      setError('');
-      // Redirect user or update UI accordingly
-    } catch (error: any) {
-      // Handle error, e.g. show login failure message
-      setError('Invalid username or password');
-      console.log('Login failed', error.response?.data || error.message);
+      const response = await loginModel(userName, password);
+      if ('error' in response) {
+        console.error(response.error);
+      } else {
+        dispatch({payload: response.data[0].toString(), type: 'resultMsg'});
+        console.log(response); // Successfully registered
+      }
+    } catch (ex) {
+      console.log(ex);
     }
   };
 
   return {
-    username,
-    setUsername,
+    userName,
     password,
-    setPassword,
-    error,
+    onChangeUsername,
+    onChangePassword,
     handleSubmit,
+    resultMsg,
+    validateForm,
   };
 };
 

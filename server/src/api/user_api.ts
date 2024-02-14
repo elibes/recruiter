@@ -5,7 +5,7 @@ import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from "../utilities/Authorization";
+import Authorization from "./Authorization";
 import {UserLoginDTO} from "../model/dto/user_login_dto";
 
 /**
