@@ -24,8 +24,6 @@ class Validators {
     });
   }
 
-  static hashedPasswordValidator(s: string) {}
-
   static userNameValidator(s: string) {
     return validator.isAlphanumeric(s) && validator.isLength(s, {max: 30});
   }

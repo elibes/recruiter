@@ -1,6 +1,5 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
 import {Validators} from '../utilities/validators';
-import {CustomValidationError} from '../utilities/custom_errors';
 
 /**
  * A user of the recruiter website.
@@ -41,11 +40,31 @@ class User extends Model {
           type: DataTypes.STRING,
           allowNull: false,
           field: 'name',
+          validate: {
+            fn: async (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.nameValidator(value)
+              ) {
+                throw new Error('email validation failed on db insert');
+              }
+            },
+          },
         },
         lastName: {
           type: DataTypes.STRING,
           allowNull: false,
           field: 'surname',
+          validate: {
+            fn: async (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.nameValidator(value)
+              ) {
+                throw new Error('email validation failed on db insert');
+              }
+            },
+          },
         },
         email: {
           type: DataTypes.STRING,
@@ -68,17 +87,44 @@ class User extends Model {
           allowNull: false,
           unique: true,
           field: 'pnr',
+          validate: {
+            fn: async (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.personalNumberValidator(value)
+              ) {
+                throw new Error('email validation failed on db insert');
+              }
+            },
+          },
         },
         username: {
           type: DataTypes.STRING,
           allowNull: false,
           unique: true,
           field: 'username',
+          validate: {
+            fn: async (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.userNameValidator(value)
+              ) {
+                throw new Error('username validation failed on db insert');
+              }
+            },
+          },
         },
         passwordHash: {
           type: DataTypes.STRING,
           allowNull: false,
           field: 'password',
+          validate: {
+            fn: async (value: any) => {
+              if (!Validators.defaultValidator(value)) {
+                throw new Error('password validation failed on db insert');
+              }
+            },
+          },
         },
         role: {
           type: DataTypes.INTEGER,
