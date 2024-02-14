@@ -104,6 +104,11 @@ class UserApi {
     return data;
   }
 
+  /**
+   * This helper function packs the data after validation and sanitization into a defined interface object to be sent
+   * to the service layer.
+   * @param body
+   */
   loginDataPacker(body: any) {
     const data: UserLoginDTO = {
       username: body.userName,
@@ -192,6 +197,10 @@ const validationSchemaRegistrationPost: any = {
   },
 };
 
+/**
+ * This object represents the validation and sanitization schema for the login POST operation.
+ * It is used with the checkSchema function defined in the express validation package.
+ */
 const validationSchemaLoginPost: any = {
   userName: {
     ...baseSanitizationSchema,
