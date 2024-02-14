@@ -1,4 +1,6 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
+import {Validators} from '../utilities/validators';
+import {CustomValidationError} from '../utilities/custom_errors';
 
 /**
  * A user of the recruiter website.
@@ -50,6 +52,16 @@ class User extends Model {
           allowNull: false,
           unique: true,
           field: 'email',
+          validate: {
+            fn: async (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.emailValidator(value)
+              ) {
+                throw new Error('email validation failed on db insert');
+              }
+            },
+          },
         },
         personalIdentificationNumber: {
           type: DataTypes.STRING,

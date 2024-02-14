@@ -1,12 +1,12 @@
 import {checkSchema, validationResult} from 'express-validator';
-import {baseSanitizationSchema} from '../utilities/validators';
+import {Validators} from '../utilities/validators';
 import {createUserService} from '../service/user_service_factory';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {ValidationSanitizationError} from '../utilities/custom_errors';
+import {CustomValidationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from "../utilities/Authorization";
-import {UserLoginDTO} from "../model/dto/user_login_dto";
+import Authorization from '../utilities/Authorization';
+import {UserLoginDTO} from '../model/dto/user_login_dto';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -29,17 +29,25 @@ class UserApi {
   async setupRequestHandling() {
     this.router.post(
       '/register',
-      checkSchema(validationSchemaRegistrationPost),
+      checkSchema(RegistrationValidationSchema),
       async (req: Request, res: Response) => {
+        /*
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
           throw new ValidationSanitizationError(
             errors
               .array()
-              .map(err => err.msg)
+              .map(err => {
+                if (err.type === 'field') {
+                  return err.path + ': ' + err.msg;
+                } else {
+                  return err.msg;
+                }
+              })
               .join(', ')
           );
         }
+        */
         const userService = createUserService();
         const registrationData = this.registrationDataPacker(req.body);
         const state = await userService.handleRegistration(registrationData);
@@ -58,26 +66,34 @@ class UserApi {
 
     this.router.post(
       '/login',
-      checkSchema(validationSchemaLoginPost),
+      checkSchema(RegistrationValidationSchema),
       async (req: Request, res: Response) => {
         const errors = validationResult(req);
-        if(!errors.isEmpty()) {
-          throw new ValidationSanitizationError(
-            errors.array().map(err => err.msg).join(', ')
+        if (!errors.isEmpty()) {
+          throw new CustomValidationError(
+            errors
+              .array()
+              .map(err => err.msg)
+              .join(', ')
           );
         }
         const userService = createUserService();
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
-        if(!user) {
+        if (!user) {
           this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
           return;
         }
         Authorization.sendAuthCookie(user, res);
-        this.responseHandler.sendHttpResponse(res, 200, 'Login successful', false);
+        this.responseHandler.sendHttpResponse(
+          res,
+          200,
+          'Login successful',
+          false
+        );
         return;
       }
-    )
+    );
 
     this.router.get('/', async (req: Request, res: Response) => {
       const data = 'user API is up!';
@@ -116,116 +132,42 @@ class UserApi {
     };
     return data;
   }
-
-
 }
-
-
 
 /**
  * This object represents the validation and sanitization schema for the registration POST operation.
  * It is used with the checkSchema function defined in the express validation package.
  */
-const validationSchemaRegistrationPost: any = {
-  firstName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'First name is required',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'First name must be at least 1 characters',
-    },
-  },
 
-  lastName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Last name is required',
+const baseUserValidationSchema: any = {
+  '*': {
+    in: ['body'],
+    defaultSanitizer: {
+      customSanitizer: Validators.defaultSanitizer,
     },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'Last name must be at least 1 characters',
+    defaultValidator: {
+      custom: Validators.defaultValidator,
+      errorMessage: 'Must not be empty or longer than 255 characters',
     },
-  },
-
-  userName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Username is required',
-    },
-    isAlphanumeric: {
-      errorMessage: 'Username must be alphanumeric',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'Username must be at least 1 characters',
-    },
-  },
-
-  password: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Password is required',
-    },
-    isLength: {
-      options: {min: 6},
-      errorMessage: 'Password must be stronger',
-    },
-  },
-
-  personalNumber: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Personal number is required',
-    },
-    isLength: {
-      options: {
-        min: 13,
-        max: 13,
-      },
-      errorMessage: 'Personal number must be 13 digits',
-    },
-  },
-
-  email: {
-    ...baseSanitizationSchema,
-    isEmail: {
-      errorMessage: 'Invalid email',
-    },
-    normalizeEmail: true,
   },
 };
 
-/**
- * This object represents the validation and sanitization schema for the login POST operation.
- * It is used with the checkSchema function defined in the express validation package.
- */
-const validationSchemaLoginPost: any = {
+const sharedRegistrationLoginValidationSchema: any = {
   userName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Username is required',
-    },
-    isAlphanumeric: {
-      errorMessage: 'Username must be alphanumeric',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'Username must be at least 1 characters',
+    custom: Validators.userNameValidator,
+  },
+  password: {
+    custom: Validators.passwordValidator,
+  },
+};
+
+const RegistrationValidationSchema: any = {
+  ...baseUserValidationSchema,
+  email: {
+    emailValidator: {
+      custom: Validators.emailValidator,
     },
   },
-
-  password: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Password is required',
-    },
-    isLength: {
-      options: {min: 6},
-      errorMessage: 'Password must be stronger',
-    },
-  }
-}
+};
 
 export {UserApi};

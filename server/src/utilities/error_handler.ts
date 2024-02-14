@@ -1,9 +1,13 @@
 import {ConflictError} from './custom_errors';
-import {ValidationSanitizationError} from './custom_errors';
+import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken';
-import {ConnectionRefusedError} from 'sequelize';
+import {
+  ConnectionRefusedError,
+  ValidationError,
+  ValidationErrorItem,
+} from 'sequelize';
 
 /**
  * This class acts as a centralized error handler for the entire application.
@@ -35,6 +39,7 @@ class ErrorHandler {
    */
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
+    console.log('here be errors' + err);
     let httpStatusCode;
     const errorMessage: ErrorMessage = {message: 'none'};
 
@@ -44,7 +49,7 @@ class ErrorHandler {
         errorMessage.message = 'That user already exists';
         break;
 
-      case ValidationSanitizationError:
+      case CustomValidationError:
         httpStatusCode = 400;
         errorMessage.message = err.message;
         break;
@@ -62,6 +67,11 @@ class ErrorHandler {
       case ConnectionRefusedError:
         httpStatusCode = 503;
         errorMessage.message = 'Service is currently unavailable';
+        break;
+
+      case ValidationError:
+        httpStatusCode = 500;
+        errorMessage.message = 'Data is invalid';
         break;
 
       default:

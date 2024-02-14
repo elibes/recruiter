@@ -1,4 +1,4 @@
-import {Sequelize} from 'sequelize';
+import {Sequelize, ValidationError} from 'sequelize';
 import {User} from '../model/user';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
@@ -55,6 +55,9 @@ class UserDAO {
       });
       return this.createUserDTO(user);
     } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      }
       console.error('Error updating the database:', error);
       throw new Error(
         `Could not add user ${registrationDetails.username} to the database!`

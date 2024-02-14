@@ -1,14 +1,32 @@
-//import * as validator from 'express-validator';
-//import * as asser from 'assert';
+import validator from 'validator';
+import {CustomValidationError} from './custom_errors';
 
 /**
- * This object is a custom schema to be used with express validator checkSchema to do basic sanitization.
- * The reason this is here is to reduce code reduplication of these checks.
+ * This class stores validation functions to be used across the application.
  */
-const baseSanitizationSchema = {
-  trim: true,
-  escape: true,
-  stripLow: true,
-};
+class Validators {
+  static defaultValidator(s: string) {
+    return !validator.isEmpty(s) && validator.isLength(s, {max: 255});
+  }
 
-export {baseSanitizationSchema};
+  static passwordValidator(s: string) {
+    return validator.isLength(s, {min: 8});
+  }
+
+  static userNameValidator(s: string) {
+    return true;
+  }
+
+  static emailValidator(s: string) {
+    return validator.isEmail(s);
+  }
+
+  static defaultSanitizer(s: string) {
+    s = validator.trim(s);
+    s = validator.escape(s);
+    s = validator.stripLow(s);
+    return s;
+  }
+}
+
+export {Validators};
