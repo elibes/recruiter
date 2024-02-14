@@ -1,35 +1,42 @@
-import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {setUsername, setPassword, login} from '../../util/loginSlice';
-import {RootState} from '../../store';
+import React, {FC, useReducer} from 'react';
+import RegistrationViewModel from '../../viewmodel/RegistrationViewModel';
+import PasswordComparison from '../../util/PasswordComparison';
+import '../styles/RegistrationForm.css';
+import {allowSubmit} from '../../util/Helper';
+import LoginViewModel from '../../viewmodel/LoginViewModel';
 import InputField from './InputField';
 import Button from './Button';
 
-const LoginForm: React.FC = () => {
-  const dispatch = useDispatch();
-  const {username, password, error} = useSelector(
-    (state: RootState) => state.login
-  );
-
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setUsername(e.target.value));
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setPassword(e.target.value));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(login({username, password}));
-  };
+/**
+ * RegistrationForm component renders the user registration form interface.
+ * It uses the RegistrationViewModel to manage form state and handle changes and submissions.
+ * The form includes fields for first name, last name, username, password, personal number, and email.
+ * It also integrates the PasswordComparison component to handle password and confirmation input.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered registration form component.
+ */
+const LoginForm: FC = () => {
+  const {
+    userName,
+    password,
+    resultMsg,
+    isSubmitDisabled,
+    isUsernameInvalid,
+    isPasswordInvalid,
+    handlePasswordChange,
+    handleUsernameChange,
+    checkFormValidity,
+    onClickLogin,
+    dispatch,
+  } = LoginViewModel();
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onClickLogin}>
       <InputField
         label="Username"
         type="text"
-        value={username}
+        value={userName}
         onChange={handleUsernameChange}
       />
       <InputField
@@ -38,8 +45,8 @@ const LoginForm: React.FC = () => {
         value={password}
         onChange={handlePasswordChange}
       />
-      {error && <div className="error">{error}</div>}
-      <Button text="Login" onClick={handleSubmit} />
+      <div className="result-message">{resultMsg}</div>
+      <Button text="Login" onClick={onClickLogin} />
     </form>
   );
 };

@@ -1,55 +1,49 @@
-import {useState} from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import {useReducer} from 'react';
+import userReducer from '../util/userReducer';
+import {loginModel} from '../model/LoginModel';
 
-const loginViewModel = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const LoginViewModel = () => {
+  const [{userName, password, resultMsg}, dispatch] = useReducer(userReducer, {
+    userName: '',
+    password: '',
+    resultMsg: '',
+  });
 
-  /**
-   * The function `validateForm` checks if the username and password fields are filled out.
-   * @returns `true` if both `username` and `password` are provided; otherwise, `false` with an error message.
-   */
-  const validateForm = () => {
-    if (!username || !password) {
-      setError('Username and password are required');
-      return false;
-    }
-    setError('');
-    return true;
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({payload: e.target.value, type: 'userName'});
   };
 
-  /**
-   * This function handles form submission, validate the form, and send a request to authenticate the user.
-   * @param event - The event is a React.FormEvent object, representing an event when a form is submitted.
-   * It contains information about the event, such as the target element and the event type.
-   * It is used to prevent the default form submission behavior and handle the form submission manually.
-   */
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({payload: e.target.value, type: 'password'});
+  };
 
+  const onClickLogin = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('api/login', {username, password});
-      // Handle response, e.g., storing auth tokens, redirecting
-      console.log('Login successful', response.data);
-      // Reset error state
-      setError('');
-      // Redirect user or update UI accordingly
-    } catch (error: any) {
-      // Handle error, e.g. show login failure message
-      setError('Invalid username or password');
-      console.log('Login failed', error.response?.data || error.message);
+      const response = await loginModel(userName, password);
+      if ('error' in response) {
+        console.error(response.error);
+      } else {
+        dispatch({payload: response.data[0].toString(), type: 'resultMsg'});
+        console.log(response);
+      }
+    } catch (ex) {
+      console.log(ex);
     }
   };
 
   return {
-    username,
-    setUsername,
+    userName,
     password,
-    setPassword,
-    error,
-    handleSubmit,
+    resultMsg,
+    handlePasswordChange,
+    handleUsernameChange,
+    dispatch,
+    onClickLogin,
   };
 };
 
-export default loginViewModel;
+export default LoginViewModel;
