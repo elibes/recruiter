@@ -3,11 +3,7 @@ import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken';
-import {
-  ConnectionRefusedError,
-  ValidationError,
-  ValidationErrorItem,
-} from 'sequelize';
+import {ConnectionRefusedError, ValidationError} from 'sequelize';
 
 /**
  * This class acts as a centralized error handler for the entire application.
@@ -39,7 +35,6 @@ class ErrorHandler {
    */
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
-    console.log('here be errors' + err);
     let httpStatusCode;
     const errorMessage: ErrorMessage = {message: 'none'};
 

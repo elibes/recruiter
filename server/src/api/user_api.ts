@@ -1,12 +1,15 @@
-import {checkSchema, validationResult} from 'express-validator';
-import {Validators} from '../utilities/validators';
+import {checkSchema} from 'express-validator';
 import {createUserService} from '../service/user_service_factory';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {CustomValidationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
 import Authorization from '../utilities/Authorization';
 import {UserLoginDTO} from '../model/dto/user_login_dto';
+import {
+  handleExpressValidatorErrors,
+  userLoginValidator,
+  userRegistrationValidationSchema,
+} from './validation_helper';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -29,25 +32,9 @@ class UserApi {
   async setupRequestHandling() {
     this.router.post(
       '/register',
-      checkSchema(RegistrationValidationSchema),
+      checkSchema(userRegistrationValidationSchema),
       async (req: Request, res: Response) => {
-        /*
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          throw new ValidationSanitizationError(
-            errors
-              .array()
-              .map(err => {
-                if (err.type === 'field') {
-                  return err.path + ': ' + err.msg;
-                } else {
-                  return err.msg;
-                }
-              })
-              .join(', ')
-          );
-        }
-        */
+        handleExpressValidatorErrors(req);
         const userService = createUserService();
         const registrationData = this.registrationDataPacker(req.body);
         const state = await userService.handleRegistration(registrationData);
@@ -66,17 +53,9 @@ class UserApi {
 
     this.router.post(
       '/login',
-      checkSchema(RegistrationValidationSchema),
+      checkSchema(userLoginValidator),
       async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          throw new CustomValidationError(
-            errors
-              .array()
-              .map(err => err.msg)
-              .join(', ')
-          );
-        }
+        handleExpressValidatorErrors(req);
         const userService = createUserService();
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
@@ -133,41 +112,4 @@ class UserApi {
     return data;
   }
 }
-
-/**
- * This object represents the validation and sanitization schema for the registration POST operation.
- * It is used with the checkSchema function defined in the express validation package.
- */
-
-const baseUserValidationSchema: any = {
-  '*': {
-    in: ['body'],
-    defaultSanitizer: {
-      customSanitizer: Validators.defaultSanitizer,
-    },
-    defaultValidator: {
-      custom: Validators.defaultValidator,
-      errorMessage: 'Must not be empty or longer than 255 characters',
-    },
-  },
-};
-
-const sharedRegistrationLoginValidationSchema: any = {
-  userName: {
-    custom: Validators.userNameValidator,
-  },
-  password: {
-    custom: Validators.passwordValidator,
-  },
-};
-
-const RegistrationValidationSchema: any = {
-  ...baseUserValidationSchema,
-  email: {
-    emailValidator: {
-      custom: Validators.emailValidator,
-    },
-  },
-};
-
 export {UserApi};
