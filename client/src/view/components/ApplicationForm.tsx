@@ -1,4 +1,4 @@
-import React, {FC, useReducer} from 'react';
+import React, {FC} from 'react';
 import CompetenceList from './CompetenceList';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
@@ -18,24 +18,35 @@ const testList = {
   ],
 };
 const ApplicationForm: FC = () => {
-  const range = useSelector(
+  const ranges = useSelector(
     (state: RootState) => state.application.availability
   );
-  const selection1 = {
-    startDate: new Date(range[0].fromDate),
-    endDate: new Date(range[0].toDate),
-    key: 'selection1',
-  };
+
+  const selectionList = ranges.map(range => {
+    return {
+      startDate: new Date(range.startDate),
+      endDate: new Date(range.endDate),
+    };
+  });
+
   const dispatch = useDispatch();
   return (
     <div>
       <button onClick={() => dispatch(createNewAvailability())}>test</button>
       <CompetenceList items={testList.items}></CompetenceList>
       <DateRangePicker
-        ranges={[selection1]}
+        ranges={selectionList}
         minDate={new Date()}
         maxDate={addYears(new Date(), 1)}
-        onChange={ranges => dispatch(setDates(ranges))}
+        onChange={ranges => {
+          const rangeKey = Object.keys(ranges)[0];
+          const formattedRange = {
+            startDate: ranges[rangeKey].startDate.toISOString(),
+            endDate: ranges[rangeKey].endDate.toISOString(),
+            key: rangeKey,
+          };
+          dispatch(setDates(formattedRange));
+        }}
       />
       <button type={'submit'}>Submit Application</button>
       <button>Cancel Application</button>
