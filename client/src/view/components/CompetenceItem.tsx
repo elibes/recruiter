@@ -8,6 +8,7 @@ const CompetenceItem: React.FC<ListItemProps> = ({itemId, competenceName}) => {
     <div>
       <input type={'checkbox'} id={`itemCheckbox-${itemId}`} />
       <span>{competenceName}</span>
+      <span>{'   Years of experience: '}</span>
       <input type={'text'} id={`itemInput-${itemId}`} />
     </div>
   );

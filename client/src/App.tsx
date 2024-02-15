@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 import AppRouter from './routes/AppRouter';
+import {Provider} from 'react-redux';
+
+import {store} from './viewmodel/reduxStore';
 
 /**
  * App component is the root component of the application.
@@ -11,10 +14,15 @@ import AppRouter from './routes/AppRouter';
  */
 function App() {
   return (
-    <div className="App">
-      <AppRouter />
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <AppRouter />
+      </div>
+    </Provider>
   );
 }
+
+/*
+ * */
 
 export default App;

@@ -10,4 +10,4 @@ const ApplicationView = () => {
   );
 };
 
-export {ApplicationView};
+export default ApplicationView;
