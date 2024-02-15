@@ -51,4 +51,3 @@ export class LoginPasswordNotMatchError extends Error {
     this.name = 'LoginPasswordNotMatchError';
   }
 }
-

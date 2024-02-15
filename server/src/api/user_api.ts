@@ -5,8 +5,8 @@ import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from "../utilities/Authorization";
-import {UserLoginDTO} from "../model/dto/user_login_dto";
+import Authorization from '../utilities/Authorization';
+import {UserLoginDTO} from '../model/dto/user_login_dto';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -61,23 +61,31 @@ class UserApi {
       checkSchema(validationSchemaLoginPost),
       async (req: Request, res: Response) => {
         const errors = validationResult(req);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
           throw new ValidationSanitizationError(
-            errors.array().map(err => err.msg).join(', ')
+            errors
+              .array()
+              .map(err => err.msg)
+              .join(', ')
           );
         }
         const userService = createUserService();
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
-        if(!user) {
+        if (!user) {
           this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
           return;
         }
         Authorization.sendAuthCookie(user, res);
-        this.responseHandler.sendHttpResponse(res, 200, 'Login successful', false);
+        this.responseHandler.sendHttpResponse(
+          res,
+          200,
+          'Login successful',
+          false
+        );
         return;
       }
-    )
+    );
 
     this.router.get('/', async (req: Request, res: Response) => {
       const data = 'user API is up!';
@@ -116,11 +124,7 @@ class UserApi {
     };
     return data;
   }
-
-
 }
-
-
 
 /**
  * This object represents the validation and sanitization schema for the registration POST operation.
@@ -225,7 +229,7 @@ const validationSchemaLoginPost: any = {
       options: {min: 6},
       errorMessage: 'Password must be stronger',
     },
-  }
-}
+  },
+};
 
 export {UserApi};

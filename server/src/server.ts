@@ -11,7 +11,7 @@ import * as express from 'express';
 
 import * as path from 'path';
 
-import { config } from 'dotenv-safe';
+import {config} from 'dotenv-safe';
 
 import * as cors from 'cors';
 
