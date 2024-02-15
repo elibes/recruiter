@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {getAllCompetencies} from '../model/CompetenceModel';
 
 interface ApplicationState {
   availability: {startDate: string; endDate: string; key: string}[];
@@ -84,14 +85,16 @@ const applicationSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getCompetencies.fulfilled, (state, action) => {
-      state.competencies = action.payload.competencies.map(competence => {
-        return {
-          competenceId: competence.id,
-          competenceName: competence.competenceName,
-          hasCompetence: false,
-          yearsOfExperience: 0,
-        };
-      });
+      state.competencies = action.payload.competencies.map(
+        (competence: {id: any; competenceName: any}) => {
+          return {
+            competenceId: competence.id,
+            competenceName: competence.competenceName,
+            hasCompetence: false,
+            yearsOfExperience: 0,
+          };
+        }
+      );
     });
     builder.addCase(applicationValidator.fulfilled, state => {
       let errorList: string[] = [];
@@ -119,13 +122,7 @@ const applicationSlice = createSlice({
 export const getCompetencies = createAsyncThunk(
   'application/getCompetencies',
   async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return {
-      competencies: [
-        {id: 1, competenceName: 'climbing'},
-        {id: 2, competenceName: 'falling'},
-      ],
-    };
+    return await getAllCompetencies();
   }
 );
 export const applicationValidator = createAsyncThunk(
