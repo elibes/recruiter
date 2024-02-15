@@ -21,12 +21,8 @@ const LoginForm: FC = () => {
     userName,
     password,
     resultMsg,
-    isSubmitDisabled,
-    isUsernameInvalid,
-    isPasswordInvalid,
     handlePasswordChange,
     handleUsernameChange,
-    checkFormValidity,
     onClickLogin,
     dispatch,
   } = LoginViewModel();
