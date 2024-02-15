@@ -22,3 +22,33 @@ export class ValidationSanitizationError extends Error {
     this.name = 'ValidationSanitizationError';
   }
 }
+
+/**
+ * Represents an error when a requested user is not found in the database.
+ * This error is thrown during operations where user existence is mandatory,
+ * such as authentication or user data retrieval.
+ *
+ * @extends Error
+ */
+export class UserNotFoundError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'UserNotFoundError';
+  }
+}
+
+/**
+ * Represents an error when a user's provided login password does not match the stored password.
+ * This error is thrown during login operations when the authentication process fails due to incorrect credentials.
+ *
+ * @extends Error
+ */
+export class LoginPasswordNotMatchError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'LoginPasswordNotMatchError';
+  }
+}
+

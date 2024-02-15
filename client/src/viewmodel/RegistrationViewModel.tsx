@@ -130,7 +130,7 @@ const RegistrationViewModel = () => {
       if ('error' in response) {
         console.error(response.error);
       } else {
-        dispatch({payload: response.success.toString(), type: 'resultMsg'});
+        dispatch({payload: response.data[0].toString(), type: 'resultMsg'});
         console.log(response); // Successfully registered
       }
     } catch (ex) {
