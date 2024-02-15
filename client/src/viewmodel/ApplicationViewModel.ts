@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {getAllCompetencies} from '../model/CompetenceModel';
+import {submitApplicationToBackEnd} from '../model/ApplicationModel';
 
 interface ApplicationState {
   availability: {startDate: string; endDate: string; key: string}[];
@@ -80,7 +81,7 @@ const applicationSlice = createSlice({
         availabilities: availabilitiesData,
         competencies: competenceData,
       };
-      console.log('sending...\n', data);
+      submitApplicationToBackEnd(data).then(res => console.log(res));
     },
   },
   extraReducers: builder => {

@@ -20,6 +20,7 @@ class ApplicationApi {
    */
   async setupRequestHandling() {
     this.router.post('/', async (req: Request, res: Response) => {
+      throw new Error('you not logged in'); /*
       const userInfo = {userId: 1018, userRole: 2}; //temp, remove later, get from JWT
       const applicationData = this.applicationDataPacker(req.body, userInfo);
       const result =
@@ -28,6 +29,7 @@ class ApplicationApi {
         const data = 'Application submission successful';
         this.responseHandler.sendHttpResponse(res, 200, data, false);
       }
+      */
     });
   }
 
