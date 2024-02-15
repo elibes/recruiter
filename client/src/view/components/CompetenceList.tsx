@@ -1,5 +1,8 @@
-import React, {FC} from 'react';
+import {FC, useEffect} from 'react';
 import CompetenceItem from './CompetenceItem';
+import {getCompetencies} from '../../viewmodel/ApplicationViewModel';
+import {AppDispatch, RootState} from '../../viewmodel/reduxStore';
+import {useSelector, useDispatch} from 'react-redux';
 
 interface CompetenceItemProps {
   itemId: number;
@@ -9,11 +12,23 @@ interface CompetenceItemProps {
 interface CompetenceListProps {
   items: CompetenceItemProps[];
 }
-const CompetenceList: React.FC<CompetenceListProps> = ({items}) => {
+const CompetenceList: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(getCompetencies());
+  }, [dispatch]);
+
+  const competencies = useSelector(
+    (state: RootState) => state.application.competencies
+  );
+
   return (
     <div>
-      {items.map(item => (
-        <CompetenceItem key={item.itemId} {...item}></CompetenceItem>
+      {competencies.map(competence => (
+        <CompetenceItem
+          key={competence.competenceId}
+          {...competence}
+        ></CompetenceItem>
       ))}
     </div>
   );

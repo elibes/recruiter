@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import {FC} from 'react';
 import CompetenceList from './CompetenceList';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
@@ -7,8 +7,10 @@ import {addYears} from 'date-fns';
 import {useSelector, useDispatch} from 'react-redux';
 import {AppDispatch, RootState} from '../../viewmodel/reduxStore';
 import {
+  applicationValidator,
   createNewAvailability,
   setDates,
+  submitApplication,
 } from '../../viewmodel/ApplicationViewModel';
 
 const testList = {
@@ -18,9 +20,12 @@ const testList = {
   ],
 };
 const ApplicationForm: FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const ranges = useSelector(
     (state: RootState) => state.application.availability
   );
+
+  const errors = useSelector((state: RootState) => state.application.errorList);
 
   const selectionList = ranges.map(range => {
     return {
@@ -29,11 +34,9 @@ const ApplicationForm: FC = () => {
     };
   });
 
-  const dispatch = useDispatch();
   return (
     <div>
-      <button onClick={() => dispatch(createNewAvailability())}>test</button>
-      <CompetenceList items={testList.items}></CompetenceList>
+      <CompetenceList></CompetenceList>
       <DateRangePicker
         ranges={selectionList}
         minDate={new Date()}
@@ -48,8 +51,17 @@ const ApplicationForm: FC = () => {
           dispatch(setDates(formattedRange));
         }}
       />
-      <button type={'submit'}>Submit Application</button>
+      <button onClick={() => dispatch(createNewAvailability())}>+</button>
+      <button
+        onClick={() => {
+          dispatch(applicationValidator());
+          dispatch(submitApplication());
+        }}
+      >
+        Submit Application
+      </button>
       <button>Cancel Application</button>
+      {errors ? <span>{errors}</span> : ''}
     </div>
   );
 };
