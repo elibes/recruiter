@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import {
   BrowserRouter as Router,
@@ -6,8 +6,8 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
-const LoginView = React.lazy(() => import('../view/LoginView'));
 const RegistrationView = React.lazy(() => import('../view/RegistrationView'));
+const LoginView = React.lazy(() => import('../view/LoginView'));
 const NotFoundView = React.lazy(() => import('../view/NotFoundView'));
 
 /**

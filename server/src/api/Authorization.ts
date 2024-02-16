@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import {Request, response, Response} from "express";
 import * as jwt from "jsonwebtoken";
 import { UserDTO } from "../model/dto/user_dto";
 import {UserService} from "../service/user_service";
 import {createUserService} from "../service/user_service_factory";
+import { CookieOptions } from "express";
 
 /**
  * Extends the JwtPayload to include a username.
@@ -40,7 +41,6 @@ class Authorization {
    * @param {Response} res - The response on which to set the cookie.
    */
   static sendAuthCookie(user: UserDTO, res: Response) {
-    const notAccessibleFromJs = { httpOnly: true };
 
     const jwtSecret = process.env.JWT_SECRET;
     if (typeof jwtSecret !== 'string') {
@@ -53,7 +53,15 @@ class Authorization {
       { expiresIn: '30 minutes' },
     );
 
-    const cookieOptions = { ...notAccessibleFromJs };
+    const nodeEnv = process.env.NODE_ENV;
+    if (typeof nodeEnv !== 'string') {
+      throw new Error('nodeEnv is not defined');
+    }
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: nodeEnv === "production"
+    };
     res.cookie(Authorization.AUTH_COOKIE_NAME, jwtToken, cookieOptions);
   }
 
