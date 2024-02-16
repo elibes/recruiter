@@ -2,12 +2,12 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {
   validateEmail,
   validateFirstname,
+  validateLastname,
   validatePassword,
   validatePasswordConfirmation,
   validatePersonalNumber,
   validateUsername,
 } from '../util/validation';
-import {validateRegistration} from './userSlice';
 
 export const userNameReducer = (state: any, action: PayloadAction<string>) => {
   state.userName = action.payload;
@@ -37,6 +37,7 @@ export const personalNumberReducer = (
 ) => {
   state.personalNumber = action.payload;
 };
+
 /**
  * Extra reducer for handling the fulfilled login action.
  * @param {Object} state - The current state.
@@ -46,16 +47,21 @@ export const personalNumberReducer = (
  * @param {string} action.payload.error - The error message, if any.
  */
 export const loginReducer = (state: any, action: any) => {
-  const {success, token, error} = action.payload;
-  if (success && token) {
+  if (action.payload.success) {
     state.isLoggedIn = true;
-    state.error = '';
+    state.resultMsg = [action.payload.data];
   } else {
-    state.error = error || 'Login failed';
+    state.error = [action.payload.error];
   }
 };
-
-export const registerReducer = (state: any) => {};
+export const registerReducer = (state: any, action: any) => {
+  if (action.payload.success) {
+    state.isLoggedIn = true;
+    state.resultMsg = [action.payload.data];
+  } else {
+    state.error = [action.payload.error];
+  }
+};
 
 export const validateLoginReducer = (state: any) => {
   const errorList: string[] = [];
@@ -69,13 +75,12 @@ export const validateRegistrationReducer = (state: any) => {
   const errorList: string[] = [];
   errorList.push(validateUsername(state.userName));
   errorList.push(validateFirstname(state.firstname));
-  errorList.push(validateFirstname(state.lastname));
+  errorList.push(validateLastname(state.lastname));
   errorList.push(validateEmail(state.email));
   errorList.push(validatePassword(state.password));
   errorList.push(
     validatePasswordConfirmation(state.password, state.passwordConfirm)
   );
   errorList.push(validatePersonalNumber(state.personalNumber));
-  errorList.push();
   state.error = errorList;
 };

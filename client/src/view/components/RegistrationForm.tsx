@@ -2,10 +2,8 @@ import * as React from 'react';
 import '../styles/RegistrationForm.css';
 import {useSelector, useDispatch} from 'react-redux';
 import InputField from './InputField';
-import PasswordComparison from '../../util/PasswordComparison';
 import {AppDispatch, RootState} from '../../store';
 import {
-  login,
   setEmail,
   setFirstname,
   setLastname,
@@ -15,25 +13,9 @@ import {
   setUsername,
   validateRegistration,
   register,
+  login,
 } from '../../viewmodel/userSlice';
-
-/**
- * Props for the `RegistrationForm` component.
- * Includes handlers for input changes, form submission, and form validity checking.
- *
- * @interface RegistrationFormProps
- * @property {Function} onChange - Handler for input field changes.
- * @property {Function} onClickRegister - Handler for the registration button click event.
- * @property {Function} checkFormValidity - Function to check the overall form validity.
- */
-interface RegistrationFormProps {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => void;
-  onClickRegister: (
-    e: React.MouseEvent<HTMLInputElement, MouseEvent>
-  ) => Promise<void>;
-  checkFormValidity: () => void;
-}
-
+import Button from './Button';
 const RegistrationForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
@@ -139,11 +121,13 @@ const RegistrationForm = () => {
           />
         </div>
         <div className="form-buttons">
-          <button className="action-btn" onClick={onClickRegister}>
-            Register
-          </button>
-          <span className="result-message">{resultMsg}</span>
+          <Button
+            text="Register"
+            onClick={handleRegister}
+            className="action-btn"
+          />
         </div>
+        <span className="result-message">{resultMsg}</span>
         <div className="registered-user-link">
           Already registered? <a href="/login">Log in</a>
         </div>

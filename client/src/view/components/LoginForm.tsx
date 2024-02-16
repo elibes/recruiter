@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import '../styles/LoginForm.css';
 import {RootState, AppDispatch} from '../../store';
@@ -8,22 +8,12 @@ import {
   login,
   validateLogin,
 } from '../../viewmodel/userSlice';
-import {validateLoginForm} from '../../util/validation';
 import InputField from './InputField';
 import Button from './Button';
 
-/**
- * LoginForm component renders a login form interface.
- * It uses the loginViewModel to manage form state and handle changes and submissions.
- * The form includes fields for username and password.
- * It also includes a submit button.
- *
- * @component
- * @returns {JSX.Element} The rendered login form component.
- */
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {userName, password, error} = useSelector(
+  const {userName, password, error, resultMsg} = useSelector(
     (state: RootState) => state.user
   );
 
@@ -35,14 +25,13 @@ const LoginForm = () => {
     dispatch(setPassword(e.target.value));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     dispatch(validateLogin());
     dispatch(login());
   };
 
   return (
-    <div onSubmit={handleSubmit}>
+    <div>
       <div className="login-form">
         <div className="form-group">
           <InputField
@@ -62,12 +51,9 @@ const LoginForm = () => {
             onChange={handlePasswordChange}
           />
         </div>
-        <Button
-          text="Login"
-          onClick={() => dispatch(login())}
-          className="login-button"
-        />
+        <Button text="Login" onClick={handleSubmit} className="login-button" />
         {error ? <p>{error}</p> : ''}
+        <span className="result-message">{resultMsg}</span>
         <div className="registered-user-link">
           Need to register? <a href="/register">Register</a>
         </div>
