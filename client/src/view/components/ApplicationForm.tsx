@@ -13,12 +13,6 @@ import {
   submitApplication,
 } from '../../viewmodel/ApplicationViewModel';
 
-const testList = {
-  items: [
-    {itemId: 1, competenceName: 'climbing'},
-    {itemId: 2, competenceName: 'falling'},
-  ],
-};
 const ApplicationForm: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const ranges = useSelector(
