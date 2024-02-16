@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import InputField from './InputField';
 import Button from './Button';
-import loginViewModel from '../../viewmodel/LoginViewModel';
 import '../styles/LoginForm.css';
 
 /**
@@ -14,39 +13,18 @@ import '../styles/LoginForm.css';
  * @returns {JSX.Element} The rendered login form component.
  */
 const LoginForm = () => {
-  const {
-    userName,
-    password,
-    onChangeUsername,
-    onChangePassword,
-    handleSubmit,
-    resultMsg,
-    validateForm,
-  } = loginViewModel();
-
   return (
     <form className="login-form">
       <div className="form-group">
-        <InputField
-          label="Username"
-          type="text"
-          value={userName}
-          onChange={onChangeUsername}
-        />
+        <InputField label="Username" type="text" value="" />
       </div>
       <div className="form-group">
-        <InputField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={onChangePassword}
-        />
+        <InputField label="Password" type="password" value="" />
       </div>
-      <Button text="Login" onClick={handleSubmit} className="login-button" />
+      <Button text="Login" className="login-button" />
       <div className="registered-user-link">
         Need to registered? <a href="/register">Register</a>
       </div>
-      <div>{resultMsg}</div>
     </form>
   );
 };

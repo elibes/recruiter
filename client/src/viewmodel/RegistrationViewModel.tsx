@@ -1,118 +1,122 @@
-import {useReducer} from 'react';
-import userReducer from '../util/userReducer';
 import {registrationModel} from '../model/RegistrationModel';
-import {
-  isPersonNumberValid,
-  PersonNumberTestResult,
-} from '../util/PersonNumberValidator';
-import {allowSubmit} from '../util/Helper';
+import {REGISTRATION_TYPE} from '../util/store/RegistrationReducer';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../util/store/AppState';
+import RegistrationView from '../view/RegistrationView';
 
 /**
- * A ViewModel hook for managing state and interactions within the RegistrationView component.
- * It uses the `useReducer` hook for state management, with actions dispatched to the `userReducer` for handling.
- * This ViewModel provides handlers for changes in form inputs and the registration submission action, incorporating validation and submission logic.
+ * `RegistrationViewModel` function component manages the registration process.
+ * It uses Redux to dispatch actions and maintain state, and it handles form validation,
+ * input changes, and the registration submission process.
  *
- * @returns An object containing the current state values, input change handlers, and the registration submission handler.
+ * @function
+ * @returns A `RegistrationView` component with bound event handlers for form interactions.
  */
 const RegistrationViewModel = () => {
-  const [
-    {
-      firstName,
-      lastName,
-      userName,
-      password,
-      personalNumber,
-      email,
-      passwordConfirm,
-      resultMsg,
-      isSubmitDisabled,
-      isFirstNameInvalid,
-      isLastNameInvalid,
-      isUsernameInvalid,
-      isPasswordInvalid,
-      isPersonalNumberInvalid,
-      isEmailInvalid,
-    },
-    dispatch,
-  ] = useReducer(userReducer, {
-    firstName: '',
-    lastName: '',
-    userName: '',
-    password: '',
-    personalNumber: '',
-    email: '',
-    passwordConfirm: '',
-    resultMsg: '',
-    isSubmitDisabled: true,
-    isFirstNameInvalid: true,
-    isLastNameInvalid: true,
-    isUsernameInvalid: true,
-    isPasswordInvalid: true,
-    isPersonalNumberInvalid: true,
-    isEmailInvalid: true,
-  });
+  const dispatch = useDispatch();
 
+  /**
+   * Selects registration data from the Redux store's state.
+   */
+  const registrationData = useSelector((state: RootState) => state.users);
+
+  /**
+   * Validates the form fields to determine if the submit button should be enabled or disabled.
+   * Dispatches an action to update the submit button's state based on form validity.
+   */
   const checkFormValidity = () => {
     if (
-      !isFirstNameInvalid &&
-      !isLastNameInvalid &&
-      !isUsernameInvalid &&
-      !isPasswordInvalid &&
-      !isPersonalNumberInvalid &&
-      !isEmailInvalid
+      registrationData.isFirstNameInvalid === false &&
+      registrationData.isLastNameInvalid === false &&
+      registrationData.isUsernameInvalid === false &&
+      registrationData.isPasswordInvalid === false &&
+      registrationData.isPersonalNumberInvalid === false &&
+      registrationData.isEmailInvalid === false
     )
-      allowSubmit(dispatch, '', false);
+      dispatch({type: REGISTRATION_TYPE, payload: {isSubmitDisabled: false}});
   };
 
-  const onChangeFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'firstName'});
-    if (!e.target.value)
-      allowSubmit(dispatch, 'First name cannot be empty', true);
-    else {
-      dispatch({payload: false, type: 'isFirstNameInvalid'});
-      checkFormValidity();
-    }
-  };
-  const onChangeLastName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'lastName'});
-    if (!e.target.value)
-      allowSubmit(dispatch, 'Last name cannot be empty', true);
-    else {
-      dispatch({payload: false, type: 'isLastNameInvalid'});
-      checkFormValidity();
-    }
-  };
-  const onChangePersonNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'personalNumber'});
-    const pnrCheck: PersonNumberTestResult = isPersonNumberValid(
-      e.target.value
-    );
-    if (!pnrCheck.isValid) {
-      allowSubmit(dispatch, pnrCheck.message, true);
-      return;
+  /**
+   * Handles changes to input fields in the registration form.
+   * Dispatches actions to update field values and their validity in the Redux store.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object for the input change.
+   * @param {string} fieldName - The name of the field being changed.
+   */
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: string
+  ) => {
+    const fieldValue = e.target.value;
+    const isEmpty = fieldValue === '';
+    const fieldMappings = {
+      firstName: {
+        valueKey: 'firstName',
+        invalidKey: 'isFirstNameInvalid',
+        errorMessage: 'First name cannot be empty',
+      },
+      lastName: {
+        valueKey: 'lastName',
+        invalidKey: 'isLastNameInvalid',
+        errorMessage: 'Last name cannot be empty',
+      },
+      username: {
+        valueKey: 'userName',
+        invalidKey: 'isUsernameInvalid',
+        errorMessage: 'User name cannot be empty',
+      },
+      personNumber: {
+        valueKey: 'personalNumber',
+        invalidKey: 'isPersonalNumberInvalid',
+        errorMessage: 'Person number cannot be empty',
+      },
+      email: {
+        valueKey: 'email',
+        invalidKey: 'isEmailInvalid',
+        errorMessage: 'Email cannot be empty',
+      },
+    };
+
+    const handleDispatch = (valueKey, invalidKey, value, isError) => {
+      dispatch({type: REGISTRATION_TYPE, payload: {[valueKey]: value}});
+      dispatch({type: REGISTRATION_TYPE, payload: {[invalidKey]: isError}});
+      if (!isError) checkFormValidity();
+    };
+
+    if (isEmpty) {
+      const {errorMessage, invalidKey} = fieldMappings[fieldName] || {
+        errorMessage: 'Some error occurred!',
+        invalidKey: 'genericError',
+      };
+      dispatch({type: REGISTRATION_TYPE, payload: {resultMsg: errorMessage}});
+      if (invalidKey !== 'genericError') {
+        dispatch({type: REGISTRATION_TYPE, payload: {[invalidKey]: true}});
+      }
+      handleDispatch(
+        fieldMappings[fieldName].valueKey,
+        fieldMappings[fieldName].invalidKey,
+        '',
+        true
+      );
     } else {
-      dispatch({payload: false, type: 'isPersonalNumberInvalid'});
-      checkFormValidity();
-    }
-  };
-  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'userName'});
-    if (!e.target.value)
-      allowSubmit(dispatch, 'User name cannot be empty', true);
-    else {
-      dispatch({payload: false, type: 'isUsernameInvalid'});
-      checkFormValidity();
-    }
-  };
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'email'});
-    if (!e.target.value) allowSubmit(dispatch, 'Email cannot be empty', true);
-    else {
-      dispatch({payload: false, type: 'isEmailInvalid'});
-      checkFormValidity();
+      const {valueKey, invalidKey} = fieldMappings[fieldName];
+      if (valueKey && invalidKey) {
+        handleDispatch(valueKey, invalidKey, fieldValue, false);
+      } else {
+        dispatch({
+          type: REGISTRATION_TYPE,
+          payload: {resultMsg: 'Some error occurred!'},
+        });
+      }
     }
   };
 
+  /**
+   * Handles the click event on the register button.
+   * Performs the registration logic and updates the Redux store based on the response.
+   *
+   * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e - The event object for the button click.
+   */
   const onClickRegister = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -120,17 +124,20 @@ const RegistrationViewModel = () => {
     // registration logic
     try {
       const response = await registrationModel(
-        firstName,
-        lastName,
-        userName,
-        password,
-        personalNumber,
-        email
+        registrationData.firstName,
+        registrationData.lastName,
+        registrationData.userName,
+        registrationData.password,
+        registrationData.personalNumber,
+        registrationData.email
       );
       if ('error' in response) {
         console.error(response.error);
       } else {
-        dispatch({payload: response.data[0].toString(), type: 'resultMsg'});
+        dispatch({
+          type: REGISTRATION_TYPE,
+          payload: {resultMsg: response.data[0].toString()},
+        });
         console.log(response); // Successfully registered
       }
     } catch (ex) {
@@ -138,31 +145,15 @@ const RegistrationViewModel = () => {
     }
   };
 
-  return {
-    firstName,
-    lastName,
-    userName,
-    password,
-    personalNumber,
-    email,
-    passwordConfirm,
-    resultMsg,
-    isSubmitDisabled,
-    isFirstNameInvalid,
-    isLastNameInvalid,
-    isUsernameInvalid,
-    isPasswordInvalid,
-    isPersonalNumberInvalid,
-    isEmailInvalid,
-    onChangeFirstName,
-    onChangeLastName,
-    onChangePersonNumber,
-    onChangeUsername,
-    onChangeEmail,
-    onClickRegister,
-    checkFormValidity,
-    dispatch,
-  };
+  return (
+    <div>
+      <RegistrationView
+        onChange={onChange}
+        onClickRegister={onClickRegister}
+        checkFormValidity={checkFormValidity}
+      />
+    </div>
+  );
 };
 
 export default RegistrationViewModel;

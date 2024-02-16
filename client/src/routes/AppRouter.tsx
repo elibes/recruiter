@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import {
   BrowserRouter as Router,
@@ -6,8 +6,8 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
+import RegistrationViewModel from '../viewmodel/RegistrationViewModel';
 const LoginView = React.lazy(() => import('../view/LoginView'));
-const RegistrationView = React.lazy(() => import('../view/RegistrationView'));
 const NotFoundView = React.lazy(() => import('../view/NotFoundView'));
 
 /**
@@ -33,7 +33,7 @@ const AppRouter = () => {
           path="/register"
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
-              <RegistrationView />
+              <RegistrationViewModel />
             </React.Suspense>
           }
         />
