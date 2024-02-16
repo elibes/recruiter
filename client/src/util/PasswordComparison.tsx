@@ -1,69 +1,97 @@
-import React, {FC} from 'react';
-import {allowSubmit} from './Helper';
-import {isPasswordValid, PasswordTestResult} from './PasswordValidator';
+import * as React from 'react';
+import {FC, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {REGISTRATION_TYPE} from './store/RegistrationReducer';
 
 /**
- * Props for the PasswordComparison component.
+ * Props for the `PasswordComparison` component.
+ *
  * @interface
  */
 interface PasswordComparisonProps {
-  dispatch: React.Dispatch<any>;
   password: string;
   passwordConfirm: string;
   checkFormValidity: () => void;
 }
 
 /**
- * Component for comparing password and password confirmation inputs.
- * Validates the password against defined rules and checks if both password fields match.
+ * `PasswordComparison` component for comparing password and password confirmation fields.
+ * This component dispatches actions based on the password and password confirmation inputs and
+ * validates if both passwords match. It triggers form validity check when passwords are valid and match.
  *
  * @component
- * @param {PasswordComparisonProps} props - The props for the PasswordComparison component.
+ * @param {PasswordComparisonProps} props - The props for the `PasswordComparison` component.
+ * @param {string} props.password - The current value of the password input field.
+ * @param {string} props.passwordConfirm - The current value of the password confirmation input field.
+ * @param {() => void} props.checkFormValidity - A callback function to check the overall form validity.
  */
 const PasswordComparison: FC<PasswordComparisonProps> = ({
-  dispatch,
   password,
   passwordConfirm,
   checkFormValidity,
 }) => {
-  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'password'});
-    const passwordCheck: PasswordTestResult = isPasswordValid(e.target.value);
+  const dispatch = useDispatch();
 
-    if (!passwordCheck.isValid) {
-      allowSubmit(dispatch, passwordCheck.message, true);
-      return;
+  /**
+   * Handles changes to the password input field.
+   * Dispatches actions to update the password state and to set a message if the password is empty.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object for the input change.
+   */
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    dispatch({type: REGISTRATION_TYPE, payload: {password: newPassword}});
+    if (!newPassword) {
+      dispatch({
+        type: REGISTRATION_TYPE,
+        payload: {resultMsg: 'Password cannot be empty'},
+      });
     }
-    passwordsSame(passwordConfirm, e.target.value);
   };
 
   /**
    * Handles changes to the password confirmation input field.
-   * Checks if the password and confirmation match.
+   * Dispatches actions to update the password confirmation state and to set a message if the confirmation is empty.
    *
    * @param {React.ChangeEvent<HTMLInputElement>} e - The event object for the input change.
    */
   const onChangePasswordConfirm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({payload: e.target.value, type: 'passwordConfirm'});
-    passwordsSame(password, e.target.value);
+    const newConfirmPassword = e.target.value;
+    dispatch({
+      type: REGISTRATION_TYPE,
+      payload: {passwordConfirm: newConfirmPassword},
+    });
+    if (!newConfirmPassword) {
+      dispatch({
+        type: REGISTRATION_TYPE,
+        payload: {resultMsg: 'Password confirmation cannot be empty'},
+      });
+    }
   };
+
+  useEffect(() => {
+    passwordsSame(password, passwordConfirm);
+  }, [password, passwordConfirm]);
 
   /**
    * Compares the password and password confirmation values.
-   * Updates the form submission state based on whether they match.
+   * Dispatches an action to indicate a mismatch or proceeds with form validity check on match.
    *
    * @param {string} passwordVal - The current password value.
    * @param {string} passwordConfirmVal - The current password confirmation value.
-   * @returns {boolean} True if the passwords match, false otherwise.
    */
   const passwordsSame = (passwordVal: string, passwordConfirmVal: string) => {
     if (passwordVal !== passwordConfirmVal) {
-      allowSubmit(dispatch, 'Passwords do not match', true);
-      return false;
+      dispatch({
+        type: REGISTRATION_TYPE,
+        payload: {resultMsg: 'Passwords do not match'},
+      });
     } else {
-      dispatch({payload: false, type: 'isPasswordInvalid'});
+      dispatch({
+        type: REGISTRATION_TYPE,
+        payload: {resultMsg: '', isPasswordInvalid: false},
+      });
       checkFormValidity();
-      return true;
     }
   };
 
