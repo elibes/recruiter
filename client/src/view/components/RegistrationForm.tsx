@@ -13,7 +13,6 @@ import {
   setUsername,
   validateRegistration,
   register,
-  login,
 } from '../../viewmodel/userSlice';
 import Button from './Button';
 const RegistrationForm = () => {

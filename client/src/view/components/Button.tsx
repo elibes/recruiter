@@ -13,7 +13,7 @@ interface Props {
  */
 const Button: React.FC<Props> = React.memo(({onClick, text, className}) => {
   return (
-    <button className="className" onClick={onClick}>
+    <button className={className} onClick={onClick}>
       {text}
     </button>
   );
