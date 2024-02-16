@@ -1,6 +1,14 @@
-import React, {FC, useReducer} from 'react';
+import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import '../styles/LoginForm.css';
-import LoginViewModel from '../../viewmodel/LoginViewModel';
+import {RootState, AppDispatch} from '../../store';
+import {
+  setPassword,
+  setUsername,
+  login,
+  validateLogin,
+} from '../../viewmodel/userSlice';
+import {validateLoginForm} from '../../util/validation';
 import InputField from './InputField';
 import Button from './Button';
 
@@ -13,41 +21,58 @@ import Button from './Button';
  * @component
  * @returns {JSX.Element} The rendered login form component.
  */
-const LoginForm: FC = () => {
-  const {
-    userName,
-    password,
-    resultMsg,
-    handlePasswordChange,
-    handleUsernameChange,
-    onClickLogin,
-    dispatch,
-  } = LoginViewModel();
+const LoginForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const {userName, password, error} = useSelector(
+    (state: RootState) => state.user
+  );
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPassword(e.target.value));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(validateLogin());
+    dispatch(login());
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
-      {error && <p>{error}</p>}
-      <div className="form-group">
-        <InputField
-          label="Username"
-          type="text"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+    <div onSubmit={handleSubmit}>
+      <div className="login-form">
+        <div className="form-group">
+          <InputField
+            className="input"
+            label="Username"
+            type="text"
+            value={userName}
+            onChange={handleUsernameChange}
+          />
+        </div>
+        <div className="form-group">
+          <InputField
+            className="input"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        <Button
+          text="Login"
+          onClick={() => dispatch(login())}
+          className="login-button"
         />
+        {error ? <p>{error}</p> : ''}
+        <div className="registered-user-link">
+          Need to register? <a href="/register">Register</a>
+        </div>
       </div>
-      <div className="form-group">
-        <InputField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-      </div>
-      <Button text="Login" onClick={() => {}} className="login-button" />
-      <div className="registered-user-link">
-        Need to registered? <a href="/register">Register</a>
-      </div>
-    </form>
+    </div>
   );
 };
 

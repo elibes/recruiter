@@ -1,9 +1,21 @@
 import * as React from 'react';
-import {FC} from 'react';
 import '../styles/RegistrationForm.css';
 import {useSelector, useDispatch} from 'react-redux';
 import InputField from './InputField';
 import PasswordComparison from '../../util/PasswordComparison';
+import {AppDispatch, RootState} from '../../store';
+import {
+  login,
+  setEmail,
+  setFirstname,
+  setLastname,
+  setPassword,
+  setPasswordConfirm,
+  setPersonalNumber,
+  setUsername,
+  validateRegistration,
+  register,
+} from '../../viewmodel/userSlice';
 
 /**
  * Props for the `RegistrationForm` component.
@@ -22,84 +34,112 @@ interface RegistrationFormProps {
   checkFormValidity: () => void;
 }
 
-/**
- * `RegistrationForm` component renders the user registration form with various input fields and a submit button.
- * It delegates the input handling to the `InputField` component and password validation to the `PasswordComparison` component.
- *
- * @component
- * @param {RegistrationFormProps} props - The props for the `RegistrationForm` component.
- */
-const RegistrationForm: FC<RegistrationFormProps> = ({
-  onChange,
-  onClickRegister,
-  checkFormValidity,
-}) => {
+const RegistrationForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const {
-    firstName,
-    lastName,
+    firstname,
+    lastname,
     userName,
     password,
     passwordConfirm,
     personalNumber,
     email,
-    isSubmitDisabled,
     resultMsg,
-  } = useSelector((state: any) => state.users);
+  } = useSelector((state: RootState) => state.user);
+
+  const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFirstname(e.target.value));
+  };
+
+  const handleLastnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setLastname(e.target.value));
+  };
+
+  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPassword(e.target.value));
+  };
+
+  const handlePasswordConfirmChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(setPasswordConfirm(e.target.value));
+  };
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setEmail(e.target.value));
+  };
+
+  const handlePersonalNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(setPersonalNumber(e.target.value));
+  };
+
+  const handleRegister = () => {
+    dispatch(validateRegistration());
+    dispatch(register());
+  };
 
   return (
     <div className="registration-container">
-      <form>
+      <div>
         <h2>Registration</h2>
         <div className="reg-inputs">
           <InputField
             label="first name"
             type="text"
-            value={firstName}
-            onChange={e => onChange(e, 'firstName')}
+            value={firstname}
+            onChange={handleFirstnameChange}
             className="form-input"
           />
           <InputField
             label="last name"
             type="text"
-            value={lastName}
-            onChange={e => onChange(e, 'lastName')}
+            value={lastname}
+            onChange={handleLastnameChange}
             className="form-input"
           />
           <InputField
             label="username"
             type="text"
             value={userName}
-            onChange={e => onChange(e, 'username')}
+            onChange={handleUserNameChange}
             className="form-input"
           />
-          <div>
-            <PasswordComparison
-              password={password}
-              passwordConfirm={passwordConfirm}
-              checkFormValidity={checkFormValidity}
-            />
-          </div>
+          <InputField
+            label="password"
+            type="text"
+            value={userName}
+            onChange={handlePasswordChange}
+            className="form-input"
+          />
+          <InputField
+            label="repeat password"
+            type="text"
+            value={userName}
+            onChange={handlePasswordConfirmChange}
+            className="form-input"
+          />
           <InputField
             label="person number"
             type="text"
             value={personalNumber}
-            onChange={e => onChange(e, 'personNumber')}
+            onChange={handlePersonalNumberChange}
             className="form-input"
           />
           <InputField
             label="email"
             type="text"
             value={email}
-            onChange={e => onChange(e, 'email')}
+            onChange={handleEmailChange}
             className="form-input"
           />
         </div>
         <div className="form-buttons">
-          <button
-            className="action-btn"
-            disabled={isSubmitDisabled}
-            onClick={onClickRegister}
-          >
+          <button className="action-btn" onClick={onClickRegister}>
             Register
           </button>
           <span className="result-message">{resultMsg}</span>
@@ -107,7 +147,7 @@ const RegistrationForm: FC<RegistrationFormProps> = ({
         <div className="registered-user-link">
           Already registered? <a href="/login">Log in</a>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
