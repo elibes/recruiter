@@ -5,13 +5,14 @@ import 'react-date-range/dist/theme/default.css';
 import {DateRangePicker} from 'react-date-range';
 import {addYears} from 'date-fns';
 import {useSelector, useDispatch} from 'react-redux';
-import {AppDispatch, RootState} from '../../viewmodel/reduxStore';
+
 import {
   applicationValidator,
   createNewAvailability,
   setDates,
   submitApplication,
-} from '../../viewmodel/ApplicationViewModel';
+} from '../../viewmodel/applicationSlice';
+import {AppDispatch, RootState} from '../../store';
 
 const ApplicationForm: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,6 +21,9 @@ const ApplicationForm: FC = () => {
   );
 
   const errors = useSelector((state: RootState) => state.application.errorList);
+  const resultMsg = useSelector(
+    (state: RootState) => state.application.resultMsg
+  );
 
   const selectionList = ranges.map(range => {
     return {
@@ -56,6 +60,7 @@ const ApplicationForm: FC = () => {
       </button>
       <button>Cancel Application</button>
       {errors ? <span>{errors}</span> : ''}
+      <span>{resultMsg}</span>
     </div>
   );
 };

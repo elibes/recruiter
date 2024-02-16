@@ -4,11 +4,12 @@ export async function getAllCompetencies() {
     const response = await fetch(url, {
       method: 'GET',
     });
-
+    /*
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`HTTP error ${response.status}: ${errorText}`);
     }
+    */
     const body = await response.json();
     return body.data[0];
   } catch (error) {

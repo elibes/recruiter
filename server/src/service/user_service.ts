@@ -1,11 +1,15 @@
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {ConflictError, LoginPasswordNotMatchError, UserNotFoundError} from '../utilities/custom_errors';
+import {
+  ConflictError,
+  LoginPasswordNotMatchError,
+  UserNotFoundError,
+} from '../utilities/custom_errors';
 import {Database} from '../integration/database';
 import {UserDAO} from '../integration/user_dao';
 import {AuthenticationService} from './authentication_service';
 import {APPLICANT_ROLE_ID} from '../utilities/configurations';
-import {UserLoginDTO} from "../model/dto/user_login_dto";
-import {UserDTO} from "../model/dto/user_dto";
+import {UserLoginDTO} from '../model/dto/user_login_dto';
+import {UserDTO} from '../model/dto/user_dto';
 import * as bcrypt from 'bcrypt';
 
 /**
@@ -72,20 +76,22 @@ export class UserService {
    * @async
    */
   async handleLogin(data: UserLoginDTO): Promise<UserDTO> {
-    const db = Database.getInstance().database;
-
     try {
-      const userDao = UserDAO.getInstance(db);
+      const userDao = UserDAO.getInstance();
       const user = await userDao.findUserByUsername(data.username);
-      if(!user) {
-        throw new UserNotFoundError(`User with username ${data.username} not found.`);
+      if (!user) {
+        throw new UserNotFoundError(
+          `User with username ${data.username} not found.`
+        );
       }
-      const passwordMatch = await bcrypt.compare(data.password, user.passwordHash);
-      if(!passwordMatch) {
+      const passwordMatch = await bcrypt.compare(
+        data.password,
+        user.passwordHash
+      );
+      if (!passwordMatch) {
         throw new LoginPasswordNotMatchError('Password is invalid');
       }
       return user;
-
     } catch (error) {
       throw error;
     }
@@ -104,20 +110,18 @@ export class UserService {
    * @async
    */
 
-  async isLoggedIn(username:string):Promise<UserDTO> {
-    const db = Database.getInstance().database;
-
+  async isLoggedIn(username: string): Promise<UserDTO> {
     try {
-      const userDao = UserDAO.getInstance(db);
+      const userDao = UserDAO.getInstance();
       const user = await userDao.findUserByUsername(username);
-      if(!user) {
-        throw new UserNotFoundError(`User with username ${username} not found.`);
+      if (!user) {
+        throw new UserNotFoundError(
+          `User with username ${username} not found.`
+        );
       }
       return user;
-
     } catch (error) {
       throw error;
     }
   }
-
 }

@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {
   setCompetence,
   setCompetenceYears,
-} from '../../viewmodel/ApplicationViewModel';
+} from '../../viewmodel/applicationSlice';
 
 interface ListItemProps {
   competenceId: number;

@@ -1,9 +1,8 @@
-import React from 'react';
+import * as React from 'react';
 import './App.css';
 import AppRouter from './routes/AppRouter';
 import {Provider} from 'react-redux';
-
-import {store} from './viewmodel/reduxStore';
+import {store} from './store';
 
 /**
  * App component is the root component of the application.

@@ -1,8 +1,8 @@
 import {FC, useEffect} from 'react';
 import CompetenceItem from './CompetenceItem';
-import {getCompetencies} from '../../viewmodel/ApplicationViewModel';
-import {AppDispatch, RootState} from '../../viewmodel/reduxStore';
+import {getCompetencies} from '../../viewmodel/applicationSlice';
 import {useSelector, useDispatch} from 'react-redux';
+import {AppDispatch, RootState} from '../../store';
 
 interface CompetenceItemProps {
   itemId: number;

@@ -39,14 +39,14 @@ const AppRouter = () => {
           }
         />
         <Route
-          path="/testRoute"
+          path="/application"
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
               <ApplicationView />
             </React.Suspense>
           }
         />
-        <Route path="/" element={<Navigate to="/testRoute" />} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route
           path={'*'}
           element={
