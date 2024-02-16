@@ -9,14 +9,14 @@ export function validateUsername(username: string): string {
 
 export function validateFirstname(firstname: string): string {
   if (!firstname) {
-    return 'Username is required.';
+    return 'Firstname is required.';
   }
   return '';
 }
 
 export function validateLastname(lastname: string): string {
   if (!lastname) {
-    return 'Username is required.';
+    return 'Lastname is required.';
   }
   return '';
 }
@@ -24,7 +24,7 @@ export function validateLastname(lastname: string): string {
 // Function to validate password
 export function validatePassword(username: string): string {
   if (!username) {
-    return 'Username is required.';
+    return 'Password is required.';
   }
   return '';
 }
@@ -51,12 +51,4 @@ export function validatePasswordConfirmation(
     return 'Passwords do not match.';
   }
   return '';
-}
-
-// validate login form
-export function validateLoginForm(username: string, password: string) {
-  return {
-    username: validateUsername(username),
-    password: validatePassword(password),
-  };
 }

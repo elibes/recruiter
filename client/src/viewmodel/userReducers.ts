@@ -28,7 +28,7 @@ export const lastnameReducer = (state: any, action: PayloadAction<string>) => {
   state.lastname = action.payload;
 };
 export const emailReducer = (state: any, action: PayloadAction<string>) => {
-  state.lastname = action.payload;
+  state.email = action.payload;
 };
 
 export const personalNumberReducer = (
@@ -47,40 +47,62 @@ export const personalNumberReducer = (
  * @param {string} action.payload.error - The error message, if any.
  */
 export const loginReducer = (state: any, action: any) => {
+  console.log(action);
+  if (!action.payload) return;
   if (action.payload.success) {
     state.isLoggedIn = true;
     state.resultMsg = [action.payload.data];
   } else {
-    state.error = [action.payload.error];
+    state.error = [action.payload.error.message];
   }
 };
 export const registerReducer = (state: any, action: any) => {
+  if (!action.payload) return;
   if (action.payload.success) {
     state.isLoggedIn = true;
     state.resultMsg = [action.payload.data];
   } else {
-    state.error = [action.payload.error];
+    state.error = [action.payload.error.message];
   }
 };
 
 export const validateLoginReducer = (state: any) => {
   const errorList: string[] = [];
-  errorList.push(validateUsername(state.userName));
-  errorList.push(validatePassword(state.password));
-  errorList.push();
+  if (validateUsername(state.userName)) {
+    errorList.push(validateUsername(state.userName));
+  }
+  if (validatePassword(state.password)) {
+    errorList.push(validatePassword(state.password));
+  }
   state.error = errorList;
 };
 
 export const validateRegistrationReducer = (state: any) => {
+  console.log('test');
   const errorList: string[] = [];
-  errorList.push(validateUsername(state.userName));
-  errorList.push(validateFirstname(state.firstname));
-  errorList.push(validateLastname(state.lastname));
-  errorList.push(validateEmail(state.email));
-  errorList.push(validatePassword(state.password));
-  errorList.push(
-    validatePasswordConfirmation(state.password, state.passwordConfirm)
-  );
-  errorList.push(validatePersonalNumber(state.personalNumber));
+  if (validateUsername(state.userName)) {
+    errorList.push(validateUsername(state.userName));
+  }
+  if (validateFirstname(state.firstname)) {
+    errorList.push(validateFirstname(state.firstname));
+  }
+  if (validateLastname(state.lastname)) {
+    errorList.push(validateLastname(state.lastname));
+  }
+  if (validateEmail(state.email)) {
+    errorList.push(validateEmail(state.email));
+  }
+  if (validatePassword(state.password)) {
+    errorList.push(validatePassword(state.password));
+  }
+  if (validatePasswordConfirmation(state.password, state.passwordConfirm)) {
+    errorList.push(
+      validatePasswordConfirmation(state.password, state.passwordConfirm)
+    );
+  }
+  if (validatePersonalNumber(state.personalNumber)) {
+    errorList.push(validatePersonalNumber(state.personalNumber));
+  }
+
   state.error = errorList;
 };

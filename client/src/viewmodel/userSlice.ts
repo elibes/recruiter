@@ -13,7 +13,6 @@ import {
   registerReducer,
 } from './userReducers';
 import {loginModel} from '../model/loginModel';
-import {RootState} from '../store';
 import {registrationModel} from '../model/RegistrationModel';
 
 interface UserState {
@@ -60,32 +59,31 @@ export const userSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(login.fulfilled, loginReducer)
-      .addCase(login.rejected, loginReducer)
-      .addCase(register.fulfilled, registerReducer)
-      .addCase(register.rejected, registerReducer);
+      .addCase(register.fulfilled, registerReducer);
   },
 });
 
-export const login = createAsyncThunk(
-  'login/login',
-  async (arg, {getState}) => {
-    const state = getState() as {user: UserState};
+export const login = createAsyncThunk('user/login', async (arg, {getState}) => {
+  const state = getState() as {user: UserState};
+  if (state.user.error.length === 0) {
     return await loginModel(state.user.userName, state.user.password);
-  }
-);
+  } else return false;
+});
 
 export const register = createAsyncThunk(
-  'login/login',
+  'user/register',
   async (arg, {getState}) => {
     const state = getState() as {user: UserState};
-    return await registrationModel(
-      state.user.firstname,
-      state.user.lastname,
-      state.user.userName,
-      state.user.password,
-      state.user.personalNumber,
-      state.user.email
-    );
+    if (state.user.error.length === 0) {
+      return await registrationModel(
+        state.user.firstname,
+        state.user.lastname,
+        state.user.userName,
+        state.user.password,
+        state.user.personalNumber,
+        state.user.email
+      );
+    } else return false;
   }
 );
 

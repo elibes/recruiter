@@ -21,11 +21,12 @@ async function loginModel(userName: string, password: string): Promise<any> {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     });
-
+    /*
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`HTTP error ${response.status}: ${errorText}`);
     }
+    */
     return await response.json();
   } catch (error) {
     console.error('Fetch operation failed:', error);

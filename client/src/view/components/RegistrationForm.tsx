@@ -27,6 +27,7 @@ const RegistrationForm = () => {
     personalNumber,
     email,
     resultMsg,
+    error,
   } = useSelector((state: RootState) => state.user);
 
   const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,14 +95,14 @@ const RegistrationForm = () => {
           <InputField
             label="password"
             type="text"
-            value={userName}
+            value={password}
             onChange={handlePasswordChange}
             className="form-input"
           />
           <InputField
             label="repeat password"
             type="text"
-            value={userName}
+            value={passwordConfirm}
             onChange={handlePasswordConfirmChange}
             className="form-input"
           />
@@ -128,6 +129,7 @@ const RegistrationForm = () => {
           />
         </div>
         <span className="result-message">{resultMsg}</span>
+        <span className="result-message">{error}</span>
         <div className="registered-user-link">
           Already registered? <a href="/login">Log in</a>
         </div>
