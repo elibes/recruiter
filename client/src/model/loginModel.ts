@@ -21,7 +21,7 @@ async function loginModel(userName: string, password: string): Promise<any> {
     return await response.json();
   } catch (error) {
     console.error('Fetch operation failed:', error);
-    throw new Error('Registration failed');
+    throw new Error('Login failed');
   }
 }
 
