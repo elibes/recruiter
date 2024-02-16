@@ -1,21 +1,64 @@
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* LoginForm.css */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+}
+
+form {
   max-width: 400px;
-  margin: auto;
+  margin: 60px auto;
   padding: 20px;
+  background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
+.input-group {
+  margin-bottom: 20px;
 }
 
-.login-error {
-  color: #d32f2f;
-  margin-bottom: 12px;
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333333;
+}
+
+.result-message {
+  margin-top: 20px;
+  color: #d9534f;
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  form {
+    margin: 20px;
+  }
 }

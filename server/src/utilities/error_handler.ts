@@ -66,6 +66,7 @@ class ErrorHandler {
         break;
 
       default:
+        console.log(err);
         httpStatusCode = 500;
         errorMessage.message = 'Sever error';
         break;

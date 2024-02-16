@@ -1,96 +1,138 @@
-import React, {FC, useReducer} from 'react';
-import RegistrationViewModel from '../../viewmodel/RegistrationViewModel';
-import PasswordComparison from '../../util/PasswordComparison';
+import * as React from 'react';
 import '../styles/RegistrationForm.css';
-import {allowSubmit} from '../../util/Helper';
-
-/**
- * RegistrationForm component renders the user registration form interface.
- * It uses the RegistrationViewModel to manage form state and handle changes and submissions.
- * The form includes fields for first name, last name, username, password, personal number, and email.
- * It also integrates the PasswordComparison component to handle password and confirmation input.
- *
- * @component
- * @returns {JSX.Element} The rendered registration form component.
- */
-const RegistrationForm: FC = () => {
+import {useSelector, useDispatch} from 'react-redux';
+import InputField from './InputField';
+import {AppDispatch, RootState} from '../../store';
+import {
+  setEmail,
+  setFirstname,
+  setLastname,
+  setPassword,
+  setPasswordConfirm,
+  setPersonalNumber,
+  setUsername,
+  validateRegistration,
+  register,
+} from '../../viewmodel/userSlice';
+import Button from './Button';
+const RegistrationForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const {
-    firstName,
-    lastName,
+    firstname,
+    lastname,
     userName,
     password,
+    passwordConfirm,
     personalNumber,
     email,
-    passwordConfirm,
     resultMsg,
-    isSubmitDisabled,
-    onChangeFirstName,
-    onChangeLastName,
-    onChangePersonNumber,
-    onChangeUsername,
-    onChangeEmail,
-    onClickRegister,
-    checkFormValidity,
-    dispatch,
-  } = RegistrationViewModel();
+    error,
+  } = useSelector((state: RootState) => state.user);
+
+  const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setFirstname(e.target.value));
+  };
+
+  const handleLastnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setLastname(e.target.value));
+  };
+
+  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setUsername(e.target.value));
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setPassword(e.target.value));
+  };
+
+  const handlePasswordConfirmChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(setPasswordConfirm(e.target.value));
+  };
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setEmail(e.target.value));
+  };
+
+  const handlePersonalNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(setPersonalNumber(e.target.value));
+  };
+
+  const handleRegister = () => {
+    dispatch(validateRegistration());
+    dispatch(register());
+  };
 
   return (
     <div className="registration-container">
-      <form>
+      <div>
         <h2>Registration</h2>
         <div className="reg-inputs">
-          <div>
-            <label>first name</label>
-            <input type="text" value={firstName} onChange={onChangeFirstName} />
-          </div>
-          <div>
-            <label>last name</label>
-            <input type="text" value={lastName} onChange={onChangeLastName} />
-          </div>
-          <div>
-            <label>username</label>
-            <input type="text" value={userName} onChange={onChangeUsername} />
-          </div>
-          <div>
-            <PasswordComparison
-              dispatch={dispatch}
-              password={password}
-              passwordConfirm={passwordConfirm}
-              checkFormValidity={checkFormValidity}
-            />
-          </div>
-          <div>
-            <label>person number</label>
-            <input
-              type="text"
-              value={personalNumber}
-              onChange={onChangePersonNumber}
-            />
-          </div>
-          <div>
-            <label>email</label>
-            <input type="text" value={email} onChange={onChangeEmail} />
-          </div>
+          <InputField
+            label="first name"
+            type="text"
+            value={firstname}
+            onChange={handleFirstnameChange}
+            className="form-input"
+          />
+          <InputField
+            label="last name"
+            type="text"
+            value={lastname}
+            onChange={handleLastnameChange}
+            className="form-input"
+          />
+          <InputField
+            label="username"
+            type="text"
+            value={userName}
+            onChange={handleUserNameChange}
+            className="form-input"
+          />
+          <InputField
+            label="password"
+            type="text"
+            value={password}
+            onChange={handlePasswordChange}
+            className="form-input"
+          />
+          <InputField
+            label="repeat password"
+            type="text"
+            value={passwordConfirm}
+            onChange={handlePasswordConfirmChange}
+            className="form-input"
+          />
+          <InputField
+            label="person number"
+            type="text"
+            value={personalNumber}
+            onChange={handlePersonalNumberChange}
+            className="form-input"
+          />
+          <InputField
+            label="email"
+            type="text"
+            value={email}
+            onChange={handleEmailChange}
+            className="form-input"
+          />
         </div>
         <div className="form-buttons">
-          <div className="form-btn-left">
-            <button
-              style={{marginLeft: '.5em'}}
-              className="action-btn"
-              disabled={isSubmitDisabled}
-              onClick={onClickRegister}
-            >
-              Register
-            </button>
-          </div>
-          <span className="result-message">
-            <strong>{resultMsg}</strong>
-          </span>
+          <Button
+            text="Register"
+            onClick={handleRegister}
+            className="action-btn"
+          />
         </div>
+        <span className="result-message">{resultMsg}</span>
+        <span className="result-message">{error}</span>
         <div className="registered-user-link">
           Already registered? <a href="/login">Log in</a>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
