@@ -1,4 +1,3 @@
-import React from 'react';
 import ApplicationForm from './components/ApplicationForm';
 
 const ApplicationView = () => {

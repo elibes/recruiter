@@ -14,6 +14,7 @@ interface CompetenceListProps {
 }
 const CompetenceList: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     dispatch(getCompetencies());
   }, [dispatch]);

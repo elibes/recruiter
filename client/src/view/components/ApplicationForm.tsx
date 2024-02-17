@@ -9,6 +9,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {
   applicationValidator,
   createNewAvailability,
+  cancelApplication,
   setDates,
   submitApplication,
 } from '../../viewmodel/applicationSlice';
@@ -58,7 +59,9 @@ const ApplicationForm: FC = () => {
       >
         Submit Application
       </button>
-      <button>Cancel Application</button>
+      <button onClick={() => dispatch(cancelApplication())}>
+        Cancel Application
+      </button>
       {errors ? <span>{errors}</span> : ''}
       <span>{resultMsg}</span>
     </div>

@@ -1,4 +1,4 @@
-import {ApplicationState} from './applicationSlice';
+import {ApplicationState, initialState} from './applicationSlice';
 import {PayloadAction} from '@reduxjs/toolkit';
 
 export const createNewAvailabilityReducer = (state: ApplicationState) => {
@@ -95,4 +95,18 @@ export const getCompetenciesReducer = (
       }
     );
   }
+};
+
+export const cancelApplicationReducer = (state: ApplicationState) => {
+  state.competencies = state.competencies.map((competence: any) => {
+    return {
+      competenceId: competence.id,
+      competenceName: competence.competenceName,
+      hasCompetence: false,
+      yearsOfExperience: 0,
+    };
+  });
+  state.availability = initialState.availability;
+  state.resultMsg = initialState.resultMsg;
+  state.errorList = initialState.errorList;
 };

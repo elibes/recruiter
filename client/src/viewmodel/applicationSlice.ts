@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {getAllCompetencies} from '../model/CompetenceModel';
 import {
   applicationValidatorReducer,
+  cancelApplicationReducer,
   createNewAvailabilityReducer,
   getCompetenciesReducer,
   setCompetenceReducer,
@@ -45,6 +46,7 @@ const applicationSlice = createSlice({
     setCompetence: setCompetenceReducer,
     setCompetenceYears: setCompetenceYearsReducer,
     applicationValidator: applicationValidatorReducer,
+    cancelApplication: cancelApplicationReducer,
   },
   extraReducers: builder => {
     builder.addCase(getCompetencies.fulfilled, getCompetenciesReducer);
@@ -101,7 +103,8 @@ export const {
   setCompetence,
   setCompetenceYears,
   applicationValidator,
+  cancelApplication,
 } = applicationSlice.actions;
 
-export {ApplicationState};
+export {ApplicationState, initialState};
 export default applicationSlice.reducer;
