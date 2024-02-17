@@ -15,11 +15,11 @@ export class ConflictError extends Error {
 /**
  * This error shall be thrown when a sanitization rule or validation check fails.
  */
-export class ValidationSanitizationError extends Error {
+export class CustomValidationError extends Error {
   static message: string;
   constructor(message: string) {
     super(message);
-    this.name = 'ValidationSanitizationError';
+    this.name = 'ValidationError';
   }
 }
 
@@ -51,4 +51,3 @@ export class LoginPasswordNotMatchError extends Error {
     this.name = 'LoginPasswordNotMatchError';
   }
 }
-

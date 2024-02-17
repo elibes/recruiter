@@ -26,43 +26,30 @@ export class UserService {
    */
   async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
     const db = Database.getInstance().database;
-    const dataRollbackState = {...data};
-
-    try {
-      return await db.transaction(async transaction => {
-        const userDAO = UserDAO.getInstance();
-        const result = await userDAO.findUserByUsername(
-          data.username,
-          transaction
-        );
-        if (result !== null) {
-          throw new ConflictError('That username already exists');
-        }
-        const hashedPassword = await AuthenticationService.hashPassword(
-          data.password
-        );
-
-        const regData: UserRegistrationDTO = {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          username: data.username,
-          password: hashedPassword,
-          personalNumber: data.personalNumber,
-          email: data.email,
-        };
-        await userDAO.createUser(regData, APPLICANT_ROLE_ID, transaction);
-        return true;
-      });
-    } catch (error) {
-      data = dataRollbackState;
-      console.error('Transaction failed:', error);
-      if (error instanceof ConflictError) {
-        //todo, how to deal with different errors?
-        throw error;
-      } else {
-        throw error;
+    return await db.transaction(async transaction => {
+      const userDAO = UserDAO.getInstance();
+      const result = await userDAO.findUserByUsername(
+        data.username,
+        transaction
+      );
+      if (result !== null) {
+        throw new ConflictError('That username already exists');
       }
-    }
+      const hashedPassword = await AuthenticationService.hashPassword(
+        data.password
+      );
+
+      const regData: UserRegistrationDTO = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        username: data.username,
+        password: hashedPassword,
+        personalNumber: data.personalNumber,
+        email: data.email,
+      };
+      await userDAO.createUser(regData, APPLICANT_ROLE_ID);
+      return true;
+    });
   }
 
   /**
