@@ -58,7 +58,7 @@ class Authorization {
       roleId: user.role.toString(),
     };
 
-    const jwtToken = jwt.sign(payload, jwtSecret, {expiresIn: '30 minutes'});
+    const jwtToken = jwt.sign(payload, jwtSecret); //30 min in seconds
 
     const nodeEnv = process.env.NODE_ENV;
     if (typeof nodeEnv !== 'string') {
