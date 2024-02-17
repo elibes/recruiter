@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 const RegistrationView = React.lazy(() => import('../view/RegistrationView'));
 const LoginView = React.lazy(() => import('../view/LoginView'));
+const RecruiterView = React.lazy(() => import('../view/RecruiterView'));
 const NotFoundView = React.lazy(() => import('../view/NotFoundView'));
 
 /**
@@ -34,6 +35,14 @@ const AppRouter = () => {
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
               <RegistrationView />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/recruiter"
+          element={
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <RecruiterView />
             </React.Suspense>
           }
         />

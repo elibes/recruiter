@@ -1,6 +1,7 @@
+import '../styles/LoginForm.css';
+
 import * as React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import '../styles/LoginForm.css';
 import {RootState, AppDispatch} from '../../store';
 import {
   setPassword,
