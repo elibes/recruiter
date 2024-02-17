@@ -31,6 +31,7 @@ class ApplicationApi {
       async (req: Request, res: Response) => {
         handleExpressValidatorErrors(req);
         const userInfo = Authorization.getUserAuth(req);
+        console.log(userInfo);
         const applicationData = this.applicationDataPacker(req.body, userInfo);
         const result =
           await createApplicationService().handleApplication(applicationData);

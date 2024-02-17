@@ -53,11 +53,12 @@ class Authorization {
       throw new Error('JWT_SECRET is not defined');
     }
 
-    const jwtToken = jwt.sign(
-      {id: user.id, username: user.username},
-      jwtSecret,
-      {expiresIn: '30 minutes'}
-    );
+    const payload: CustomJwtPayload = {
+      sub: user.id.toString(),
+      roleId: user.role.toString(),
+    };
+
+    const jwtToken = jwt.sign(payload, jwtSecret, {expiresIn: '30 minutes'});
 
     const nodeEnv = process.env.NODE_ENV;
     if (typeof nodeEnv !== 'string') {
@@ -80,6 +81,7 @@ class Authorization {
    * @returns {Promise<boolean>} True if the user is authenticated, false otherwise.
    * @async
    */
+  /*
   static async checkLogin(
     userService: UserService,
     req: CustomRequest,
@@ -117,9 +119,9 @@ class Authorization {
       return false;
     }
   }
-
+*/
   static getUserAuth(req: CustomRequest): UserAuthDTO {
-    const authCookie = req.cookies.AUTH_COOKIE_NAME;
+    const authCookie = req.cookies.recruiterAuth;
     const jwtSecret = process.env.JWT_SECRET;
     if (typeof jwtSecret !== 'string') {
       throw new Error('JWT_SECRET is not defined');

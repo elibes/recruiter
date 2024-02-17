@@ -1,16 +1,11 @@
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {
-  ConflictError,
-  LoginPasswordNotMatchError,
-  UserNotFoundError,
-} from '../utilities/custom_errors';
+import {ConflictError, UserNotFoundError} from '../utilities/custom_errors';
 import {Database} from '../integration/database';
 import {UserDAO} from '../integration/user_dao';
 import {AuthenticationService} from './authentication_service';
 import {APPLICANT_ROLE_ID} from '../utilities/configurations';
 import {UserLoginDTO} from '../model/dto/user_login_dto';
 import {UserDTO} from '../model/dto/user_dto';
-import * as bcrypt from 'bcrypt';
 
 /**
  * This class implements the logic for handling user related operations.
@@ -63,25 +58,18 @@ export class UserService {
    * @async
    */
   async handleLogin(data: UserLoginDTO): Promise<UserDTO> {
-    try {
-      const userDao = UserDAO.getInstance();
-      const user = await userDao.findUserByUsername(data.username);
-      if (!user) {
-        throw new UserNotFoundError(
-          `User with username ${data.username} not found.`
-        );
-      }
-      const passwordMatch = await bcrypt.compare(
-        data.password,
-        user.passwordHash
+    const userDao = UserDAO.getInstance();
+    const user = await userDao.findUserByUsername(data.username);
+    if (!user) {
+      throw new UserNotFoundError(
+        `User with username ${data.username} not found.`
       );
-      if (!passwordMatch) {
-        throw new LoginPasswordNotMatchError('Password is invalid');
-      }
-      return user;
-    } catch (error) {
-      throw error;
     }
+    await AuthenticationService.comparePasswords(
+      data.password,
+      user.passwordHash
+    );
+    return user;
   }
 
   /**

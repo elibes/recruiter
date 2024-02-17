@@ -100,7 +100,7 @@ export const userRegistrationValidationSchema: any = {
 
 export const applicationValidationSchema: any = {
   ...baseValidationSchema,
-  'cookie.recruiterAuth': {
+  recruiterAuth: {
     jsonWebTokenValidator: {
       custom: Validators.jsonWebTokenValidator,
       errorMessage: 'must be a valid JWT string',
@@ -109,5 +109,6 @@ export const applicationValidationSchema: any = {
 };
 
 export const userLoginValidator: any = {
+  ...baseValidationSchema,
   ...userNamePasswordValidationSchema,
 };

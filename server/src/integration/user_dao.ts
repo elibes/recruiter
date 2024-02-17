@@ -1,5 +1,5 @@
 import {User} from '../model/user';
-import {Sequelize, ValidationError} from 'sequelize';
+import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {Transaction} from 'sequelize';
@@ -9,7 +9,6 @@ import {Transaction} from 'sequelize';
  * */
 class UserDAO {
   private static instance: UserDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
