@@ -15,7 +15,7 @@ import {
 import {loginModel} from '../model/loginModel';
 import {registrationModel} from '../model/RegistrationModel';
 
-interface UserState {
+export interface UserState {
   userName: string;
   password: string;
   passwordConfirm: string;
