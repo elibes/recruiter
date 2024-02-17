@@ -4,14 +4,20 @@ import validator from 'validator';
  * This class stores validation functions to be used across the application.
  */
 class Validators {
-  static defaultValidator(s: string) {
-    return !validator.isEmpty(s) && validator.isLength(s, {max: 255});
+  static defaultValidator(value: any) {
+    if (typeof value === 'string') {
+      return !validator.isEmpty(value) && validator.isLength(value, {max: 255});
+    } else {
+      return true;
+    }
   }
-  static defaultSanitizer(s: string) {
-    s = validator.trim(s);
-    s = validator.escape(s);
-    s = validator.stripLow(s);
-    return s;
+  static defaultSanitizer(value: any) {
+    if (typeof value === 'string') {
+      value = validator.trim(value);
+      value = validator.stripLow(value);
+      value = validator.escape(value);
+    }
+    return value;
   }
 
   static passwordValidator(s: string) {
