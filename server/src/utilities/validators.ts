@@ -32,6 +32,9 @@ class Validators {
     return true;
   }
 
+  static jsonWebTokenValidator(s: string) {
+    return !validator.isEmpty(s) && validator.isJWT(s);
+  }
   static emailValidator(s: string) {
     return validator.isEmail(s);
   }

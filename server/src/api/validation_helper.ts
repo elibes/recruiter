@@ -1,7 +1,7 @@
-import {Validators} from '../utilities/validators';
 import {Request} from 'express';
 import {validationResult} from 'express-validator';
 import {CustomValidationError} from '../utilities/custom_errors';
+import {Validators} from '../utilities/validators';
 
 /**
  * @fileoverview This file constructs various express validator schemas to be used by different apis.
@@ -94,6 +94,16 @@ export const userRegistrationValidationSchema: any = {
     lastNameValidator: {
       custom: Validators.nameValidator,
       errorMessage: 'is invalid',
+    },
+  },
+};
+
+export const applicationValidationSchema: any = {
+  ...baseValidationSchema,
+  'cookie.recruiterAuth': {
+    jsonWebTokenValidator: {
+      custom: Validators.jsonWebTokenValidator,
+      errorMessage: 'must be a valid JWT string',
     },
   },
 };

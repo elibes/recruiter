@@ -3,7 +3,7 @@ import {createUserService} from '../service/user_service_factory';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from './Authorization';
+import Authorization from './authorization';
 import {UserLoginDTO} from '../model/dto/user_login_dto';
 import {
   handleExpressValidatorErrors,

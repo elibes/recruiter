@@ -4,6 +4,9 @@ import {UserDTO} from '../model/dto/user_dto';
 import {UserService} from '../service/user_service';
 import {createUserService} from '../service/user_service_factory';
 import {CookieOptions} from 'express';
+import validator from 'validator';
+import {CustomValidationError} from '../utilities/custom_errors';
+import {UserAuthDTO} from '../model/dto/user_auth_dto';
 
 /**
  * Extends the JwtPayload to include a username.
@@ -11,6 +14,10 @@ import {CookieOptions} from 'express';
  */
 interface JwtPayloadWithUsername extends jwt.JwtPayload {
   username?: string;
+}
+
+interface CustomJwtPayload extends jwt.JwtPayload {
+  roleId: string;
 }
 
 /**
@@ -108,6 +115,28 @@ class Authorization {
     } catch (err) {
       res.clearCookie(Authorization.AUTH_COOKIE_NAME);
       return false;
+    }
+  }
+
+  static getUserAuth(req: CustomRequest): UserAuthDTO {
+    const authCookie = req.cookies.AUTH_COOKIE_NAME;
+    const jwtSecret = process.env.JWT_SECRET;
+    if (typeof jwtSecret !== 'string') {
+      throw new Error('JWT_SECRET is not defined');
+    }
+    const payload = jwt.verify(authCookie, jwtSecret) as CustomJwtPayload;
+    if (
+      payload.sub &&
+      payload.roleId &&
+      validator.isInt(payload.sub) &&
+      validator.isInt(payload.roleId)
+    ) {
+      return {
+        userId: validator.toInt(payload.sub),
+        roleId: validator.toInt(payload.roleId),
+      };
+    } else {
+      throw new CustomValidationError('auth payload is invalid');
     }
   }
 }
