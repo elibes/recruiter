@@ -8,7 +8,7 @@ import ApplicationListItem from './ApplicationListItem';
 
 const ApplicationList = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {isLoaded, sorting, applications} = useSelector(
+  const {isLoaded, sorting, applications, error} = useSelector(
     (state: RootState) => state.applicationList
   );
   const changeSorting = event => {
@@ -24,6 +24,11 @@ const ApplicationList = () => {
             <option value="status">Status</option>
           </select>
         </div>
+      ) : (
+        <></>
+      )}
+      {error.length > 0 ? (
+        <div className="error-message">{error[0]}</div>
       ) : (
         <></>
       )}

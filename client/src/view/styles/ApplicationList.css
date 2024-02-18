@@ -26,6 +26,8 @@ body, html {
   text-transform: capitalize; /* Auto capitalize text */
   font-weight: bold; /* Make text bold */
   font-size: large;
+  word-wrap: break-word; /* Allow long words to break onto multiple lines */
+  hyphens: manual; /* Enable hyphenation */
 }
 
 .application-status-accepted,
@@ -48,4 +50,17 @@ body, html {
 }
 .application-status-unhandled {
   background-color: dimgray;
+}
+
+.sort{
+  margin: 1.0rem;
+  padding: 0.25rem;
+}
+
+.error-message {
+  margin: 1.0rem;
+  padding: 0.25rem;
+  color: red;
+  font-weight: bold;
+  font-size: larger;
 }
