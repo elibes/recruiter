@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {
   setCompetence,
   setCompetenceYears,
 } from '../../viewmodel/applicationSlice';
-import {RootState} from '../../store';
+import {validateYearsOfExperience} from '../../util/validation';
+import {useState} from 'react';
 
 interface ListItemProps {
   competenceId: number;
@@ -19,30 +20,53 @@ const CompetenceItem: React.FC<ListItemProps> = ({
   yearsOfExperience,
 }) => {
   const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState('');
+
+  const handleCompetenceChecked = () => {
+    dispatch(setCompetence({competenceId}));
+  };
+
+  const handleYearsOfExperienceBlur = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (validateYearsOfExperience(e.target.value)) {
+      dispatch(
+        setCompetenceYears({
+          competenceId: competenceId,
+          years: e.target.value,
+        })
+      );
+    }
+  };
+
+  const handleYearsOfExperienceChanged = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.value === '' || validateYearsOfExperience(e.target.value)) {
+      setInputValue(e.target.value);
+    }
+  };
 
   return (
     <div>
-      <input
-        type={'checkbox'}
-        id={`itemCheckbox-${competenceId}`}
-        checked={hasCompetence}
-        onClick={() => dispatch(setCompetence({competenceId}))}
-      />
-      <span>{competenceName}</span>
-      <span>{'   Years of experience: '}</span>
-      <input
-        type={'text'}
-        id={`itemInput-${competenceId}`}
-        value={yearsOfExperience}
-        onChange={e =>
-          dispatch(
-            setCompetenceYears({
-              competenceId: competenceId,
-              years: e.target.value,
-            })
-          )
-        }
-      />
+      <label>
+        {competenceName}
+        <input
+          type={'checkbox'}
+          id={`CompetenceCheckbox-${competenceId}`}
+          checked={hasCompetence}
+          onChange={handleCompetenceChecked}
+        />
+        <span>{'   Years of experience: '}</span>
+        <input
+          type={'text'}
+          id={`CompetenceInput-${competenceId}`}
+          value={yearsOfExperience ? yearsOfExperience : inputValue}
+          onChange={handleYearsOfExperienceChanged}
+          onBlur={handleYearsOfExperienceBlur}
+          disabled={!hasCompetence}
+        />
+      </label>
     </div>
   );
 };

@@ -36,6 +36,7 @@ const ApplicationForm: FC = () => {
   return (
     <div>
       <CompetenceList></CompetenceList>
+      <h3>Availabilities</h3>
       <DateRangePicker
         ranges={selectionList}
         minDate={new Date()}
@@ -49,7 +50,7 @@ const ApplicationForm: FC = () => {
           };
           dispatch(setDates(formattedRange));
         }}
-      />
+      ></DateRangePicker>
       <button onClick={() => dispatch(createNewAvailability())}>+</button>
       <button
         onClick={() => {

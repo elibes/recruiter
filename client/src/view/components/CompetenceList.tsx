@@ -4,14 +4,6 @@ import {getCompetencies} from '../../viewmodel/applicationSlice';
 import {useSelector, useDispatch} from 'react-redux';
 import {AppDispatch, RootState} from '../../store';
 
-interface CompetenceItemProps {
-  itemId: number;
-  competenceName: string;
-}
-
-interface CompetenceListProps {
-  items: CompetenceItemProps[];
-}
 const CompetenceList: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -25,6 +17,7 @@ const CompetenceList: FC = () => {
 
   return (
     <div>
+      <h3>Competencies</h3>
       {competencies.map(competence => (
         <CompetenceItem
           key={competence.competenceId}

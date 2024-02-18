@@ -14,6 +14,14 @@ export function validateFirstname(firstname: string): string {
   return '';
 }
 
+export function validateYearsOfExperience(years: string) {
+  const regex = /^\d+\.?\d*$/;
+  if (!years) {
+    return false;
+  }
+  return regex.test(years);
+}
+
 export function validateLastname(lastname: string): string {
   if (!lastname) {
     return 'Lastname is required.';
