@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {
   getAllApplicationsReducer,
   isLoadedReducer,
+  sortingReducer,
 } from './applicationListReducers';
 import applicationListModel from '../model/applicationListModel';
 
@@ -17,6 +18,7 @@ export interface ApplicationListState {
       status: 'accepted' | 'unhandled' | 'rejected';
     },
   ];
+  sorting: 'a-z' | 'status';
   isLoaded: boolean;
   error: string[];
 }
@@ -33,6 +35,7 @@ const initialState: ApplicationListState = {
       status: 'unhandled',
     },
   ],
+  sorting: 'a-z',
   isLoaded: false,
   error: [],
 };
@@ -45,6 +48,7 @@ export const applicationListSlice = createSlice({
   initialState,
   reducers: {
     setIsLoaded: isLoadedReducer,
+    setSorting: sortingReducer,
   },
   extraReducers: builder => {
     builder.addCase(loadApplications.fulfilled, getAllApplicationsReducer);
@@ -61,6 +65,6 @@ export const loadApplications = createAsyncThunk(
   }
 );
 
-export const {setIsLoaded} = applicationListSlice.actions;
+export const {setIsLoaded, setSorting} = applicationListSlice.actions;
 
 export default applicationListSlice.reducer;
