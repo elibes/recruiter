@@ -6,7 +6,7 @@ import {
   setSorting,
   loadApplications,
 } from '../viewmodel/applicationListSlice';
-import ApplicationListItem from './components/ApplicationListItem';
+import ApplicationList from './components/ApplicationList';
 
 /**
  * Creates the main view for the recruiter. Has a button that loads all applications from
@@ -17,7 +17,7 @@ import ApplicationListItem from './components/ApplicationListItem';
  * */
 const RecruiterView = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {isLoaded, sorting, applications} = useSelector(
+  const {isLoaded, sorting} = useSelector(
     (state: RootState) => state.applicationList
   );
 
@@ -31,41 +31,13 @@ const RecruiterView = () => {
       });
   };
 
-  const changeSorting = event => {
-    const newSorting = event.target.value;
-    dispatch(setSorting(newSorting));
-  };
-
   return (
     <div>
       <h1>Recruiter Dashboard</h1>
       <button onClick={getApplications}>
         {isLoaded ? 'Re-load applications' : 'Load applications'}
       </button>
-      <div>
-        {isLoaded ? (
-          <div>
-            <select className="sort" value={sorting} onChange={changeSorting}>
-              <option value="a-z">Alphabetic</option>
-              <option value="status">Status</option>
-            </select>
-          </div>
-        ) : (
-          <></>
-        )}
-        {isLoaded ? (
-          applications.map(application => (
-            <ApplicationListItem
-              key={application.id}
-              firstName={application.firstName}
-              lastName={application.lastName}
-              status={application.status}
-            />
-          ))
-        ) : (
-          <></>
-        )}
-      </div>
+      <ApplicationList />
     </div>
   );
 };

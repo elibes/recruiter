@@ -1,4 +1,4 @@
-import '../styles/ApplicationListItem.css';
+import '../styles/ApplicationList.css';
 
 import * as React from 'react';
 
