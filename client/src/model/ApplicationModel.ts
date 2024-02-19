@@ -1,3 +1,7 @@
+/**
+ * This function calls the back-end server with a request to submit a job application form.
+ * @param payload the job application form data
+ */
 export async function submitApplicationToBackEnd(payload: any) {
   const url = 'http://localhost:3001/application/'; // API endpoint
   try {

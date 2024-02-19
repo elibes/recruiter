@@ -7,6 +7,7 @@ import {store} from './store';
 /**
  * App component is the root component of the application.
  * It renders the AppRouter component, which handles routing and rendering different views based on the path.
+ * It also provides the application with access to the redux store.
  *
  * @component
  * @returns {JSX.Element} The rendered App component.

@@ -1,5 +1,9 @@
 import ApplicationForm from './components/ApplicationForm';
 
+/**
+ * This component organizes what other components should be displayed in the job application view.
+ * @component
+ */
 const ApplicationView = () => {
   return (
     <>

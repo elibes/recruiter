@@ -12,18 +12,31 @@ import {
 } from './applicationReducers';
 import {submitApplicationToBackEnd} from '../model/ApplicationModel';
 
+/**
+ * This interface represent the slice of state related to a user job application.
+ */
 interface ApplicationState {
-  availability: {startDate: string; endDate: string; key: string}[];
-  competencies: {
-    competenceId: number;
-    competenceName: string;
-    hasCompetence: boolean;
-    yearsOfExperience: number;
-  }[];
+  availability: AvailabilityState[];
+  competencies: CompetenceState[];
   errorList: string[];
   resultMsg: string;
 }
 
+interface AvailabilityState {
+  startDate: string;
+  endDate: string;
+  key: string;
+}
+interface CompetenceState {
+  competenceId: number;
+  competenceName: string;
+  hasCompetence: boolean;
+  yearsOfExperience: number;
+}
+
+/**
+ * This constant declares the initial values for ApplicationState.
+ */
 const initialState: ApplicationState = {
   availability: [
     {
@@ -37,6 +50,15 @@ const initialState: ApplicationState = {
   resultMsg: '',
 };
 
+/**
+ * Creates a redux slice to manage ApplicationState functionality.
+ *
+ * Reducer functions are responsible for changing state, they are tied to a name here and createSlice
+ * automatically generates action creators with names matching the reducer functions. These are then exported
+ * as actions which allows for changing state using dispatch.
+ *
+ * createSlice also uses Immer to wrap the reducers this prevents state mutation, instead converting to immutable updates.
+ */
 const applicationSlice = createSlice({
   name: 'application',
   initialState,
@@ -54,6 +76,10 @@ const applicationSlice = createSlice({
   },
 });
 
+/**
+ * This code defines an asynchronous Redux Thunk action creator for fetching competency names. The promise
+ * emits actions when its state changes, which are handled by extraReducers above.
+ */
 export const getCompetencies = createAsyncThunk(
   'application/getCompetencies',
   async () => {
@@ -61,6 +87,13 @@ export const getCompetencies = createAsyncThunk(
   }
 );
 
+/**
+ * This code defines an asynchronous Redux Thunk action creator for submitting the application to the server. The promise
+ * emits actions when its state changes, which are handled by extraReducers above.
+ *
+ * It looks at the application state and as long as there are currently no errors it will format it and
+ * then send it to the back-end server.
+ */
 export const submitApplication = createAsyncThunk(
   'application/submitApplication',
   async (arg, {getState}) => {
@@ -106,5 +139,5 @@ export const {
   cancelApplication,
 } = applicationSlice.actions;
 
-export {ApplicationState, initialState};
+export {ApplicationState, AvailabilityState, CompetenceState, initialState};
 export default applicationSlice.reducer;

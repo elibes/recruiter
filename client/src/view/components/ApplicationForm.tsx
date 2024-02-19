@@ -16,6 +16,13 @@ import {
 import {AppDispatch, RootState} from '../../store';
 import * as React from 'react';
 
+/**
+ * This component organizes what should be displayed in the job application form.
+ * It also handles user events by dispatching actions which will update the state.
+ * It will re-render when the states in useSelector change.
+ *
+ * @component
+ */
 const ApplicationForm: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const ranges = useSelector(
@@ -25,32 +32,52 @@ const ApplicationForm: FC = () => {
   const resultMsg = useSelector(
     (state: RootState) => state.application.resultMsg
   );
+
+  /**
+   * This const converts the availability state to the Date format that DateRangePicker uses.
+   */
   const selectionList = ranges.map(range => {
     return {
       startDate: new Date(range.startDate),
       endDate: new Date(range.endDate),
+      key: range.key,
     };
   });
 
-  const handleDateRangeSet = (ranges: any) => {
-    const rangeKey = Object.keys(ranges)[0];
+  /**
+   * This function handles the event when a user selects a data range in the DateRangePicker. It will
+   * convert the dates to string and then attempt to update corresponding state using dispatch.
+   * @param range the date range from the picker,
+   */
+  const handleDateRangeSet = (range: any) => {
+    const rangeKey = Object.keys(range)[0];
     const formattedRange = {
-      startDate: ranges[rangeKey].startDate.toISOString(),
-      endDate: ranges[rangeKey].endDate.toISOString(),
+      startDate: range[rangeKey].startDate.toISOString(),
+      endDate: range[rangeKey].endDate.toISOString(),
       key: rangeKey,
     };
     dispatch(setDates(formattedRange));
   };
 
+  /**
+   * This function handles the event when a user wants to add another availability range in the DateRangePicker.
+   */
   const handleNewAvailabilityButton = () => {
     dispatch(createNewAvailability());
   };
 
+  /**
+   * This function handles the event when a user want to submit the job application. First dispatching an action
+   * to set error state and then attempting the submission.
+   */
   const handleSubmitApplicationButton = () => {
     dispatch(applicationValidator());
     dispatch(submitApplication());
   };
 
+  /**
+   * This function handles the event when a user wants to cancel their application.
+   */
   const handleCancelApplicationButton = () => {
     dispatch(cancelApplication());
   };

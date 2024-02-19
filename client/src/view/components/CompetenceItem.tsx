@@ -7,12 +7,25 @@ import {
 import {validateYearsOfExperience} from '../../util/validation';
 import {useState} from 'react';
 
+/**
+ * This interface defines the shape of the competence data props, passed down by the higher level component.
+ */
 interface ListItemProps {
   competenceId: number;
   competenceName: string;
   hasCompetence: boolean;
   yearsOfExperience: number;
 }
+
+/**
+ * This component is responsible for rendering a single competence input, allowing the user to specify
+ * if they have the competence or not and the years of experience if they do.
+ * @param competenceId the id of the competence
+ * @param competenceName the name of the competence
+ * @param hasCompetence a boolean value representing if the user has the competence or not
+ * @param yearsOfExperience a number representing the years of experience a user has with the competence.
+ * @component
+ */
 const CompetenceItem: React.FC<ListItemProps> = ({
   competenceId,
   competenceName,
@@ -22,10 +35,18 @@ const CompetenceItem: React.FC<ListItemProps> = ({
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState('');
 
+  /**
+   * This function handles the event when a user specifies that they have the competence.
+   */
   const handleCompetenceChecked = () => {
     dispatch(setCompetence({competenceId}));
   };
 
+  /**
+   * This function handles when a user finishes writing their competence years. It does basic validation of the input
+   * and then dispatches an action to update the state if it is ok.
+   * @param e the event from the input.
+   */
   const handleYearsOfExperienceBlur = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -39,6 +60,11 @@ const CompetenceItem: React.FC<ListItemProps> = ({
     }
   };
 
+  /**
+   * This function handles each change of the years of experience input. It will update the local state,
+   * corresponding to the value of the input field if the change would leave the input in a valid format.
+   * @param e the change event, emitted on each change in input (each key press).
+   */
   const handleYearsOfExperienceChanged = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
