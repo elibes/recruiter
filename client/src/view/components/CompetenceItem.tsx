@@ -30,7 +30,6 @@ const CompetenceItem: React.FC<ListItemProps> = ({
   competenceId,
   competenceName,
   hasCompetence,
-  yearsOfExperience,
 }) => {
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState('');
@@ -51,6 +50,7 @@ const CompetenceItem: React.FC<ListItemProps> = ({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (validateYearsOfExperience(e.target.value)) {
+      setInputValue(e.target.value);
       dispatch(
         setCompetenceYears({
           competenceId: competenceId,
@@ -87,7 +87,7 @@ const CompetenceItem: React.FC<ListItemProps> = ({
         <input
           type={'text'}
           id={`CompetenceInput-${competenceId}`}
-          value={yearsOfExperience ? yearsOfExperience : inputValue}
+          value={inputValue}
           onChange={handleYearsOfExperienceChanged}
           onBlur={handleYearsOfExperienceBlur}
           disabled={!hasCompetence}

@@ -138,7 +138,7 @@ export const getCompetenciesReducer = (
 ) => {
   if (!action.payload) return;
   if (action.payload.success) {
-    state.competencies = action.payload.data.competencies.map(
+    state.competencies = action.payload.data[0].competencies.map(
       (competence: {id: any; competenceName: any}) => {
         return {
           competenceId: competence.id,
