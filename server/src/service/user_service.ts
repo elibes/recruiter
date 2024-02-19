@@ -20,13 +20,10 @@ export class UserService {
    * @async
    */
   async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
-    const db = Database.getInstance().database;
+    const db = Database.getInstance().getDatabase();
     return await db.transaction(async transaction => {
       const userDAO = UserDAO.getInstance();
-      const result = await userDAO.findUserByUsername(
-        data.username,
-        transaction
-      );
+      const result = await userDAO.findUserByUsername(data.username);
       if (result !== null) {
         throw new ConflictError('That username already exists');
       }
@@ -58,18 +55,21 @@ export class UserService {
    * @async
    */
   async handleLogin(data: UserLoginDTO): Promise<UserDTO> {
-    const userDao = UserDAO.getInstance();
-    const user = await userDao.findUserByUsername(data.username);
-    if (!user) {
-      throw new UserNotFoundError(
-        `User with username ${data.username} not found.`
+    const db = Database.getInstance().getDatabase();
+    return await db.transaction(async transaction => {
+      const userDao = UserDAO.getInstance();
+      const user = await userDao.findUserByUsername(data.username);
+      if (!user) {
+        throw new UserNotFoundError(
+          `User with username ${data.username} not found.`
+        );
+      }
+      await AuthenticationService.comparePasswords(
+        data.password,
+        user.passwordHash
       );
-    }
-    await AuthenticationService.comparePasswords(
-      data.password,
-      user.passwordHash
-    );
-    return user;
+      return user;
+    });
   }
 
   /**
@@ -86,7 +86,8 @@ export class UserService {
    */
 
   async isLoggedIn(username: string): Promise<UserDTO> {
-    try {
+    const db = Database.getInstance().getDatabase();
+    return await db.transaction(async transaction => {
       const userDao = UserDAO.getInstance();
       const user = await userDao.findUserByUsername(username);
       if (!user) {
@@ -95,8 +96,6 @@ export class UserService {
         );
       }
       return user;
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 }

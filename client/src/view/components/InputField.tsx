@@ -31,7 +31,7 @@ const InputField: React.FC<Props> = ({
   value,
   onChange,
   className,
-}) => {
+}: Props): React.ReactElement => {
   return (
     <div className={className}>
       <label>{label}</label>

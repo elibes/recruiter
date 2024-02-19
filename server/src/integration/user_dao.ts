@@ -2,7 +2,6 @@ import {User} from '../model/user';
 import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {Transaction} from 'sequelize';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -31,29 +30,24 @@ class UserDAO {
    * @param {UserRegistrationDTO} registrationDetails A DTO containing the information to be stored about
    * the user wanting to register an account.
    * @param {number} role this it the role_id for the user, a fk to the role table.
-   * @param transaction the sequelize transaction
    * @return {UserDTO} A DTO containing information about the user, otherwise throws an error.
    * @async
    * @todo Use validators to sanitise the input.
    * */
   async createUser(
     registrationDetails: UserRegistrationDTO,
-    role: number,
-    transaction?: Transaction
+    role: number
   ): Promise<UserDTO | null> {
     try {
-      const user = await User.create(
-        {
-          firstName: registrationDetails.firstName,
-          lastName: registrationDetails.lastName,
-          email: registrationDetails.email,
-          personalIdentificationNumber: registrationDetails.personalNumber,
-          username: registrationDetails.username,
-          passwordHash: registrationDetails.password,
-          role: role,
-        },
-        {transaction}
-      );
+      const user = await User.create({
+        firstName: registrationDetails.firstName,
+        lastName: registrationDetails.lastName,
+        email: registrationDetails.email,
+        personalIdentificationNumber: registrationDetails.personalNumber,
+        username: registrationDetails.username,
+        passwordHash: registrationDetails.password,
+        role: role,
+      });
       return this.createUserDTO(user);
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -69,20 +63,15 @@ class UserDAO {
   /**
    * Searches the database for any entry matching the provided username.
    * @param {string} username The username of the user to search for as a string.
-   * @param transaction the sequelize transaction.
    * @return {UserDTO} A DTO containing the user's information if found,
    *                   otherwise null.
    * @async
    * @todo Use validators to sanitise the data before searching the database.
    * */
-  async findUserByUsername(
-    username: string,
-    transaction?: Transaction
-  ): Promise<UserDTO | null> {
+  async findUserByUsername(username: string): Promise<UserDTO | null> {
     try {
       const user = await User.findOne({
         where: {username: username},
-        transaction,
       });
 
       if (user === null) {
@@ -99,18 +88,13 @@ class UserDAO {
   /**
    * Searches the database for any entry matching the provided id.
    * @param {number} id The id of the user to search for as a string.
-   * @param transaction the sequelize transaction.
    * @return {UserDTO} A DTO containing the user's information if found, otherwise null.
    * @async
    */
-  async findUserById(
-    id: number,
-    transaction?: Transaction
-  ): Promise<UserDTO | null> {
+  async findUserById(id: number): Promise<UserDTO | null> {
     try {
       const user = await User.findOne({
         where: {id: id},
-        transaction,
       });
 
       if (user === null) {

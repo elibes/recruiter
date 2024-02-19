@@ -3,7 +3,6 @@ import {
   CompetenceProfilesDTO,
 } from '../model/dto/competence_profiles_dto';
 import {CompetenceProfile} from '../model/competence_profile';
-import {Transaction} from 'sequelize';
 
 class CompetenceProfileDAO {
   private static instance: CompetenceProfileDAO;
@@ -20,12 +19,9 @@ class CompetenceProfileDAO {
   }
   private constructor() {}
 
-  async createAllCompetenceProfiles(
-    data: CompetenceProfilesDTO,
-    transaction: Transaction
-  ) {
+  async createAllCompetenceProfiles(data: CompetenceProfilesDTO) {
     for (const entry of data.competenceProfiles) {
-      const result = await this.createCompetenceProfile(entry, transaction);
+      const result = await this.createCompetenceProfile(entry);
       if (result === null) {
         return null;
       }
@@ -33,19 +29,13 @@ class CompetenceProfileDAO {
     return true;
   }
 
-  async createCompetenceProfile(
-    entry: CompetenceProfileDTO,
-    transaction: Transaction
-  ) {
+  async createCompetenceProfile(entry: CompetenceProfileDTO) {
     try {
-      await CompetenceProfile.create(
-        {
-          personId: entry.personId,
-          competenceId: entry.competenceId,
-          yearsOfExperience: entry.yearsOfExperience,
-        },
-        {transaction}
-      );
+      await CompetenceProfile.create({
+        personId: entry.personId,
+        competenceId: entry.competenceId,
+        yearsOfExperience: entry.yearsOfExperience,
+      });
       return true;
     } catch (error) {
       console.error('Error updating the database:', error);

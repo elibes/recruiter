@@ -3,7 +3,7 @@ import {User} from '../model/user';
 import {Competence} from '../model/competence';
 import {CompetenceProfile} from '../model/competence_profile';
 import {Availability} from '../model/availability';
-
+import * as cls from 'cls-hooked';
 /**
  * The class responsible for creating the connection to the database.
  * Is used before retrieving data from the database.
@@ -23,10 +23,16 @@ class Database {
     return Database.instance;
   }
 
+  public getDatabase() {
+    return this.database;
+  }
+
   /**
    * Creates new instance using .env variables.
    * */
   private constructor() {
+    const namespace = cls.createNamespace('sequelize-namespace');
+    Sequelize.useCLS(namespace);
     this.database = new Sequelize({
       database: process.env.DB_NAME,
       username: process.env.DB_USER,

@@ -20,11 +20,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/cls-hooked": "^4.3.8",
     "@types/cookie-parser": "^1.4.6",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/validator": "^13.11.9",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
+    "cls-hooked": "^4.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "decimal.js": "^10.4.3",

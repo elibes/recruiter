@@ -9,32 +9,24 @@ export class ApplicationService {
   constructor() {}
   async handleApplication(application: fullApplicationDTO) {
     console.log(application);
-    const db = Database.getInstance().database;
+    const db = Database.getInstance().getDatabase();
     if (application.userRole != 2) {
       throw new Error('Only users can post applications');
     }
-    try {
-      return await db.transaction(async transaction => {
-        const userDAO = UserDAO.getInstance();
-        const availabilityDAO = AvailabilityDAO.getInstance();
-        const competenceProfileDAO = CompetenceProfileDAO.getInstance();
-        const user = await userDAO.findUserById(application.userId);
-        if (user === null) {
-          throw new ConflictError('That user does not exist');
-        }
+    return await db.transaction(async transaction => {
+      const userDAO = UserDAO.getInstance();
+      const availabilityDAO = AvailabilityDAO.getInstance();
+      const competenceProfileDAO = CompetenceProfileDAO.getInstance();
+      const user = await userDAO.findUserById(application.userId);
+      if (user === null) {
+        throw new ConflictError('That user does not exist');
+      }
 
-        await availabilityDAO.createAllAvailabilities(
-          application.availabilities,
-          transaction
-        );
-        await competenceProfileDAO.createAllCompetenceProfiles(
-          application.competencies,
-          transaction
-        );
-        return true;
-      });
-    } catch (error) {
-      throw error;
-    }
+      await availabilityDAO.createAllAvailabilities(application.availabilities);
+      await competenceProfileDAO.createAllCompetenceProfiles(
+        application.competencies
+      );
+      return true;
+    });
   }
 }

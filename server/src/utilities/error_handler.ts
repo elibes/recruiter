@@ -73,7 +73,7 @@ class ErrorHandler {
       default:
         console.log(err);
         httpStatusCode = 500;
-        errorMessage.message = 'Sever error';
+        errorMessage.message = 'Server error';
         break;
     }
     this.responseHandler.sendHttpResponse(
