@@ -1,6 +1,9 @@
 import {Competence} from '../model/competence';
 import {CompetenciesDTO} from '../model/dto/competencies_dto';
 
+/**
+ * This DAO class handles operations on the competence table in the db.
+ */
 class CompetenceDAO {
   private static instance: CompetenceDAO;
 
@@ -20,6 +23,9 @@ class CompetenceDAO {
    * */
   private constructor() {}
 
+  /**
+   * This function attempts to get all rows from the competence table (competence_id and name)
+   */
   async getAllCompetencies() {
     try {
       const result = await Competence.findAll();
@@ -30,6 +36,10 @@ class CompetenceDAO {
     }
   }
 
+  /**
+   * This helper function takes a list of Competence objects from the db and converts it into a DTO.
+   * @param comps the competence objects.
+   */
   createCompetenceDTO(comps: Competence[] | null): CompetenciesDTO | null {
     if (comps === null || comps.length === 0) {
       return null;

@@ -4,6 +4,9 @@ import {
 } from '../model/dto/availabilities_dto';
 import {Availability} from '../model/availability';
 
+/**
+ * This class handles db operations on the availability table.
+ */
 class AvailabilityDAO {
   private static instance: AvailabilityDAO;
 
@@ -19,6 +22,11 @@ class AvailabilityDAO {
   }
   private constructor() {}
 
+  /**
+   * This function take a list of availabilities formatted to conform to the db table and tries to insert them all
+   * into the db. The reason to use this instead of createBulk is for better control over validation and error messages.
+   * @param data the availabilities, with each entry formatted to the db table specification.
+   */
   async createAllAvailabilities(data: AvailabilitiesDTO) {
     for (const entry of data.availabilities) {
       const result = await this.createAvailability(entry);
@@ -29,6 +37,10 @@ class AvailabilityDAO {
     return true;
   }
 
+  /**
+   * This helper function tries to insert a single availability row into the db.
+   * @param entry a single availability, formatted to the db table specification.
+   */
   async createAvailability(entry: AvailabilityDTO) {
     try {
       await Availability.create({

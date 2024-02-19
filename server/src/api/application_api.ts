@@ -13,6 +13,9 @@ import {
 import Authorization from './authorization';
 import {UserAuthDTO} from '../model/dto/user_auth_dto';
 
+/**
+ * This class represents the api logic used for job application related requests.
+ */
 class ApplicationApi {
   constructor(
     private responseHandler: ResponseHandler,
@@ -22,7 +25,6 @@ class ApplicationApi {
   /**
    * This function sets up the handling used for each operation or action defined for this route.
    * it should only be called once, by the api manager.
-   * @todo add validation logic for html form data here.
    */
   async setupRequestHandling() {
     this.router.post(

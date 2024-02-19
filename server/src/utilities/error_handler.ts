@@ -42,7 +42,7 @@ class ErrorHandler {
     switch (err.constructor) {
       case ConflictError:
         httpStatusCode = 409;
-        errorMessage.message = 'That user already exists';
+        errorMessage.message = 'There was a data conflict';
         break;
 
       case CustomValidationError:

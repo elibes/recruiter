@@ -4,6 +4,9 @@ import {
 } from '../model/dto/competence_profiles_dto';
 import {CompetenceProfile} from '../model/competence_profile';
 
+/**
+ * This dao class handles operations on the competence_profile table in the db.
+ */
 class CompetenceProfileDAO {
   private static instance: CompetenceProfileDAO;
 
@@ -19,6 +22,11 @@ class CompetenceProfileDAO {
   }
   private constructor() {}
 
+  /**
+   * This function will attempt to insert a list of competence profiles into the db from a DTO.
+   *  The reason to use this instead of createBulk is for better control over validation and error messages.
+   * @param data a DTO containing competence profiles conforming to the format in the database.
+   */
   async createAllCompetenceProfiles(data: CompetenceProfilesDTO) {
     for (const entry of data.competenceProfiles) {
       const result = await this.createCompetenceProfile(entry);
@@ -29,6 +37,10 @@ class CompetenceProfileDAO {
     return true;
   }
 
+  /**
+   * This helper function tries to insert a single competence profile into the db.
+   * @param entry a single competence profile
+   */
   async createCompetenceProfile(entry: CompetenceProfileDTO) {
     try {
       await CompetenceProfile.create({

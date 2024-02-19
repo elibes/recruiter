@@ -15,6 +15,7 @@ export class UserService {
 
   /**
    * This function handles the register user operation.
+   *
    * @param {UserRegistrationDTO} data the validated and sanitized registration data passed through the presentation layer.
    * @return {Promise<boolean>} A promise that will be true if the registration was successful and handled by the api layer.
    * @async
@@ -68,33 +69,6 @@ export class UserService {
         data.password,
         user.passwordHash
       );
-      return user;
-    });
-  }
-
-  /**
-   * Checks if a user with the given username exists in the database.
-   *
-   * This function queries the database for a user with the specified username. If the user exists,
-   * it returns the user's data. This can be used to verify if a user is logged in by checking if
-   * their account exists in the system. The function throws an error if the user is not found.
-   *
-   * @param {string} username - The username of the user to check.
-   * @returns {Promise<UserDTO>} A promise that resolves to the user's data if the user exists.
-   * @throws {UserNotFoundError} If no user with the given username is found in the database.
-   * @async
-   */
-
-  async isLoggedIn(username: string): Promise<UserDTO> {
-    const db = Database.getInstance().getDatabase();
-    return await db.transaction(async transaction => {
-      const userDao = UserDAO.getInstance();
-      const user = await userDao.findUserByUsername(username);
-      if (!user) {
-        throw new UserNotFoundError(
-          `User with username ${username} not found.`
-        );
-      }
       return user;
     });
   }

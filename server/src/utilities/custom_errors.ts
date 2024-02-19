@@ -51,3 +51,15 @@ export class LoginPasswordNotMatchError extends Error {
     this.name = 'LoginPasswordNotMatchError';
   }
 }
+
+/**
+ * This error shall be thrown when an operation would violate an authorization rule
+ * (like, a user trying to do recruiter operations)
+ */
+export class AuthorizationError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidRoleError';
+  }
+}

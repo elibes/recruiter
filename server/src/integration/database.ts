@@ -28,7 +28,7 @@ class Database {
   }
 
   /**
-   * Creates new instance using .env variables.
+   * Creates new instance using .env variables and defines a cls namespace to allow declarative transaction handling.
    * */
   private constructor() {
     const namespace = cls.createNamespace('sequelize-namespace');

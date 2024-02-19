@@ -25,6 +25,11 @@ class AuthenticationService {
     }
   }
 
+  /**
+   * This function compares user password, it is used in the login request.
+   * @param plainTextPassword the password coming from the user.
+   * @param hashedPassword the password in the database for the corresponding user.
+   */
   static async comparePasswords(
     plainTextPassword: string,
     hashedPassword: string

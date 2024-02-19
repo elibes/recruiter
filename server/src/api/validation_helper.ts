@@ -98,6 +98,9 @@ export const userRegistrationValidationSchema: any = {
   },
 };
 
+/**
+ * This schema is for validating all the form data associated with a job application submission request.
+ */
 export const applicationValidationSchema: any = {
   ...baseValidationSchema,
   recruiterAuth: {
@@ -108,6 +111,9 @@ export const applicationValidationSchema: any = {
   },
 };
 
+/**
+ * This schema is for validating a login request.
+ */
 export const userLoginValidator: any = {
   ...baseValidationSchema,
   ...userNamePasswordValidationSchema,

@@ -1,35 +1,15 @@
 import {Request, Response} from 'express';
 import * as jwt from 'jsonwebtoken';
 import {UserDTO} from '../model/dto/user_dto';
-import {UserService} from '../service/user_service';
-import {createUserService} from '../service/user_service_factory';
 import {CookieOptions} from 'express';
 import validator from 'validator';
 import {CustomValidationError} from '../utilities/custom_errors';
 import {UserAuthDTO} from '../model/dto/user_auth_dto';
-
-/**
- * Extends the JwtPayload to include a username.
- * @interface
- */
-interface JwtPayloadWithUsername extends jwt.JwtPayload {
-  username?: string;
-}
-
 interface CustomJwtPayload extends jwt.JwtPayload {
   roleId: string;
 }
-
 /**
- * Extends the Request to include a user property.
- * @interface
- */
-interface CustomRequest extends Request {
-  user?: UserDTO;
-}
-
-/**
- * Provides authorization functionalities such as sending authentication cookies and checking login status.
+ * Provides authorization functionalities such as sending authentication cookies, unpacking and verifying them.
  */
 class Authorization {
   /**
@@ -73,55 +53,13 @@ class Authorization {
   }
 
   /**
-   * Checks the login status of the user by validating the authentication cookie.
-   * @static
-   * @param {UserService} userService - The user service to use for checking if a user is logged in.
-   * @param {CustomRequest} req - The request from which to extract the authentication cookie.
-   * @param {Response} res - The response to clear the cookie if authentication fails.
-   * @returns {Promise<boolean>} True if the user is authenticated, false otherwise.
-   * @async
+   * This middleware function takes a request that includes a valid JWT user token and tries to verify it.
+   * If successful it returns the userId and roleId, otherwise it will throw an error.
+   * @param req a request containing a validated JWT token.
    */
-  /*
-  static async checkLogin(
-    userService: UserService,
-    req: CustomRequest,
-    res: Response
-  ) {
-    const authCookie = req.cookies.AUTH_COOKIE_NAME;
-    const jwtSecret = process.env.JWT_SECRET;
-    if (typeof jwtSecret !== 'string') {
-      throw new Error('JWT_SECRET is not defined');
-    }
-    if (!authCookie) {
-      // TODO: better error handling (...errorHandler)
-      return false;
-    }
-    try {
-      const userJWTPayload = jwt.verify(
-        authCookie,
-        jwtSecret
-      ) as JwtPayloadWithUsername;
-      if (!userJWTPayload.username) {
-        throw new Error('Invalid JWT payload: username not found');
-      }
-      const userService = createUserService();
-      const loggedInUser = await userService.isLoggedIn(
-        userJWTPayload.username
-      );
-      if (loggedInUser === null) {
-        res.clearCookie(Authorization.AUTH_COOKIE_NAME);
-        return false;
-      }
-      req.user = loggedInUser;
-      return true;
-    } catch (err) {
-      res.clearCookie(Authorization.AUTH_COOKIE_NAME);
-      return false;
-    }
-  }
-*/
-  static getUserAuth(req: CustomRequest): UserAuthDTO {
-    const authCookie = req.cookies.recruiterAuth;
+  static getUserAuth(req: Request): UserAuthDTO {
+    const authCookieName = this.AUTH_COOKIE_NAME;
+    const authCookie = req.cookies[authCookieName];
     const jwtSecret = process.env.JWT_SECRET;
     if (typeof jwtSecret !== 'string') {
       throw new Error('JWT_SECRET is not defined');

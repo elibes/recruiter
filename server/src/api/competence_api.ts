@@ -22,7 +22,7 @@ class CompetenceApi {
    */
   async setupRequestHandling() {
     this.router.get('/all', async (req: Request, res: Response) => {
-      const data = await createCompetenceService().getCompetencies();
+      const data = await createCompetenceService().getAllCompetencies();
       this.responseHandler.sendHttpResponse(res, 200, data, false);
     });
   }

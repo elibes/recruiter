@@ -6,7 +6,7 @@ export interface CompetenciesDTO {
 }
 
 /**
- * This represent a single row of the competence table from the database.
+ * This represents a single row of the competence table from the database.
  */
 export interface CompetenceDTO {
   readonly id: number;
