@@ -3,11 +3,8 @@ import {fullApplicationDTO} from '../model/dto/full_application_dto';
 import {AvailabilityDAO} from '../integration/availability_dao';
 import {CompetenceProfileDAO} from '../integration/competence_profile_dao';
 import {UserDAO} from '../integration/user_dao';
-import {
-  AuthorizationError,
-  ConflictError,
-  UserNotFoundError,
-} from '../utilities/custom_errors';
+import {AuthorizationError} from '../utilities/custom_errors';
+import {checkUser} from './error_helper';
 
 /**
  * This class contains methods to service requests related to job applications.
@@ -24,7 +21,9 @@ export class ApplicationService {
     const db = Database.getInstance().getDatabase();
     if (application.userRole !== 2) {
       throw new AuthorizationError(
-        'only regular users are allowed to post job applications'
+        'Only regular users are allowed to post job applications, userId: ' +
+          application.userId +
+          ' is not a regular user'
       );
     }
     return await db.transaction(async transaction => {
@@ -33,14 +32,7 @@ export class ApplicationService {
       const competenceProfileDAO = CompetenceProfileDAO.getInstance();
 
       const userData = await userDAO.findUserById(application.userId);
-      if (!userData) {
-        throw new UserNotFoundError('That user does not exist');
-      } else if (userData.role !== 2) {
-        console.log('userId is: ', userData.id);
-        throw new ConflictError(
-          'The role in db and from cookie does not match'
-        );
-      }
+      checkUser(application.userId, application.userRole, userData);
       await availabilityDAO.createAllAvailabilities(application.availabilities);
       await competenceProfileDAO.createAllCompetenceProfiles(
         application.competencies
