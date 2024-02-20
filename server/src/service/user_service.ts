@@ -131,7 +131,6 @@ export class UserService {
     }
   }
 
-  // TODO:
   async handleListUsers(
     userFromTokenDTO: UserFromTokenDTO
   ): Promise<UserApplicationDTO[]> {

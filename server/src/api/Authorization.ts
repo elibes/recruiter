@@ -1,9 +1,9 @@
-import {Request, response, Response} from "express";
-import * as jwt from "jsonwebtoken";
-import { UserDTO } from "../model/dto/user_dto";
-import {UserService} from "../service/user_service";
-import {createUserService} from "../service/user_service_factory";
-import { CookieOptions } from "express";
+import {Request, response, Response} from 'express';
+import * as jwt from 'jsonwebtoken';
+import {UserDTO} from '../model/dto/user_dto';
+import {UserService} from '../service/user_service';
+import {createUserService} from '../service/user_service_factory';
+import {CookieOptions} from 'express';
 
 /**
  * Extends the JwtPayload to include a username.
@@ -41,16 +41,15 @@ class Authorization {
    * @param {Response} res - The response on which to set the cookie.
    */
   static sendAuthCookie(user: UserDTO, res: Response) {
-
     const jwtSecret = process.env.JWT_SECRET;
     if (typeof jwtSecret !== 'string') {
       throw new Error('JWT_SECRET is not defined');
     }
 
     const jwtToken = jwt.sign(
-      { id: user.id, username: user.username },
+      {id: user.id, username: user.username},
       jwtSecret,
-      { expiresIn: '30 minutes' },
+      {expiresIn: '30 minutes'}
     );
 
     const nodeEnv = process.env.NODE_ENV;
@@ -59,8 +58,8 @@ class Authorization {
     }
     const cookieOptions: CookieOptions = {
       httpOnly: true,
-      sameSite: "lax",
-      secure: nodeEnv === "production"
+      sameSite: 'lax',
+      secure: nodeEnv === 'production',
     };
     res.cookie(Authorization.AUTH_COOKIE_NAME, jwtToken, cookieOptions);
   }
@@ -74,23 +73,32 @@ class Authorization {
    * @returns {Promise<boolean>} True if the user is authenticated, false otherwise.
    * @async
    */
-  static async checkLogin(userService:UserService, req: CustomRequest, res: Response) {
+  static async checkLogin(
+    userService: UserService,
+    req: CustomRequest,
+    res: Response
+  ) {
     const authCookie = req.cookies.AUTH_COOKIE_NAME;
     const jwtSecret = process.env.JWT_SECRET;
     if (typeof jwtSecret !== 'string') {
       throw new Error('JWT_SECRET is not defined');
     }
-    if(!authCookie) {
+    if (!authCookie) {
       // TODO: better error handling (...errorHandler)
       return false;
     }
     try {
-      const userJWTPayload = jwt.verify(authCookie, jwtSecret) as JwtPayloadWithUsername;
+      const userJWTPayload = jwt.verify(
+        authCookie,
+        jwtSecret
+      ) as JwtPayloadWithUsername;
       if (!userJWTPayload.username) {
         throw new Error('Invalid JWT payload: username not found');
       }
       const userService = createUserService();
-      const loggedInUser = await userService.isLoggedIn(userJWTPayload.username);
+      const loggedInUser = await userService.isLoggedIn(
+        userJWTPayload.username
+      );
       if (loggedInUser === null) {
         res.clearCookie(Authorization.AUTH_COOKIE_NAME);
         return false;
