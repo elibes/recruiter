@@ -1,14 +1,19 @@
 async function loginModel(userName: string, password: string): Promise<any> {
-  const url = 'http://localhost:3001/user/login'; // API endpoint
+  const host: string = process.env.REACT_APP_SERVER_HOST || 'localhost';
+  const port: string = process.env.REACT_APP_SERVER_PORT || '3001';
+  const url: string = 'http://' + host + ':' + port + '/user/login'; // API endpoint
   const payload = {
     userName,
     password,
   };
 
   try {
+    const headers: Headers = new Headers();
+    headers.set('Content-Type', 'application/json');
+    headers.set('Accept', 'application/json');
     const response = await fetch(url, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: JSON.stringify(payload),
     });
     /*

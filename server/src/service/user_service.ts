@@ -77,25 +77,21 @@ export class UserService {
   async handleLogin(data: UserLoginDTO): Promise<UserDTO> {
     const db = Database.getInstance().database;
 
-    try {
-      const userDao = UserDAO.getInstance(db);
-      const user = await userDao.findUserByUsername(data.username);
-      if (!user) {
-        throw new UserNotFoundError(
-          `User with username ${data.username} not found.`
-        );
-      }
-      const passwordMatch = await bcrypt.compare(
-        data.password,
-        user.passwordHash
+    const userDao = UserDAO.getInstance(db);
+    const user = await userDao.findUserByUsername(data.username);
+    if (!user) {
+      throw new UserNotFoundError(
+        `User with username ${data.username} not found.`
       );
-      if (!passwordMatch) {
-        throw new LoginPasswordNotMatchError('Password is invalid');
-      }
-      return user;
-    } catch (error) {
-      throw error;
     }
+    const passwordMatch = await bcrypt.compare(
+      data.password,
+      user.passwordHash
+    );
+    if (!passwordMatch) {
+      throw new LoginPasswordNotMatchError('Password is invalid');
+    }
+    return user;
   }
 
   /**
@@ -114,17 +110,11 @@ export class UserService {
   async isLoggedIn(username: string): Promise<UserDTO> {
     const db = Database.getInstance().database;
 
-    try {
-      const userDao = UserDAO.getInstance(db);
-      const user = await userDao.findUserByUsername(username);
-      if (!user) {
-        throw new UserNotFoundError(
-          `User with username ${username} not found.`
-        );
-      }
-      return user;
-    } catch (error) {
-      throw error;
+    const userDao = UserDAO.getInstance(db);
+    const user = await userDao.findUserByUsername(username);
+    if (!user) {
+      throw new UserNotFoundError(`User with username ${username} not found.`);
     }
+    return user;
   }
 }

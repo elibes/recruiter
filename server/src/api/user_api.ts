@@ -5,8 +5,8 @@ import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from "./Authorization";
-import {UserLoginDTO} from "../model/dto/user_login_dto";
+import Authorization from './Authorization';
+import {UserLoginDTO} from '../model/dto/user_login_dto';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -73,14 +73,24 @@ class UserApi {
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
         if (!user) {
-          this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
+          this.responseHandler.sendHttpResponse(
+            res,
+            401,
+            [{message: 'Login failed', userRole: -1}],
+            true
+          );
           return;
         }
         Authorization.sendAuthCookie(user, res);
         this.responseHandler.sendHttpResponse(
           res,
           200,
-          'Login successful',
+          [
+            {
+              message: 'Login successful',
+              userRole: user.role,
+            },
+          ],
           false
         );
         return;

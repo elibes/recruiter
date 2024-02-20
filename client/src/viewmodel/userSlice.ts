@@ -27,6 +27,7 @@ export interface UserState {
   error: string[];
   isLoggedIn: boolean;
   resultMsg: string;
+  userRole: 'applicant' | 'recruiter' | 'unregistered';
 }
 
 const initialState: UserState = {
@@ -41,6 +42,7 @@ const initialState: UserState = {
   error: [],
   isLoggedIn: false,
   resultMsg: '',
+  userRole: 'unregistered',
 };
 export const userSlice = createSlice({
   name: 'user',
