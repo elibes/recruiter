@@ -5,8 +5,10 @@ import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ValidationSanitizationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from "./Authorization";
-import {UserLoginDTO} from "../model/dto/user_login_dto";
+import Authorization from './Authorization';
+import {UserLoginDTO} from '../model/dto/user_login_dto';
+import {UserFromTokenDTO} from '../model/dto/user_from_token_dto';
+import * as jwt from 'jsonwebtoken';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -61,28 +63,68 @@ class UserApi {
       checkSchema(validationSchemaLoginPost),
       async (req: Request, res: Response) => {
         const errors = validationResult(req);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
           throw new ValidationSanitizationError(
-            errors.array().map(err => err.msg).join(', ')
+            errors
+              .array()
+              .map(err => err.msg)
+              .join(', ')
           );
         }
         const userService = createUserService();
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
-        if(!user) {
+        if (!user) {
           this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
           return;
         }
         Authorization.sendAuthCookie(user, res);
-        this.responseHandler.sendHttpResponse(res, 200, 'Login successful', false);
+        this.responseHandler.sendHttpResponse(
+          res,
+          200,
+          'Login successful',
+          false
+        );
         return;
       }
-    )
+    );
 
     this.router.get('/', async (req: Request, res: Response) => {
       const data = 'user API is up!';
       const httpStatusCode = 200;
       this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+      return;
+    });
+
+    this.router.get('/all', async (req: Request, res: Response) => {
+      // Extract the JWT token from the request
+      // TODO: this needs to be refactored into a middleware after merge
+      const token = req.headers.authorization;
+
+      if (!token || !process.env.JWT_SECRET) {
+        throw new Error('Authorization token or secret key is missing');
+      }
+
+      // Decode the token and extract the user info
+      // TODO: this needs to be refactored based on a middleware from another branch
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      if (typeof decodedToken === 'string') {
+        throw new Error('Invalid token');
+      }
+      const {id, role} = decodedToken;
+
+      // Pack the user info into a UserFromTokenDTO
+      const userFromTokenDTO: UserFromTokenDTO = {
+        id,
+        role,
+      };
+
+      // Send the DTO to the service layer function
+      const result =
+        await createUserService().handleListUsers(userFromTokenDTO);
+
+      // Send the result back to the client
+      this.responseHandler.sendHttpResponse(res, 200, result, false);
       return;
     });
   }
@@ -116,11 +158,7 @@ class UserApi {
     };
     return data;
   }
-
-
 }
-
-
 
 /**
  * This object represents the validation and sanitization schema for the registration POST operation.
@@ -225,7 +263,7 @@ const validationSchemaLoginPost: any = {
       options: {min: 6},
       errorMessage: 'Password must be stronger',
     },
-  }
-}
+  },
+};
 
 export {UserApi};
