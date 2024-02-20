@@ -103,7 +103,7 @@ const ApplicationForm: FC = () => {
           Cancel Application
         </button>
       </div>
-      {errors ? <span>{errors}</span> : ''}
+      {errors.length > 0 ? <span>{errors}</span> : ''}
       <span>{resultMsg}</span>
     </div>
   );

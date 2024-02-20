@@ -24,7 +24,7 @@ class Availability extends Model {
           field: 'availability_id',
         },
         personId: {
-          type: DataTypes.STRING,
+          type: DataTypes.INTEGER,
           allowNull: false,
           field: 'person_id',
           references: {

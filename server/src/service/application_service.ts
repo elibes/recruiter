@@ -35,7 +35,8 @@ export class ApplicationService {
       const userData = await userDAO.findUserById(application.userId);
       if (!userData) {
         throw new UserNotFoundError('That user does not exist');
-      } else if (userData.id !== 2) {
+      } else if (userData.role !== 2) {
+        console.log('userId is: ', userData.id);
         throw new ConflictError(
           'The role in db and from cookie does not match'
         );

@@ -22,11 +22,18 @@ interface ApplicationState {
   resultMsg: string;
 }
 
+/**
+ * Represent the part of job application state that is related to a single availability period.
+ */
 interface AvailabilityState {
   startDate: string;
   endDate: string;
   key: string;
 }
+
+/**
+ * Represent the part of the job application state that is related to a single competence
+ */
 interface CompetenceState {
   competenceId: number;
   competenceName: string;
@@ -107,24 +114,30 @@ export const submitApplication = createAsyncThunk(
           };
         }
       );
+      console.log('before: ', state.application.competencies);
 
-      const competenceData = state.application.competencies.filter(
+      let competenceData: any = [...state.application.competencies].filter(
         competence => {
           return competence.hasCompetence;
         }
       );
-      competenceData.map(competence => {
+
+      console.log('after filter: ', competenceData);
+
+      competenceData = competenceData.map((competence: CompetenceState) => {
         return {
-          competenceId: competence.competenceName,
+          competenceId: competence.competenceId,
           yearsOfExperience: competence.yearsOfExperience,
         };
       });
+
+      console.log('after map: ', competenceData);
 
       const data = {
         availabilities: availabilitiesData,
         competencies: competenceData,
       };
-
+      console.log(data);
       return await submitApplicationToBackEnd(data);
     } else return false;
   }
