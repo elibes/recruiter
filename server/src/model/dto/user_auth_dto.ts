@@ -1,4 +1,7 @@
+/**
+ * DTO for sending authentication info to the service layer
+ */
 export interface UserAuthDTO {
-  username: string;
-  role: number;
+  readonly username: string;
+  readonly role: number;
 }
