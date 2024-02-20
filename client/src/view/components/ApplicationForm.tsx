@@ -3,7 +3,7 @@ import CompetenceList from './CompetenceList';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
 import {DateRangePicker} from 'react-date-range';
-import {addYears} from 'date-fns';
+import {addYears, format} from 'date-fns';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {
@@ -12,6 +12,7 @@ import {
   cancelApplication,
   setDates,
   submitApplication,
+  AvailabilityState,
 } from '../../viewmodel/applicationSlice';
 import {AppDispatch, RootState} from '../../store';
 import * as React from 'react';
@@ -51,9 +52,13 @@ const ApplicationForm: FC = () => {
    */
   const handleDateRangeSet = (range: any) => {
     const rangeKey = Object.keys(range)[0];
-    const formattedRange = {
-      startDate: range[rangeKey].startDate.toISOString(),
-      endDate: range[rangeKey].endDate.toISOString(),
+    const dateFormat = 'yyyy-MM-dd';
+    const startDateString = format(range[rangeKey].startDate, dateFormat);
+    const endDateString = format(range[rangeKey].endDate, dateFormat);
+
+    const formattedRange: AvailabilityState = {
+      startDate: startDateString,
+      endDate: endDateString,
       key: rangeKey,
     };
     dispatch(setDates(formattedRange));

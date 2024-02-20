@@ -1,4 +1,8 @@
-import {ApplicationState, initialState} from './applicationSlice';
+import {
+  ApplicationState,
+  AvailabilityState,
+  initialState,
+} from './applicationSlice';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {validateAvailabilities, validateCompetencies} from '../util/validation';
 
@@ -8,22 +12,12 @@ import {validateAvailabilities, validateCompetencies} from '../util/validation';
  */
 
 /**
- * This interface specifies the expected format of an availability period. It should be the same format as the
- * availability state in the application slice.
- */
-export interface dateRange {
-  startDate: string;
-  endDate: string;
-  key: string;
-}
-
-/**
  * This reducer adds a new availability period to the state.
  * The period uses the default values of: from and to the current time.
  * @param state The job application state.
  */
 export const createNewAvailabilityReducer = (state: ApplicationState) => {
-  const defaultPeriod: dateRange = {
+  const defaultPeriod: AvailabilityState = {
     startDate: new Date().toISOString(),
     endDate: new Date().toISOString(),
     key: 'range' + (state.availability.length + 1),
@@ -39,7 +33,7 @@ export const createNewAvailabilityReducer = (state: ApplicationState) => {
  */
 export const setDatesReducer = (
   state: ApplicationState,
-  action: PayloadAction<dateRange>
+  action: PayloadAction<AvailabilityState>
 ) => {
   const key = action.payload.key;
   const index = state.availability.findIndex(range => range.key === key);
