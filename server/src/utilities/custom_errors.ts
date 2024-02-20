@@ -60,6 +60,28 @@ export class AuthorizationError extends Error {
   static message: string;
   constructor(message: string) {
     super(message);
-    this.name = 'InvalidRoleError';
+    this.name = 'AuthorizationError';
+  }
+}
+
+/**
+ * This error shall be thrown when a request does not match a valid route.
+ */
+export class InvalidRouteError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidRouteError';
+  }
+}
+
+/**
+ * This error shall be thrown when a request does not match a valid route.
+ */
+export class MissingHeaderError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'MissingHeaderError';
   }
 }

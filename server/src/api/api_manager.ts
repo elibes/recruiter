@@ -12,6 +12,7 @@ import {USER_API_ROUTE} from '../utilities/configurations';
 import {NextFunction, Request, Response} from 'express';
 import {ApplicationApi} from './application_api';
 import {CompetenceApi} from './competence_api';
+import {InvalidRouteError} from '../utilities/custom_errors';
 
 /**
  * This class is singleton manager responsible for setting up all apis, only one instance should be created.
@@ -63,7 +64,10 @@ class ApiManager {
   /**
    * This function creates and inserts dependencies for each route and api class pair defined by the defineRoute helper.
    *
-   * It also sets up the global errorHandling middleware. The reason this is in this class and function
+   * It also starts a wildcard route that will be run if a request does not match any previous route, which will trigger
+   * an error.
+   *
+   * Finally, it sets up the global errorHandling middleware. The reason this is in this class and function
    * instead of the main server file is that it must be used last, which is safer here since this function should be
    * the last middleware used in the server file.
    */
@@ -74,6 +78,10 @@ class ApiManager {
       const entryInstance = new entry.class(this.responseHandler, entryRoute);
       entryInstance.setupRequestHandling();
       this.app.use(entry.route, entryRoute);
+    });
+
+    this.app.use(() => {
+      throw new InvalidRouteError('That resource does not exist');
     });
 
     this.app.use(

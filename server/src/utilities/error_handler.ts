@@ -1,4 +1,8 @@
-import {ConflictError} from './custom_errors';
+import {
+  ConflictError,
+  InvalidRouteError,
+  MissingHeaderError,
+} from './custom_errors';
 import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
@@ -68,6 +72,18 @@ class ErrorHandler {
       case ValidationError:
         httpStatusCode = 500;
         errorMessage.message = 'Data is invalid';
+        break;
+
+      case InvalidRouteError:
+        httpStatusCode = 404;
+        errorMessage.message = 'That route does not exist';
+        errorMessage.code = 'INVALID_ROUTE_ERROR';
+        break;
+
+      case MissingHeaderError:
+        httpStatusCode = 400;
+        errorMessage.message = err.message;
+        errorMessage.code = 'MISSING_HEADER_ERROR';
         break;
 
       default:

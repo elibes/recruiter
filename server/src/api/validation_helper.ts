@@ -1,12 +1,50 @@
-import {Request} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {validationResult} from 'express-validator';
-import {CustomValidationError} from '../utilities/custom_errors';
+import {
+  CustomValidationError,
+  MissingHeaderError,
+} from '../utilities/custom_errors';
 import {Validators} from '../utilities/validators';
 
 /**
  * @fileoverview This file constructs various express validator schemas to be used by different apis.
  * It also contains helper functions to handle validation in the api layer.
  */
+
+/**
+ * This middleware is intended to be used before the routes to validate headers. The reason for this
+ * is that if a request without content-length header reaches a post route then an empty response is immediately sent
+ * and the connection closed by express, preventing our standardized error response to be sent.
+ * @param req the express request
+ * @param res the express response
+ * @param next the next middleware.
+ */
+export function headerPreValidatorMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const errorList: string[] = [];
+  if (req.method === 'POST') {
+    if (!req.headers['content-length']) {
+      errorList.push('The content length header is required for this request');
+    }
+    if (
+      !req.headers['content-type'] ||
+      req.headers['content-type'] !== 'application/json'
+    ) {
+      errorList.push(
+        'The content type header is required to be application/json for this request'
+      );
+    }
+  } else if (req.method === 'GET') {
+  }
+  next();
+  if (errorList.length !== 0) {
+    throw new MissingHeaderError(errorList.join(', '));
+  }
+  return;
+}
 
 /**
  * This function retrieves any errors that the express validator middleware has found, formats this and throws an error
