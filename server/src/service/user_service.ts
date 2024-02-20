@@ -1,11 +1,18 @@
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {ConflictError, LoginPasswordNotMatchError, UserNotFoundError} from '../utilities/custom_errors';
+import {
+  ConflictError,
+  LoginPasswordNotMatchError,
+  UserNotFoundError,
+} from '../utilities/custom_errors';
 import {Database} from '../integration/database';
 import {UserDAO} from '../integration/user_dao';
 import {AuthenticationService} from './authentication_service';
 import {APPLICANT_ROLE_ID} from '../utilities/configurations';
-import {UserLoginDTO} from "../model/dto/user_login_dto";
-import {UserDTO} from "../model/dto/user_dto";
+import {UserLoginDTO} from '../model/dto/user_login_dto';
+import {UserDTO} from '../model/dto/user_dto';
+import {UserAuthDTO} from '../model/dto/user_auth_dto';
+import {UserApplicationDTO} from '../model/dto/user_application_dto';
+import {UserFromTokenDTO} from '../model/dto/user_from_token_dto';
 import * as bcrypt from 'bcrypt';
 
 /**
@@ -76,15 +83,19 @@ export class UserService {
     try {
       const userDao = UserDAO.getInstance(db);
       const user = await userDao.findUserByUsername(data.username);
-      if(!user) {
-        throw new UserNotFoundError(`User with username ${data.username} not found.`);
+      if (!user) {
+        throw new UserNotFoundError(
+          `User with username ${data.username} not found.`
+        );
       }
-      const passwordMatch = await bcrypt.compare(data.password, user.passwordHash);
-      if(!passwordMatch) {
+      const passwordMatch = await bcrypt.compare(
+        data.password,
+        user.passwordHash
+      );
+      if (!passwordMatch) {
         throw new LoginPasswordNotMatchError('Password is invalid');
       }
       return user;
-
     } catch (error) {
       throw error;
     }
@@ -103,20 +114,58 @@ export class UserService {
    * @async
    */
 
-  async isLoggedIn(username:string):Promise<UserDTO> {
+  async isLoggedIn(username: string): Promise<UserDTO> {
     const db = Database.getInstance().database;
 
     try {
       const userDao = UserDAO.getInstance(db);
       const user = await userDao.findUserByUsername(username);
-      if(!user) {
-        throw new UserNotFoundError(`User with username ${username} not found.`);
+      if (!user) {
+        throw new UserNotFoundError(
+          `User with username ${username} not found.`
+        );
       }
       return user;
-
     } catch (error) {
       throw error;
     }
   }
 
+  // TODO:
+  async handleListUsers(
+    userFromTokenDTO: UserFromTokenDTO
+  ): Promise<UserApplicationDTO[]> {
+    // Create a transaction
+    const transaction = await Database.getInstance().database.transaction();
+
+    try {
+      // Perform authorization check
+      if (userFromTokenDTO.role !== 1) {
+        throw new Error('Unauthorized');
+      }
+
+      // Call UserDAO function to get the data
+      const users = await UserDAO.getInstance(
+        Database.getInstance().database
+      ).getAllApplications();
+
+      // Pack the data into a DTO
+      const userListDTOs: UserApplicationDTO[] = users.map(user => ({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        status: user.status,
+      }));
+
+      // Commit the transaction
+      await transaction.commit();
+
+      // Return the DTOs to the API layer
+      return userListDTOs;
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await transaction.rollback();
+      throw error;
+    }
+  }
 }
