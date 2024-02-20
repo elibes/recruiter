@@ -14,7 +14,6 @@ root.render(
   <React.StrictMode>
     <ErrorBoundary>
       <Provider store={store}>
-        {' '}
         <App />
       </Provider>
     </ErrorBoundary>

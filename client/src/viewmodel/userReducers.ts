@@ -47,7 +47,6 @@ export const personalNumberReducer = (
  * @param {string} action.payload.error - The error message, if any.
  */
 export const loginReducer = (state: any, action: any) => {
-  console.log(action);
   if (!action.payload) return;
   if (action.payload.success) {
     state.isLoggedIn = true;
@@ -78,7 +77,6 @@ export const validateLoginReducer = (state: any) => {
 };
 
 export const validateRegistrationReducer = (state: any) => {
-  console.log('test');
   const errorList: string[] = [];
   if (validateUsername(state.userName)) {
     errorList.push(validateUsername(state.userName));

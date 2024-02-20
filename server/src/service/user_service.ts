@@ -1,9 +1,5 @@
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {
-  ConflictError,
-  LoginPasswordNotMatchError,
-  UserNotFoundError,
-} from '../utilities/custom_errors';
+import {ConflictError, UserNotFoundError} from '../utilities/custom_errors';
 import {Database} from '../integration/database';
 import {UserDAO} from '../integration/user_dao';
 import {AuthenticationService} from './authentication_service';
@@ -13,7 +9,6 @@ import {UserDTO} from '../model/dto/user_dto';
 import {UserAuthDTO} from '../model/dto/user_auth_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
 import {UserFromTokenDTO} from '../model/dto/user_from_token_dto';
-import * as bcrypt from 'bcrypt';
 
 /**
  * This class implements the logic for handling user related operations.
@@ -23,18 +18,15 @@ export class UserService {
 
   /**
    * This function handles the register user operation.
+   *
    * @param {UserRegistrationDTO} data the validated and sanitized registration data passed through the presentation layer.
-   * @return {boolean} A promise that will be true if the registration was successful and handled by the api layer.
+   * @return {Promise<boolean>} A promise that will be true if the registration was successful and handled by the api layer.
    * @async
    */
   async handleRegistration(data: UserRegistrationDTO): Promise<boolean> {
-    const db = Database.getInstance().database;
-    const dataRollbackState = {...data};
-
-    const transaction = await db.transaction();
-
-    try {
-      const userDAO = UserDAO.getInstance(db);
+    const db = Database.getInstance().getDatabase();
+    return await db.transaction(async transaction => {
+      const userDAO = UserDAO.getInstance();
       const result = await userDAO.findUserByUsername(data.username);
       if (result !== null) {
         throw new ConflictError('That username already exists');
@@ -52,19 +44,8 @@ export class UserService {
         email: data.email,
       };
       await userDAO.createUser(regData, APPLICANT_ROLE_ID);
-      await transaction.commit();
       return true;
-    } catch (error) {
-      await transaction.rollback();
-      data = dataRollbackState;
-      console.error('Transaction failed:', error);
-      if (error instanceof ConflictError) {
-        //todo, how to deal with different errors?
-        throw error;
-      } else {
-        throw error;
-      }
-    }
+    });
   }
 
   /**
@@ -78,57 +59,21 @@ export class UserService {
    * @async
    */
   async handleLogin(data: UserLoginDTO): Promise<UserDTO> {
-    const db = Database.getInstance().database;
-
-    try {
-      const userDao = UserDAO.getInstance(db);
+    const db = Database.getInstance().getDatabase();
+    return await db.transaction(async transaction => {
+      const userDao = UserDAO.getInstance();
       const user = await userDao.findUserByUsername(data.username);
       if (!user) {
         throw new UserNotFoundError(
           `User with username ${data.username} not found.`
         );
       }
-      const passwordMatch = await bcrypt.compare(
+      await AuthenticationService.comparePasswords(
         data.password,
         user.passwordHash
       );
-      if (!passwordMatch) {
-        throw new LoginPasswordNotMatchError('Password is invalid');
-      }
       return user;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  /**
-   * Checks if a user with the given username exists in the database.
-   *
-   * This function queries the database for a user with the specified username. If the user exists,
-   * it returns the user's data. This can be used to verify if a user is logged in by checking if
-   * their account exists in the system. The function throws an error if the user is not found.
-   *
-   * @param {string} username - The username of the user to check.
-   * @returns {Promise<UserDTO>} A promise that resolves to the user's data if the user exists.
-   * @throws {UserNotFoundError} If no user with the given username is found in the database.
-   * @async
-   */
-
-  async isLoggedIn(username: string): Promise<UserDTO> {
-    const db = Database.getInstance().database;
-
-    try {
-      const userDao = UserDAO.getInstance(db);
-      const user = await userDao.findUserByUsername(username);
-      if (!user) {
-        throw new UserNotFoundError(
-          `User with username ${username} not found.`
-        );
-      }
-      return user;
-    } catch (error) {
-      throw error;
-    }
+    });
   }
 
   async handleListUsers(

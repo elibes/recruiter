@@ -9,6 +9,7 @@ import {
 const RegistrationView = React.lazy(() => import('../view/RegistrationView'));
 const LoginView = React.lazy(() => import('../view/LoginView'));
 const NotFoundView = React.lazy(() => import('../view/NotFoundView'));
+const ApplicationView = React.lazy(() => import('../view/ApplicationView'));
 
 /**
  * AppRouter component handles routing and rendering different views based on the path.
@@ -34,6 +35,14 @@ const AppRouter = () => {
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
               <RegistrationView />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/application"
+          element={
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <ApplicationView />
             </React.Suspense>
           }
         />

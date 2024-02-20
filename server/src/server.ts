@@ -20,6 +20,7 @@ import * as cookieParser from 'cookie-parser';
 import {Database} from './integration/database';
 
 import {ApiManager} from './api/api_manager';
+import {headerPreValidatorMiddleware} from './api/validation_helper';
 
 require('express-async-errors');
 
@@ -50,17 +51,17 @@ try {
   console.log(error);
 }
 
+app.use(headerPreValidatorMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
 );
-
 const apiManager = ApiManager.getInstance(app);
 apiManager.createAllApis();
 

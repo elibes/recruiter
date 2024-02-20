@@ -1,10 +1,9 @@
-async function loginModel(userName: string, password: string): Promise<any> {
-  const url = 'http://localhost:3001/user/login'; // API endpoint
-  const payload = {
-    userName,
-    password,
-  };
-
+/**
+ * This function calls the back-end server with a request to submit a job application form.
+ * @param payload the job application form data
+ */
+export async function submitApplicationToBackEnd(payload: any) {
+  const url = 'http://localhost:3001/application/'; // API endpoint
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -17,13 +16,10 @@ async function loginModel(userName: string, password: string): Promise<any> {
       const errorText = await response.text();
       throw new Error(`HTTP error ${response.status}: ${errorText}`);
     }
-
  */
     return await response.json();
   } catch (error) {
     console.error('Fetch operation failed:', error);
-    throw new Error('Login failed');
+    throw new Error('get all competencies failed');
   }
 }
-
-export {loginModel};

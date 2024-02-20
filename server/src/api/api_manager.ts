@@ -3,9 +3,16 @@ import * as express from 'express';
 import {RootApi} from './root_api';
 import {UserApi} from './user_api';
 import {ErrorHandler} from '../utilities/error_handler';
-import {ROOT_API_ROUTE} from '../utilities/configurations';
+import {
+  APPLICATION_API_ROUTE,
+  COMPETENCE_API_ROUTE,
+  ROOT_API_ROUTE,
+} from '../utilities/configurations';
 import {USER_API_ROUTE} from '../utilities/configurations';
 import {NextFunction, Request, Response} from 'express';
+import {ApplicationApi} from './application_api';
+import {CompetenceApi} from './competence_api';
+import {InvalidRouteError} from '../utilities/custom_errors';
 
 /**
  * This class is singleton manager responsible for setting up all apis, only one instance should be created.
@@ -50,12 +57,17 @@ class ApiManager {
   defineRoutes(): void {
     this.apiList.push({route: ROOT_API_ROUTE, class: RootApi});
     this.apiList.push({route: USER_API_ROUTE, class: UserApi});
+    this.apiList.push({route: APPLICATION_API_ROUTE, class: ApplicationApi});
+    this.apiList.push({route: COMPETENCE_API_ROUTE, class: CompetenceApi});
   }
 
   /**
    * This function creates and inserts dependencies for each route and api class pair defined by the defineRoute helper.
    *
-   * It also sets up the global errorHandling middleware. The reason this is in this class and function
+   * It also starts a wildcard route that will be run if a request does not match any previous route, which will trigger
+   * an error.
+   *
+   * Finally, it sets up the global errorHandling middleware. The reason this is in this class and function
    * instead of the main server file is that it must be used last, which is safer here since this function should be
    * the last middleware used in the server file.
    */
@@ -66,6 +78,10 @@ class ApiManager {
       const entryInstance = new entry.class(this.responseHandler, entryRoute);
       entryInstance.setupRequestHandling();
       this.app.use(entry.route, entryRoute);
+    });
+
+    this.app.use(() => {
+      throw new InvalidRouteError('That resource does not exist');
     });
 
     this.app.use(

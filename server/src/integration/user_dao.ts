@@ -1,5 +1,6 @@
 import {QueryTypes, Sequelize} from 'sequelize';
 import {User} from '../model/user';
+import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
@@ -9,27 +10,22 @@ import {UserApplicationDTO} from '../model/dto/user_application_dto';
  * */
 class UserDAO {
   private static instance: UserDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
-   * @param {Sequelize} database the Sequelize instance.
    * @return {UserDAO} A singleton instance of the class.
    */
-  public static getInstance(database: Sequelize): UserDAO {
+  public static getInstance(): UserDAO {
     if (!UserDAO.instance) {
-      UserDAO.instance = new UserDAO(database);
+      UserDAO.instance = new UserDAO();
     }
     return UserDAO.instance;
   }
 
   /**
-   * Creates the DAO and connects to the database.
+   * Creates the DAO.
    * */
-  private constructor(database: Sequelize) {
-    this.database = database;
-    User.createModel(this.database);
-  }
+  private constructor() {}
 
   /**
    * Creates a new regular user in the database (with role_id 2)
@@ -56,6 +52,9 @@ class UserDAO {
       });
       return this.createUserDTO(user);
     } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      }
       console.error('Error updating the database:', error);
       throw new Error(
         `Could not add user ${registrationDetails.username} to the database!`
@@ -75,6 +74,29 @@ class UserDAO {
     try {
       const user = await User.findOne({
         where: {username: username},
+      });
+
+      if (user === null) {
+        return null;
+      } else {
+        return this.createUserDTO(user);
+      }
+    } catch (error) {
+      console.log('Error finding a user:', error);
+      throw new Error('Could not search the database for a user!');
+    }
+  }
+
+  /**
+   * Searches the database for any entry matching the provided id.
+   * @param {number} id The id of the user to search for as a string.
+   * @return {UserDTO} A DTO containing the user's information if found, otherwise null.
+   * @async
+   */
+  async findUserById(id: number): Promise<UserDTO | null> {
+    try {
+      const user = await User.findOne({
+        where: {id: id},
       });
 
       if (user === null) {
