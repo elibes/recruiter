@@ -4,9 +4,9 @@
  * @async
  * */
 async function applicationListModel() {
-  const host: string = process.env.REACT_APP_SERVER_HOST || 'http://localhost';
-  const port: string = process.env.REACT_APP_SERVER_PORT || '3001';
-  const url: string = '' + host + ':' + port + '/user/all';
+  const host: string =
+    process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+  const url: string = '' + host + '/user/all';
   try {
     const response = await fetch(url, {
       method: 'GET',
