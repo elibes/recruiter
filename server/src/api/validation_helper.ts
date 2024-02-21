@@ -154,5 +154,10 @@ export const applicationValidationSchema: any = {
  */
 export const userLoginValidator: any = {
   ...baseValidationSchema,
-  ...userNamePasswordValidationSchema,
+  userName: {
+    userNameValidator: {
+      custom: Validators.userNameValidator,
+      errorMessage: 'Must be shorter than 30 characters',
+    },
+  },
 };
