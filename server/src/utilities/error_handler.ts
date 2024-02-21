@@ -1,10 +1,19 @@
-import {ConflictError} from './custom_errors';
-import {ValidationSanitizationError} from './custom_errors';
+import {
+  AuthorizationError,
+  ConflictError,
+  InvalidRouteError,
+  MissingHeaderError,
+} from './custom_errors';
+import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken';
-import {ConnectionRefusedError} from 'sequelize';
-
+import {
+  ConnectionError,
+  ValidationError,
+  BaseError,
+  DatabaseError,
+} from 'sequelize';
 /**
  * This class acts as a centralized error handler for the entire application.
  * It does/shall:
@@ -35,16 +44,17 @@ class ErrorHandler {
    */
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
+    console.log(err);
     let httpStatusCode;
     const errorMessage: ErrorMessage = {message: 'none'};
 
     switch (err.constructor) {
       case ConflictError:
         httpStatusCode = 409;
-        errorMessage.message = 'That user already exists';
+        errorMessage.message = 'There was a data conflict';
         break;
 
-      case ValidationSanitizationError:
+      case CustomValidationError:
         httpStatusCode = 400;
         errorMessage.message = err.message;
         break;
@@ -59,15 +69,51 @@ class ErrorHandler {
         errorMessage.message = 'Unauthorized';
         break;
 
-      case ConnectionRefusedError:
+      case ValidationError:
+        httpStatusCode = 500;
+        errorMessage.message = 'Data is invalid';
+        break;
+
+      case InvalidRouteError:
+        httpStatusCode = 404;
+        errorMessage.message = 'That route does not exist';
+        errorMessage.code = 'INVALID_ROUTE_ERROR';
+        break;
+
+      case MissingHeaderError:
+        httpStatusCode = 400;
+        errorMessage.message = err.message;
+        errorMessage.code = 'MISSING_HEADER_ERROR';
+        break;
+
+      case AuthorizationError:
+        httpStatusCode = 403;
+        errorMessage.message = 'You are not authorized to perform this action';
+        errorMessage.code = 'FORBIDDEN_ERROR';
+        break;
+
+      case ConnectionError:
         httpStatusCode = 503;
         errorMessage.message = 'Service is currently unavailable';
+        errorMessage.code = 'INTERNAL_ERROR';
+        break;
+
+      case DatabaseError:
+        httpStatusCode = 500;
+        errorMessage.message = 'There was an error handling your request';
+        errorMessage.code = 'INTERNAL_ERROR';
+        break;
+
+      case BaseError:
+        httpStatusCode = 500;
+        errorMessage.message = 'Server error';
+        errorMessage.code = 'INTERNAL_ERROR';
         break;
 
       default:
         console.log(err);
         httpStatusCode = 500;
-        errorMessage.message = 'Sever error';
+        errorMessage.message = 'Server error';
         break;
     }
     this.responseHandler.sendHttpResponse(

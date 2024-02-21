@@ -15,11 +15,11 @@ export class ConflictError extends Error {
 /**
  * This error shall be thrown when a sanitization rule or validation check fails.
  */
-export class ValidationSanitizationError extends Error {
+export class CustomValidationError extends Error {
   static message: string;
   constructor(message: string) {
     super(message);
-    this.name = 'ValidationSanitizationError';
+    this.name = 'ValidationError';
   }
 }
 
@@ -49,5 +49,39 @@ export class LoginPasswordNotMatchError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'LoginPasswordNotMatchError';
+  }
+}
+
+/**
+ * This error shall be thrown when an operation would violate an authorization rule
+ * (like, a user trying to do recruiter operations)
+ */
+export class AuthorizationError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthorizationError';
+  }
+}
+
+/**
+ * This error shall be thrown when a request does not match a valid route.
+ */
+export class InvalidRouteError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidRouteError';
+  }
+}
+
+/**
+ * This error shall be thrown when a request does not match a valid route.
+ */
+export class MissingHeaderError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'MissingHeaderError';
   }
 }

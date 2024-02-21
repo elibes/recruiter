@@ -1,7 +1,6 @@
-import '../styles/LoginForm.css';
-
 import * as React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import '../styles/LoginForm.css';
 import {RootState, AppDispatch} from '../../store';
 import {
   setPassword,
@@ -28,8 +27,9 @@ const LoginForm = () => {
           }, 1000);
           break;
         case 'applicant':
-          // Redirect to apply-for-a-position page
-          console.log("Would've redirected here...");
+          setTimeout(() => {
+            navigate('/application');
+          }, 500);
           break;
         default:
       }

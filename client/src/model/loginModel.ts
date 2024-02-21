@@ -15,6 +15,7 @@ async function loginModel(userName: string, password: string): Promise<any> {
       method: 'POST',
       headers: headers,
       body: JSON.stringify(payload),
+      credentials: 'include',
     });
     /*
     if (!response.ok) {
