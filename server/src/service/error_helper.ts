@@ -10,11 +10,7 @@ export function checkUser(
   userRole: number,
   userData: UserDTO | null
 ) {
-  if (
-    !userData ||
-    userData.id !== userRole ||
-    userData.role !== userData.role
-  ) {
+  if (!userData || userRole !== userData.role) {
     throw new ConflictError(
       'Request user data does not match db data, ' +
         'request had: \nuserId: ' +
