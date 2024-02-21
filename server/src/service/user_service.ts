@@ -8,7 +8,6 @@ import {UserLoginDTO} from '../model/dto/user_login_dto';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserAuthDTO} from '../model/dto/user_auth_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
-import {UserFromTokenDTO} from '../model/dto/user_from_token_dto';
 
 /**
  * This class implements the logic for handling user related operations.
@@ -77,25 +76,23 @@ export class UserService {
   }
 
   async handleListUsers(
-    userFromTokenDTO: UserFromTokenDTO
+    userAuthDTO: UserAuthDTO
   ): Promise<UserApplicationDTO[]> {
     // Create a transaction
     const transaction = await Database.getInstance().database.transaction();
 
     try {
       // Perform authorization check
-      if (userFromTokenDTO.role !== 1) {
+      if (userAuthDTO.roleId !== 1) {
         throw new Error('Unauthorized');
       }
 
       // Call UserDAO function to get the data
-      const users = await UserDAO.getInstance(
-        Database.getInstance().database
-      ).getAllApplications();
+      const users = await UserDAO.getInstance().getAllApplications();
 
       // Pack the data into a DTO
       const userListDTOs: UserApplicationDTO[] = users.map(user => ({
-        id: user.id,
+        userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
         status: user.status,
