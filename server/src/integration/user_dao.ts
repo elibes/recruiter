@@ -1,34 +1,33 @@
-import {Sequelize} from 'sequelize';
+import {QueryTypes, Sequelize} from 'sequelize';
 import {User} from '../model/user';
+import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
+import {UserApplicationDTO} from '../model/dto/user_application_dto';
+import {Database} from './database';
+import {Availability} from '../model/availability';
 
 /**
  * The class responsible for communicating with the database regarding users.
  * */
 class UserDAO {
   private static instance: UserDAO;
-  database: Sequelize;
 
   /**
    * Gets the singleton instance of this class.
-   * @param {Sequelize} database the Sequelize instance.
    * @return {UserDAO} A singleton instance of the class.
    */
-  public static getInstance(database: Sequelize): UserDAO {
+  public static getInstance(): UserDAO {
     if (!UserDAO.instance) {
-      UserDAO.instance = new UserDAO(database);
+      UserDAO.instance = new UserDAO();
     }
     return UserDAO.instance;
   }
 
   /**
-   * Creates the DAO and connects to the database.
+   * Creates the DAO.
    * */
-  private constructor(database: Sequelize) {
-    this.database = database;
-    User.createModel(this.database);
-  }
+  private constructor() {}
 
   /**
    * Creates a new regular user in the database (with role_id 2)
@@ -55,6 +54,9 @@ class UserDAO {
       });
       return this.createUserDTO(user);
     } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      }
       console.error('Error updating the database:', error);
       throw new Error(
         `Could not add user ${registrationDetails.username} to the database!`
@@ -88,6 +90,29 @@ class UserDAO {
   }
 
   /**
+   * Searches the database for any entry matching the provided id.
+   * @param {number} id The id of the user to search for as a string.
+   * @return {UserDTO} A DTO containing the user's information if found, otherwise null.
+   * @async
+   */
+  async findUserById(id: number): Promise<UserDTO | null> {
+    try {
+      const user = await User.findOne({
+        where: {id: id},
+      });
+
+      if (user === null) {
+        return null;
+      } else {
+        return this.createUserDTO(user);
+      }
+    } catch (error) {
+      console.log('Error finding a user:', error);
+      throw new Error('Could not search the database for a user!');
+    }
+  }
+
+  /**
    * Converts a sequelize user object into a readonly UserDTO containing the same data.
    * @return {UserDTO} A DTO containing all information from the provided user object, or null
    *         if the provided user is null.
@@ -106,6 +131,29 @@ class UserDAO {
         passwordHash: user.passwordHash,
         role: user.role,
       };
+    }
+  }
+
+  async getAllApplications(): Promise<UserApplicationDTO[]> {
+    try {
+      const usersWithApplications = await User.findAll({
+        include: {
+          model: Availability,
+          as: 'personInAvailability',
+          required: true,
+        },
+      });
+
+      // Map the data to a DTO and return
+      return usersWithApplications.map((user: any) => ({
+        userId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        status: user.status || 'unhandled',
+      }));
+    } catch (error) {
+      console.error('Error fetching applications:', error);
+      throw new Error('Could not fetch applications from the database');
     }
   }
 }

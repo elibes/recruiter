@@ -1,6 +1,9 @@
 import {Dialect, Sequelize} from 'sequelize';
 import {User} from '../model/user';
-
+import {Competence} from '../model/competence';
+import {CompetenceProfile} from '../model/competence_profile';
+import {Availability} from '../model/availability';
+import * as cls from 'cls-hooked';
 /**
  * The class responsible for creating the connection to the database.
  * Is used before retrieving data from the database.
@@ -20,10 +23,16 @@ class Database {
     return Database.instance;
   }
 
+  public getDatabase() {
+    return this.database;
+  }
+
   /**
-   * Creates new instance using .env variables.
+   * Creates new instance using .env variables and defines a cls namespace to allow declarative transaction handling.
    * */
   private constructor() {
+    const namespace = cls.createNamespace('sequelize-namespace');
+    Sequelize.useCLS(namespace);
     this.database = new Sequelize({
       database: process.env.DB_NAME,
       username: process.env.DB_USER,
@@ -48,13 +57,34 @@ class Database {
   }
 
   /**
-   * Creates all sequelize objects representing tables in the database.
+   * Creates all sequelize objects representing tables in the database. Also establishes associations between them.
    * @throws {Error} When setting up a model fails
    * @async
    * */
   async setupDatabaseModels() {
     try {
       User.createModel(this.database);
+      Competence.createModel(this.database);
+      CompetenceProfile.createModel(this.database);
+      Availability.createModel(this.database);
+
+      User.hasMany(Availability, {
+        foreignKey: 'person_id',
+        as: 'personInAvailability',
+      });
+      Availability.belongsTo(User, {foreignKey: 'person_id'});
+
+      User.hasMany(CompetenceProfile, {
+        foreignKey: 'person_id',
+        as: 'personInProfile',
+      });
+      CompetenceProfile.belongsTo(User, {foreignKey: 'person_id'});
+
+      Competence.hasMany(CompetenceProfile, {
+        foreignKey: 'competence_id',
+        as: 'competence',
+      });
+      CompetenceProfile.belongsTo(Competence, {foreignKey: 'competence_id'});
     } catch (error) {
       throw new Error('Error setting up database models:');
     }

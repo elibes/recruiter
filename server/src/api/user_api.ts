@@ -1,12 +1,16 @@
-import {checkSchema, validationResult} from 'express-validator';
-import {baseSanitizationSchema} from '../utilities/validators';
+import {checkSchema} from 'express-validator';
 import {createUserService} from '../service/user_service_factory';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
-import {ValidationSanitizationError} from '../utilities/custom_errors';
 import {ResponseHandler} from './response_handler';
 import {Request, Response, Router} from 'express';
-import Authorization from "./Authorization";
-import {UserLoginDTO} from "../model/dto/user_login_dto";
+import Authorization from './authorization';
+import {UserLoginDTO} from '../model/dto/user_login_dto';
+import {
+  handleExpressValidatorErrors,
+  userLoginValidator,
+  userRegistrationValidationSchema,
+} from './validation_helper';
+import {UserAuthDTO} from '../model/dto/user_auth_dto';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -29,17 +33,9 @@ class UserApi {
   async setupRequestHandling() {
     this.router.post(
       '/register',
-      checkSchema(validationSchemaRegistrationPost),
+      checkSchema(userRegistrationValidationSchema),
       async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          throw new ValidationSanitizationError(
-            errors
-              .array()
-              .map(err => err.msg)
-              .join(', ')
-          );
-        }
+        handleExpressValidatorErrors(req);
         const userService = createUserService();
         const registrationData = this.registrationDataPacker(req.body);
         const state = await userService.handleRegistration(registrationData);
@@ -58,31 +54,61 @@ class UserApi {
 
     this.router.post(
       '/login',
-      checkSchema(validationSchemaLoginPost),
+      checkSchema(userLoginValidator),
       async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if(!errors.isEmpty()) {
-          throw new ValidationSanitizationError(
-            errors.array().map(err => err.msg).join(', ')
-          );
-        }
+        handleExpressValidatorErrors(req);
         const userService = createUserService();
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
-        if(!user) {
-          this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
+        if (!user) {
+          this.responseHandler.sendHttpResponse(
+            res,
+            401,
+            [{message: 'Login failed', userRole: -1}],
+            true
+          );
           return;
         }
         Authorization.sendAuthCookie(user, res);
-        this.responseHandler.sendHttpResponse(res, 200, 'Login successful', false);
-        return;
+        this.responseHandler.sendHttpResponse(
+          res,
+          200,
+          [
+            {
+              message: 'Login successful',
+              userRole: user.role,
+            },
+          ],
+          false
+        );
       }
-    )
+    );
 
     this.router.get('/', async (req: Request, res: Response) => {
       const data = 'user API is up!';
       const httpStatusCode = 200;
       this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+      return;
+    });
+
+    this.router.get('/all', async (req: Request, res: Response) => {
+      // Extract the JWT token from the request
+      const decodedToken = Authorization.getUserAuth(req);
+
+      // Extract the user id and role from the decoded token
+      const {userId, roleId} = decodedToken;
+
+      // Pack the user info into a UserFromTokenDTO
+      const userAuthDTO: UserAuthDTO = {
+        userId: decodedToken.userId,
+        roleId: decodedToken.roleId,
+      };
+
+      // Send the DTO to the service layer function
+      const result = await createUserService().handleListUsers(userAuthDTO);
+
+      // Send the result back to the client
+      this.responseHandler.sendHttpResponse(res, 200, result, false);
       return;
     });
   }
@@ -115,116 +141,6 @@ class UserApi {
       password: body.password,
     };
     return data;
-  }
-
-
-}
-
-
-
-/**
- * This object represents the validation and sanitization schema for the registration POST operation.
- * It is used with the checkSchema function defined in the express validation package.
- */
-const validationSchemaRegistrationPost: any = {
-  firstName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'First name is required',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'First name must be at least 1 characters',
-    },
-  },
-
-  lastName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Last name is required',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'Last name must be at least 1 characters',
-    },
-  },
-
-  userName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Username is required',
-    },
-    isAlphanumeric: {
-      errorMessage: 'Username must be alphanumeric',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'Username must be at least 1 characters',
-    },
-  },
-
-  password: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Password is required',
-    },
-    isLength: {
-      options: {min: 6},
-      errorMessage: 'Password must be stronger',
-    },
-  },
-
-  personalNumber: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Personal number is required',
-    },
-    isLength: {
-      options: {
-        min: 13,
-        max: 13,
-      },
-      errorMessage: 'Personal number must be 13 digits',
-    },
-  },
-
-  email: {
-    ...baseSanitizationSchema,
-    isEmail: {
-      errorMessage: 'Invalid email',
-    },
-    normalizeEmail: true,
-  },
-};
-
-/**
- * This object represents the validation and sanitization schema for the login POST operation.
- * It is used with the checkSchema function defined in the express validation package.
- */
-const validationSchemaLoginPost: any = {
-  userName: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Username is required',
-    },
-    isAlphanumeric: {
-      errorMessage: 'Username must be alphanumeric',
-    },
-    isLength: {
-      options: {min: 1},
-      errorMessage: 'Username must be at least 1 characters',
-    },
-  },
-
-  password: {
-    ...baseSanitizationSchema,
-    notEmpty: {
-      errorMessage: 'Password is required',
-    },
-    isLength: {
-      options: {min: 6},
-      errorMessage: 'Password must be stronger',
-    },
   }
 }
 

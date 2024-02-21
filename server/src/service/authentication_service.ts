@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import {LoginPasswordNotMatchError} from '../utilities/custom_errors';
 
 /**
  * This class handles authentication.
@@ -21,6 +22,26 @@ class AuthenticationService {
     } catch (error) {
       console.error('Hashing error:', error);
       throw error;
+    }
+  }
+
+  /**
+   * This function compares user password, it is used in the login request.
+   * @param plainTextPassword the password coming from the user.
+   * @param hashedPassword the password in the database for the corresponding user.
+   */
+  static async comparePasswords(
+    plainTextPassword: string,
+    hashedPassword: string
+  ) {
+    const passwordMatch = await bcrypt.compare(
+      plainTextPassword,
+      hashedPassword
+    );
+    if (passwordMatch) {
+      return true;
+    } else {
+      throw new LoginPasswordNotMatchError('Password is invalid');
     }
   }
 }
