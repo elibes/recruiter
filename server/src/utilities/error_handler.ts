@@ -1,5 +1,4 @@
 import {
-  AuthorizationError,
   ConflictError,
   InvalidRouteError,
   MissingHeaderError,
@@ -8,12 +7,20 @@ import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken';
-import {
-  ConnectionError,
-  ValidationError,
-  BaseError,
-  DatabaseError,
-} from 'sequelize';
+import {ConnectionRefusedError, ValidationError} from 'sequelize';
+
+const ERROR_CODES = {
+  CONFLICT_ERROR: 'CONFLICT_ERROR',
+  CUSTOM_VALIDATION_ERROR: 'CUSTOM_VALIDATION_ERROR',
+  JWT_ERROR: 'JWT_ERROR',
+  TOKEN_EXPIRED_ERROR: 'TOKEN_EXPIRED_ERROR',
+  CONNECTION_REFUSED_ERROR: 'CONNECTION_REFUSED_ERROR',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  DEFAULT_ERROR: 'DEFAULT_ERROR',
+  ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
+  MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
+};
+
 /**
  * This class acts as a centralized error handler for the entire application.
  * It does/shall:
@@ -52,68 +59,56 @@ class ErrorHandler {
       case ConflictError:
         httpStatusCode = 409;
         errorMessage.message = 'There was a data conflict';
+        errorMessage.code = ERROR_CODES.CONFLICT_ERROR;
         break;
 
       case CustomValidationError:
         httpStatusCode = 400;
         errorMessage.message = err.message;
+        errorMessage.code = ERROR_CODES.CUSTOM_VALIDATION_ERROR;
         break;
 
       case JsonWebTokenError:
         httpStatusCode = 401;
         errorMessage.message = 'Unauthorized';
+        errorMessage.code = ERROR_CODES.JWT_ERROR;
         break;
 
       case TokenExpiredError:
         httpStatusCode = 401;
         errorMessage.message = 'Unauthorized';
+        errorMessage.code = ERROR_CODES.TOKEN_EXPIRED_ERROR;
+        break;
+
+      case ConnectionRefusedError:
+        httpStatusCode = 503;
+        errorMessage.message = 'Service is currently unavailable';
+        errorMessage.code = ERROR_CODES.CONNECTION_REFUSED_ERROR;
         break;
 
       case ValidationError:
         httpStatusCode = 500;
         errorMessage.message = 'Data is invalid';
+        errorMessage.code = ERROR_CODES.VALIDATION_ERROR;
         break;
 
       case InvalidRouteError:
         httpStatusCode = 404;
         errorMessage.message = 'That route does not exist';
-        errorMessage.code = 'INVALID_ROUTE_ERROR';
+        errorMessage.code = ERROR_CODES.ROUTE_VALIDATION_ERROR;
         break;
 
       case MissingHeaderError:
         httpStatusCode = 400;
         errorMessage.message = err.message;
-        errorMessage.code = 'MISSING_HEADER_ERROR';
-        break;
-
-      case AuthorizationError:
-        httpStatusCode = 403;
-        errorMessage.message = 'You are not authorized to perform this action';
-        errorMessage.code = 'FORBIDDEN_ERROR';
-        break;
-
-      case ConnectionError:
-        httpStatusCode = 503;
-        errorMessage.message = 'Service is currently unavailable';
-        errorMessage.code = 'INTERNAL_ERROR';
-        break;
-
-      case DatabaseError:
-        httpStatusCode = 500;
-        errorMessage.message = 'There was an error handling your request';
-        errorMessage.code = 'INTERNAL_ERROR';
-        break;
-
-      case BaseError:
-        httpStatusCode = 500;
-        errorMessage.message = 'Server error';
-        errorMessage.code = 'INTERNAL_ERROR';
+        errorMessage.code = ERROR_CODES.MISSING_HEADER_ERROR;
         break;
 
       default:
         console.log(err);
         httpStatusCode = 500;
         errorMessage.message = 'Server error';
+        errorMessage.code = ERROR_CODES.DEFAULT_ERROR;
         break;
     }
     this.responseHandler.sendHttpResponse(

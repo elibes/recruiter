@@ -11,6 +11,7 @@ import {
   validateRegistrationReducer,
   passwordConfirmReducer,
   registerReducer,
+  errorReducer,
 } from './userReducers';
 import {loginModel} from '../model/loginModel';
 import {registrationModel} from '../model/RegistrationModel';
@@ -55,6 +56,7 @@ export const userSlice = createSlice({
     setPersonalNumber: personalNumberReducer,
     validateLogin: validateLoginReducer,
     validateRegistration: validateRegistrationReducer,
+    setError: errorReducer,
   },
   extraReducers: builder => {
     builder
@@ -72,7 +74,7 @@ export const login = createAsyncThunk('user/login', async (arg, {getState}) => {
 
 export const register = createAsyncThunk(
   'user/register',
-  async (arg, {getState}) => {
+  async (arg, {getState, dispatch}) => {
     const state = getState() as {user: UserState};
     if (state.user.error.length === 0) {
       return await registrationModel(
@@ -81,7 +83,8 @@ export const register = createAsyncThunk(
         state.user.userName,
         state.user.password,
         state.user.personalNumber,
-        state.user.email
+        state.user.email,
+        dispatch
       );
     } else return false;
   }
@@ -97,6 +100,7 @@ export const {
   setPasswordConfirm,
   validateRegistration,
   validateLogin,
+  setError,
 } = userSlice.actions;
 
 /**
