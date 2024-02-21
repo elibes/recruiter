@@ -151,9 +151,9 @@ class UserDAO {
 
       // Map the data to a DTO
       const applications = usersWithApplications.map((user: any) => ({
-        userId: user.userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        userId: user.person_id,
+        firstName: user.name,
+        lastName: user.surname,
         status: user.status || 'unhandled',
       }));
 
