@@ -4,6 +4,7 @@ import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
+import {Database} from './database';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -135,20 +136,22 @@ class UserDAO {
   async getAllApplications(): Promise<UserApplicationDTO[]> {
     try {
       // SQL query to get all users and their application status
-      const usersWithApplications = await this.database.query(
-        `
+      const usersWithApplications = await Database.getInstance()
+        .getDatabase()
+        .query(
+          `
         SELECT u.id, u.firstName, u.lastName, a.status
         FROM Users u
         LEFT JOIN Applications a ON u.id = a.userId
       `,
-        {
-          type: QueryTypes.SELECT,
-        }
-      );
+          {
+            type: QueryTypes.SELECT,
+          }
+        );
 
       // Map the data to a DTO
       const applications = usersWithApplications.map((user: any) => ({
-        id: user.id,
+        userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
         status: user.status,
