@@ -58,7 +58,7 @@ export const getAllApplicationsReducer = (
 ) => {
   if (!action.payload) return;
   if (action.payload.success) {
-    state.applications = action.payload.applications;
+    state.applications = action.payload.data;
   } else {
     state.error = [action.payload.error.message];
   }

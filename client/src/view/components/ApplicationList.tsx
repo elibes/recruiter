@@ -35,7 +35,7 @@ const ApplicationList = () => {
       {isLoaded ? (
         applications.map(application => (
           <ApplicationListItem
-            key={application.id}
+            key={application.userId}
             firstName={application.firstName}
             lastName={application.lastName}
             status={application.status}

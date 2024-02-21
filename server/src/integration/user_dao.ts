@@ -5,6 +5,7 @@ import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
 import {Database} from './database';
+import {Availability} from '../model/availability';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -135,30 +136,21 @@ class UserDAO {
 
   async getAllApplications(): Promise<UserApplicationDTO[]> {
     try {
-      // SQL query to get all users and their application status
-      const usersWithApplications = await Database.getInstance()
-        .getDatabase()
-        .query(
-          `
-        SELECT p.person_id, p.name, p.surname
-        FROM public.person p
-        JOIN public.availability a ON p.person_id = a.person_id;
-      `,
-          {
-            type: QueryTypes.SELECT,
-          }
-        );
+      const usersWithApplications = await User.findAll({
+        include: {
+          model: Availability,
+          as: 'personInAvailability',
+          required: true,
+        },
+      });
 
-      // Map the data to a DTO
-      const applications = usersWithApplications.map((user: any) => ({
-        userId: user.person_id,
-        firstName: user.name,
-        lastName: user.surname,
+      // Map the data to a DTO and return
+      return usersWithApplications.map((user: any) => ({
+        userId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         status: user.status || 'unhandled',
       }));
-
-      // Return the DTOs
-      return applications;
     } catch (error) {
       console.error('Error fetching applications:', error);
       throw new Error('Could not fetch applications from the database');

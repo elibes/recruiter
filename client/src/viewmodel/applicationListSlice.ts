@@ -12,7 +12,7 @@ import applicationListModel from '../model/applicationListModel';
 export interface ApplicationListState {
   applications: [
     {
-      id: number;
+      userId: number;
       firstName: string;
       lastName: string;
       status: 'accepted' | 'unhandled' | 'rejected';
@@ -29,7 +29,7 @@ export interface ApplicationListState {
 const initialState: ApplicationListState = {
   applications: [
     {
-      id: -1,
+      userId: -1,
       firstName: '',
       lastName: '',
       status: 'unhandled',
