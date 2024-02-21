@@ -3,7 +3,7 @@
  * Used for sending the user data to the API layer
  */
 export interface UserApplicationDTO {
-  readonly id: number;
+  readonly userId: number;
   readonly firstName: string;
   readonly lastName: string;
   readonly status: string;
