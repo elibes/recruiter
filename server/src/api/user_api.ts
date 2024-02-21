@@ -61,29 +61,26 @@ class UserApi {
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
         if (!user) {
-          this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
-          if (!user) {
-            this.responseHandler.sendHttpResponse(
-              res,
-              401,
-              [{message: 'Login failed', userRole: -1}],
-              true
-            );
-            return;
-          }
-          Authorization.sendAuthCookie(user, res);
           this.responseHandler.sendHttpResponse(
             res,
-            200,
-            [
-              {
-                message: 'Login successful',
-                userRole: user.role,
-              },
-            ],
-            false
+            401,
+            [{message: 'Login failed', userRole: -1}],
+            true
           );
+          return;
         }
+        Authorization.sendAuthCookie(user, res);
+        this.responseHandler.sendHttpResponse(
+          res,
+          200,
+          [
+            {
+              message: 'Login successful',
+              userRole: user.role,
+            },
+          ],
+          false
+        );
       }
     );
 

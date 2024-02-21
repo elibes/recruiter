@@ -39,10 +39,10 @@ export function headerPreValidatorMiddleware(
     }
   } else if (req.method === 'GET') {
   }
-  next();
   if (errorList.length !== 0) {
     throw new MissingHeaderError(errorList.join(', '));
   }
+  next();
   return;
 }
 
