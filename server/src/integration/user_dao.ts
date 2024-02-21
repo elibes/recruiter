@@ -140,9 +140,9 @@ class UserDAO {
         .getDatabase()
         .query(
           `
-        SELECT u.id, u.firstName, u.lastName, a.status
-        FROM Users u
-        LEFT JOIN Applications a ON u.id = a.userId
+        SELECT p.person_id, p.name, p.surname
+        FROM public.person p
+        JOIN public.availability a ON p.person_id = a.person_id;
       `,
           {
             type: QueryTypes.SELECT,
@@ -154,7 +154,7 @@ class UserDAO {
         userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
-        status: user.status,
+        status: user.status || 'unhandled',
       }));
 
       // Return the DTOs
