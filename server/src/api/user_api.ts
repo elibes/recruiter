@@ -10,6 +10,7 @@ import {
   userLoginValidator,
   userRegistrationValidationSchema,
 } from './validation_helper';
+import {UserAuthDTO} from '../model/dto/user_auth_dto';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -83,30 +84,19 @@ class UserApi {
 
     this.router.get('/all', async (req: Request, res: Response) => {
       // Extract the JWT token from the request
-      // TODO: this needs to be refactored into a middleware after merge
-      const token = req.headers.authorization;
+      const decodedToken = Authorization.getUserAuth(req);
 
-      if (!token || !process.env.JWT_SECRET) {
-        throw new Error('Authorization token or secret key is missing');
-      }
-
-      // Decode the token and extract the user info
-      // TODO: this needs to be refactored based on a middleware from another branch
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      if (typeof decodedToken === 'string') {
-        throw new Error('Invalid token');
-      }
-      const {id, role} = decodedToken;
+      // Extract the user id and role from the decoded token
+      const {userId, roleId} = decodedToken;
 
       // Pack the user info into a UserFromTokenDTO
-      const userFromTokenDTO: UserFromTokenDTO = {
-        id,
-        role,
+      const userAuthDTO: UserAuthDTO = {
+        userId: decodedToken.userId,
+        roleId: decodedToken.roleId,
       };
 
       // Send the DTO to the service layer function
-      const result =
-        await createUserService().handleListUsers(userFromTokenDTO);
+      const result = await createUserService().handleListUsers(userAuthDTO);
 
       // Send the result back to the client
       this.responseHandler.sendHttpResponse(res, 200, result, false);
