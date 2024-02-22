@@ -15,6 +15,7 @@ import {
   register,
 } from '../../viewmodel/userSlice';
 import Button from './Button';
+import {errorPlacer} from '../../util/error_handler';
 
 /**
  * Represents a registration form component allowing users to input their registration details.
@@ -35,28 +36,6 @@ const RegistrationForm = () => {
     error,
     backendError,
   } = useSelector((state: RootState) => state.user);
-
-  /**
-   * Generates an error message for a specific field if an error exists.
-   * @param {string} fieldName - The name of the field to check for an error.
-   * @returns {string | undefined} - The error message for the field, if any.
-   */
-  const generateErrorMessage = (fieldName: string) => {
-    if (backendError[0] && backendError[0].includes('::')) {
-      const errorStrings = backendError[0].split('::');
-      for (const errorString of errorStrings) {
-        const [errorFieldName, ...messageParts] = errorString.split(' ');
-        const message = messageParts.join(' ');
-        if (fieldName === errorFieldName) {
-          return message;
-        }
-      }
-    } else if (backendError[0] && backendError[0].includes(fieldName)) {
-      const [errorFieldName, ...messageParts] = backendError[0].split(' ');
-      return messageParts.join(' ');
-    }
-    return undefined;
-  };
 
   /**
    * Handles changes to the firstname input field.
@@ -126,6 +105,11 @@ const RegistrationForm = () => {
     dispatch(register());
   };
 
+  /**
+   * This helper function assign errors to particular fields.
+   * @param field the field name
+   */
+
   return (
     <div className="registration-container">
       <div>
@@ -138,9 +122,7 @@ const RegistrationForm = () => {
             onChange={handleFirstnameChange}
             className="form-input"
           />
-          {generateErrorMessage('firstName') && (
-            <strong>{generateErrorMessage('firstName')}</strong>
-          )}
+          <strong>{errorPlacer('firstName', backendError)}</strong>
           <InputField
             label="last name"
             type="text"
@@ -148,9 +130,7 @@ const RegistrationForm = () => {
             onChange={handleLastnameChange}
             className="form-input"
           />
-          {generateErrorMessage('lastName') && (
-            <strong>{generateErrorMessage('lastName')}</strong>
-          )}
+          <strong>{errorPlacer('lastName', backendError)}</strong>
           <InputField
             label="username"
             type="text"
@@ -158,9 +138,7 @@ const RegistrationForm = () => {
             onChange={handleUserNameChange}
             className="form-input"
           />
-          {generateErrorMessage('userName') && (
-            <strong>{generateErrorMessage('userName')}</strong>
-          )}
+          <strong>{errorPlacer('userName', backendError)}</strong>
           <InputField
             label="password"
             type="text"
@@ -168,9 +146,7 @@ const RegistrationForm = () => {
             onChange={handlePasswordChange}
             className="form-input"
           />
-          {generateErrorMessage('password') && (
-            <strong>{generateErrorMessage('password')}</strong>
-          )}
+          <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
             label="repeat password"
             type="text"
@@ -178,9 +154,7 @@ const RegistrationForm = () => {
             onChange={handlePasswordConfirmChange}
             className="form-input"
           />
-          {generateErrorMessage('password') && (
-            <strong>{generateErrorMessage('password')}</strong>
-          )}
+          <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
             label="person number"
             type="text"
@@ -188,9 +162,7 @@ const RegistrationForm = () => {
             onChange={handlePersonalNumberChange}
             className="form-input"
           />
-          {generateErrorMessage('personalNumber') && (
-            <strong>{generateErrorMessage('personalNumber')}</strong>
-          )}
+          <strong>{errorPlacer('personalNumber', backendError)}</strong>
           <InputField
             label="email"
             type="text"
@@ -198,9 +170,7 @@ const RegistrationForm = () => {
             onChange={handleEmailChange}
             className="form-input"
           />
-          {generateErrorMessage('email') && (
-            <strong>{generateErrorMessage('email')}</strong>
-          )}
+          <strong>{errorPlacer('email', backendError)}</strong>
         </div>
         <div className="form-buttons">
           <Button

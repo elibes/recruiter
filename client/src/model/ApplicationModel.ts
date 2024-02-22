@@ -1,8 +1,11 @@
+import {handleError} from '../util/error_handler';
+
 /**
  * This function calls the back-end server with a request to submit a job application form.
  * @param payload the job application form data
+ * @async
  */
-export async function submitApplicationToBackEnd(payload: any) {
+export async function submitApplicationToBackEnd(payload: any, dispatch: any) {
   const host: string =
     process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
   const url: string = '' + host + '/application/'; // API endpoint
@@ -13,12 +16,11 @@ export async function submitApplicationToBackEnd(payload: any) {
       body: JSON.stringify(payload),
       credentials: 'include',
     });
-    /*
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP error ${response.status}: ${errorText}`);
+      handleError({response, dispatch});
+    } else {
+      return await response.json();
     }
- */
     return await response.json();
   } catch (error) {
     console.error('Fetch operation failed:', error);

@@ -1,4 +1,5 @@
 import {setBackendError} from '../viewmodel/userSlice';
+import {setErrorList} from '../viewmodel/applicationSlice';
 
 /**
  * Enumeration of custom error codes used to handle specific error scenarios.
@@ -41,11 +42,14 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
     switch (response.status) {
       case 400:
         if (errorData.code === ERROR_CODES.CUSTOM_VALIDATION_ERROR) {
-          dispatch(setBackendError([errorMsg]));
+          const formattedMessage = generateErrorMessage(errorMsg);
+          console.log(formattedMessage);
+          dispatch(setBackendError(formattedMessage));
+          dispatch(setErrorList(formattedMessage));
         }
         if (errorData.code === ERROR_CODES.MISSING_HEADER_ERROR) {
           console.error('Missing Header: ', errorMsg);
-          alert('The header is missing.');
+          alert('Your request is missing needed HTTP headers.');
         }
         break;
       case 401:
@@ -94,3 +98,34 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
     }
   });
 }
+
+/**
+ * This function parses a validation error string from the back end, putting it in a list.
+ * @param validationErrors the string of validation errors
+ */
+const generateErrorMessage = (validationErrors: string) => {
+  console.log(validationErrors);
+  const toSet: string[] = [];
+  const errorStrings = validationErrors.split('::');
+  for (const errorString of errorStrings) {
+    const [errorFieldName, ...messageParts] = errorString.split(' ');
+    const message = messageParts.join(' ');
+    toSet.push(errorFieldName + ': ' + message);
+  }
+  return toSet;
+};
+
+/**
+ * This function takes a list of errors and retrieves the one matching a string, for placement within a view.
+ * @param field the string to match for placement
+ * @param errors the list of errors
+ */
+export const errorPlacer = (field: string, errors: string[]) => {
+  for (const errorString of errors) {
+    const errorParts = errorString.split(':');
+    if (field === errorParts[0]) {
+      return errorParts[1];
+    }
+  }
+  return undefined;
+};

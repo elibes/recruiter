@@ -3,9 +3,10 @@ import '../styles/ApplicationList.css';
 import * as React from 'react';
 
 /**
- * Creates an individual application to be shown in the list of all applications. Contains
- * the first and last name of the applicant, and the status of the application.
- * @return the application.
+ * Creates a div containing an individual application to be shown in the list of all
+ * applications. Contains the first and last name of the applicant, and the status
+ * of the application.
+ * @return the div containing the application.
  * */
 const ApplicationListItem = ({firstName, lastName, status}) => {
   return (

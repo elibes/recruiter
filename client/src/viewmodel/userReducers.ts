@@ -55,7 +55,7 @@ export const personalNumberReducer = (
 };
 
 export const errorReducer = (state: any, action: PayloadAction<string[]>) => {
-  state.backendError = [...state.backendError, ...action.payload];
+  state.backendError = [...action.payload];
 };
 
 /**

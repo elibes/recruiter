@@ -49,7 +49,7 @@ const CompetenceItem: React.FC<ListItemProps> = ({
   const handleYearsOfExperienceBlur = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (validateYearsOfExperience(e.target.value)) {
+    if (!e.target.value || validateYearsOfExperience(e.target.value)) {
       setInputValue(e.target.value);
       dispatch(
         setCompetenceYears({

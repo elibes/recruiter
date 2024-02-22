@@ -8,6 +8,7 @@ import applicationListModel from '../model/applicationListModel';
 
 /**
  * Interface defining the fields of the Application List state.
+ * @interface
  * */
 export interface ApplicationListState {
   applications: [

@@ -10,7 +10,9 @@ import {handleError} from '../util/error_handler';
  * @param {string} personalNumber - A unique identifier for the user (e.g., social security number).
  * @param {string} email - The email address of the user.
  * @param {Function} dispatch - A Redux dispatch function used for state management and error handling.
- * @returns {Promise<any>} - A promise that resolves with the response from the registration API if the registration is successful, or rejects with an error if the registration fails.
+ * @returns {Promise<any>} - A promise that resolves with the response from the registration API if the registration
+ * is successful, or rejects with an error if the registration fails.
+ * @async
  */
 async function registrationModel(
   firstName: string,

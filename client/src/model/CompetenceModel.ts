@@ -1,5 +1,6 @@
 /**
  * This function calls the back-end server with a request to get all competencies (names + id).
+ * @async
  */
 export async function getAllCompetencies() {
   const host: string =
@@ -9,6 +10,7 @@ export async function getAllCompetencies() {
     const response = await fetch(url, {
       method: 'GET',
     });
+
     const result = await response.json();
     //do error handling here.
     return result;

@@ -16,6 +16,9 @@ import {
 import {loginModel} from '../model/loginModel';
 import {registrationModel} from '../model/RegistrationModel';
 
+/**
+ * Interface defining the fields of the User state.
+ * */
 export interface UserState {
   userName: string;
   password: string;
@@ -32,6 +35,9 @@ export interface UserState {
   userRole: 'applicant' | 'recruiter' | 'unregistered';
 }
 
+/**
+ * The initial state of the user.
+ * */
 const initialState: UserState = {
   userName: '',
   password: '',
@@ -47,6 +53,11 @@ const initialState: UserState = {
   resultMsg: '',
   userRole: 'unregistered',
 };
+
+/**
+ * Creates the user slice by defining the name of the user slice, its initial state,
+ * and the reducers that can change that state.
+ * */
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -69,12 +80,22 @@ export const userSlice = createSlice({
   },
 });
 
-export const login = createAsyncThunk('user/login', async (arg, {getState}) => {
-  const state = getState() as {user: UserState};
-  if (state.user.error.length === 0) {
-    return await loginModel(state.user.userName, state.user.password);
-  } else return false;
-});
+/**
+ * Used for logging in a user by making a call to the login model.
+ * */
+export const login = createAsyncThunk(
+  'user/login',
+  async (arg, {getState, dispatch}) => {
+    const state = getState() as {user: UserState};
+    if (state.user.error.length === 0) {
+      return await loginModel(
+        state.user.userName,
+        state.user.password,
+        dispatch
+      );
+    } else return false;
+  }
+);
 
 export const register = createAsyncThunk(
   'user/register',

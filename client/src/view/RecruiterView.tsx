@@ -14,7 +14,7 @@ import {useNavigate} from 'react-router-dom';
  * the server. When the applications have been loaded, they will be shown under the button.
  * The applications can be sorted (alphabetic name order, status of the application) with
  * a drop-down menu.
- * @return The main view.
+ * @return The main view for the recruiter.
  * */
 const RecruiterView = () => {
   const dispatch = useDispatch<AppDispatch>();
