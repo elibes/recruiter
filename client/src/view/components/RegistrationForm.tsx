@@ -33,6 +33,7 @@ const RegistrationForm = () => {
     email,
     resultMsg,
     error,
+    backendError,
   } = useSelector((state: RootState) => state.user);
 
   /**
@@ -41,8 +42,8 @@ const RegistrationForm = () => {
    * @returns {string | undefined} - The error message for the field, if any.
    */
   const generateErrorMessage = (fieldName: string) => {
-    if (error[0] && error[0].includes('::')) {
-      const errorStrings = error[0].split('::');
+    if (backendError[0] && backendError[0].includes('::')) {
+      const errorStrings = backendError[0].split('::');
       for (const errorString of errorStrings) {
         const [errorFieldName, ...messageParts] = errorString.split(' ');
         const message = messageParts.join(' ');
@@ -50,8 +51,8 @@ const RegistrationForm = () => {
           return message;
         }
       }
-    } else if (error[0] && error[0].includes(fieldName)) {
-      const [errorFieldName, ...messageParts] = error[0].split(' ');
+    } else if (backendError[0] && backendError[0].includes(fieldName)) {
+      const [errorFieldName, ...messageParts] = backendError[0].split(' ');
       return messageParts.join(' ');
     }
     return undefined;
@@ -209,6 +210,7 @@ const RegistrationForm = () => {
           />
         </div>
         <span className="result-message">{resultMsg}</span>
+        <span className="result-message">{error}</span>
         <div className="registered-user-link">
           Already registered? <a href="/login">Log in</a>
         </div>

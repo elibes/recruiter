@@ -26,6 +26,7 @@ interface UserState {
   personalNumber: string;
   userInfo: {userId: string; role: string} | null;
   error: string[];
+  backendError: string[];
   isLoggedIn: boolean;
   resultMsg: string;
 }
@@ -40,6 +41,7 @@ const initialState: UserState = {
   personalNumber: '',
   userInfo: null,
   error: [],
+  backendError: [],
   isLoggedIn: false,
   resultMsg: '',
 };
@@ -56,7 +58,7 @@ export const userSlice = createSlice({
     setPersonalNumber: personalNumberReducer,
     validateLogin: validateLoginReducer,
     validateRegistration: validateRegistrationReducer,
-    setError: errorReducer,
+    setBackendError: errorReducer,
   },
   extraReducers: builder => {
     builder
@@ -100,7 +102,7 @@ export const {
   setPasswordConfirm,
   validateRegistration,
   validateLogin,
-  setError,
+  setBackendError,
 } = userSlice.actions;
 
 /**

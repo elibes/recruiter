@@ -1,4 +1,4 @@
-import {setError} from '../viewmodel/userSlice';
+import {setBackendError} from '../viewmodel/userSlice';
 
 /**
  * Enumeration of custom error codes used to handle specific error scenarios.
@@ -41,7 +41,7 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
     switch (response.status) {
       case 400:
         if (errorData.code === ERROR_CODES.CUSTOM_VALIDATION_ERROR) {
-          dispatch(setError([errorMsg]));
+          dispatch(setBackendError([errorMsg]));
         }
         if (errorData.code === ERROR_CODES.MISSING_HEADER_ERROR) {
           console.error('Missing Header: ', errorMsg);
@@ -72,7 +72,7 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
         break;
       case 500:
         if (errorData.code === ERROR_CODES.VALIDATION_ERROR) {
-          dispatch(setError([errorMsg]));
+          dispatch(setBackendError([errorMsg]));
         }
         if (errorData.code === ERROR_CODES.DEFAULT_ERROR) {
           console.error('Server Error', errorMsg);
