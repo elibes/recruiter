@@ -83,9 +83,13 @@ export const setCompetenceYearsReducer = (
   if (index === -1) {
     throw new Error('Tried to change the years of a non existing competence.');
   }
-  state.competencies[index].yearsOfExperience = parseFloat(
-    action.payload.years
-  );
+  if (action.payload.years !== '') {
+    state.competencies[index].yearsOfExperience = parseFloat(
+      action.payload.years
+    );
+  } else {
+    state.competencies[index].yearsOfExperience = NaN;
+  }
 };
 
 /**
@@ -163,4 +167,16 @@ export const cancelApplicationReducer = (state: ApplicationState) => {
   state.availability = initialState.availability;
   state.resultMsg = initialState.resultMsg;
   state.errorList = initialState.errorList;
+};
+
+/**
+ * This reducer sets the errors to be displayed
+ * @param state the job application state
+ * @param action an action containing a list of errors
+ */
+export const setErrorsReducer = (
+  state: ApplicationState,
+  action: PayloadAction<string[]>
+) => {
+  state.errorList = [...action.payload];
 };

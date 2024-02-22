@@ -1,16 +1,18 @@
+import {handleError} from '../util/error_handler';
+
 /**
- * Handles user registration by sending user details to the registration API endpoint.
+ * Registers a new user by sending their information to the registration API endpoint.
  *
+ * @param {string} firstName - The first name of the user.
+ * @param {string} lastName - The last name of the user.
+ * @param {string} userName - The desired username for the new account.
+ * @param {string} password - The password for the new account.
+ * @param {string} personalNumber - A unique identifier for the user (e.g., social security number).
+ * @param {string} email - The email address of the user.
+ * @param {Function} dispatch - A Redux dispatch function used for state management and error handling.
+ * @returns {Promise<any>} - A promise that resolves with the response from the registration API if the registration
+ * is successful, or rejects with an error if the registration fails.
  * @async
- * @function registrationModel
- * @param {string} firstName - User's first name.
- * @param {string} lastName - User's last name.
- * @param {string} userName - Chosen username.
- * @param {string} password - Account password.
- * @param {string} personalNumber - User's personal identification number.
- * @param {string} email - User's email address.
- * @returns {Promise<any>} - The response from the registration process, which can be a success message or an error message.
- * @throws {Error} Throws an error if the registration process fails or if the fetch operation encounters an error.
  */
 async function registrationModel(
   firstName: string,
@@ -18,7 +20,8 @@ async function registrationModel(
   userName: string,
   password: string,
   personalNumber: string,
-  email: string
+  email: string,
+  dispatch: any
 ): Promise<any> {
   const host: string =
     process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
@@ -38,14 +41,11 @@ async function registrationModel(
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     });
-    /*
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`HTTP error ${response.status}: ${errorText}`);
+      handleError({response, dispatch});
+    } else {
+      return await response.json();
     }
-
- */
-    return await response.json();
   } catch (error) {
     console.error('Fetch operation failed:', error);
     throw new Error('Registration failed');

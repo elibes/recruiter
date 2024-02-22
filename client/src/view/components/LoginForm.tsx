@@ -11,6 +11,8 @@ import {
 import InputField from './InputField';
 import Button from './Button';
 import {useNavigate} from 'react-router-dom';
+import {errorPlacer} from '../../util/error_handler';
+import {setErrorList} from '../../viewmodel/applicationSlice';
 
 /**
  * React component which is responsible for rendering a login form and handling user interactions with the form.
@@ -19,8 +21,15 @@ import {useNavigate} from 'react-router-dom';
  */
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {userName, password, error, resultMsg, isLoggedIn, userRole} =
-    useSelector((state: RootState) => state.user);
+  const {
+    userName,
+    password,
+    error,
+    resultMsg,
+    isLoggedIn,
+    userRole,
+    backendError,
+  } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -32,6 +41,7 @@ const LoginForm = () => {
           }, 1000);
           break;
         case 'applicant':
+          dispatch(setErrorList([]));
           setTimeout(() => {
             navigate('/application');
           }, 500);
@@ -65,6 +75,7 @@ const LoginForm = () => {
             value={userName}
             onChange={handleUsernameChange}
           />
+          <strong>{errorPlacer('userName', backendError)}</strong>
         </div>
         <div className="form-group">
           <InputField
@@ -74,6 +85,7 @@ const LoginForm = () => {
             value={password}
             onChange={handlePasswordChange}
           />
+          <strong>{errorPlacer('password', backendError)}</strong>
         </div>
         <Button text="Login" onClick={handleSubmit} className="login-button" />
         {error ? <p>{error}</p> : ''}

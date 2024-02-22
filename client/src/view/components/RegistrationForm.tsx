@@ -15,6 +15,7 @@ import {
   register,
 } from '../../viewmodel/userSlice';
 import Button from './Button';
+import {errorPlacer} from '../../util/error_handler';
 
 /**
  * RegistrationForm component responsible for rendering a registration form and handling user interactions with the form
@@ -34,43 +35,81 @@ const RegistrationForm = () => {
     email,
     resultMsg,
     error,
+    backendError,
   } = useSelector((state: RootState) => state.user);
 
+  /**
+   * Handles changes to the firstname input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setFirstname(e.target.value));
   };
 
+  /**
+   * Handles changes to the lastname input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handleLastnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setLastname(e.target.value));
   };
 
+  /**
+   * Handles changes to the username input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));
   };
 
+  /**
+   * Handles changes to the password input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setPassword(e.target.value));
   };
 
+  /**
+   * Handles changes to the password confirmation input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handlePasswordConfirmChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     dispatch(setPasswordConfirm(e.target.value));
   };
+
+  /**
+   * Handles changes to the email input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setEmail(e.target.value));
   };
 
+  /**
+   * Handles changes to the person number input field.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object from the input field.
+   */
   const handlePersonalNumberChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     dispatch(setPersonalNumber(e.target.value));
   };
 
+  /**
+   * Initiates the registration process, including validation and registration actions.
+   */
   const handleRegister = () => {
     dispatch(validateRegistration());
     dispatch(register());
   };
+
+  /**
+   * This helper function assign errors to particular fields.
+   * @param field the field name
+   */
 
   return (
     <div className="registration-container">
@@ -84,6 +123,7 @@ const RegistrationForm = () => {
             onChange={handleFirstnameChange}
             className="form-input"
           />
+          <strong>{errorPlacer('firstName', backendError)}</strong>
           <InputField
             label="last name"
             type="text"
@@ -91,6 +131,7 @@ const RegistrationForm = () => {
             onChange={handleLastnameChange}
             className="form-input"
           />
+          <strong>{errorPlacer('lastName', backendError)}</strong>
           <InputField
             label="username"
             type="text"
@@ -98,20 +139,23 @@ const RegistrationForm = () => {
             onChange={handleUserNameChange}
             className="form-input"
           />
+          <strong>{errorPlacer('userName', backendError)}</strong>
           <InputField
             label="password"
-            type="text"
+            type="password"
             value={password}
             onChange={handlePasswordChange}
             className="form-input"
           />
+          <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
             label="repeat password"
-            type="text"
+            type="password"
             value={passwordConfirm}
             onChange={handlePasswordConfirmChange}
             className="form-input"
           />
+          <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
             label="person number"
             type="text"
@@ -119,6 +163,7 @@ const RegistrationForm = () => {
             onChange={handlePersonalNumberChange}
             className="form-input"
           />
+          <strong>{errorPlacer('personalNumber', backendError)}</strong>
           <InputField
             label="email"
             type="text"
@@ -126,6 +171,7 @@ const RegistrationForm = () => {
             onChange={handleEmailChange}
             className="form-input"
           />
+          <strong>{errorPlacer('email', backendError)}</strong>
         </div>
         <div className="form-buttons">
           <Button

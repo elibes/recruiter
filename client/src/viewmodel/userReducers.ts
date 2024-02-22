@@ -54,6 +54,10 @@ export const personalNumberReducer = (
   state.personalNumber = action.payload;
 };
 
+export const errorReducer = (state: any, action: PayloadAction<string[]>) => {
+  state.backendError = [...action.payload];
+};
+
 /**
  * Extra reducer for handling the fulfilled login action.
  * @param {Object} state - The current state.

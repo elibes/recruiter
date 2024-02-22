@@ -8,6 +8,7 @@ import {
   setCompetenceReducer,
   setCompetenceYearsReducer,
   setDatesReducer,
+  setErrorsReducer,
   submitApplicationReducer,
 } from './applicationReducers';
 import {submitApplicationToBackEnd} from '../model/ApplicationModel';
@@ -76,6 +77,7 @@ const applicationSlice = createSlice({
     setCompetenceYears: setCompetenceYearsReducer,
     applicationValidator: applicationValidatorReducer,
     cancelApplication: cancelApplicationReducer,
+    setErrorList: setErrorsReducer,
   },
   extraReducers: builder => {
     builder.addCase(getCompetencies.fulfilled, getCompetenciesReducer);
@@ -103,7 +105,7 @@ export const getCompetencies = createAsyncThunk(
  */
 export const submitApplication = createAsyncThunk(
   'application/submitApplication',
-  async (arg, {getState}) => {
+  async (arg, {getState, dispatch}) => {
     const state = getState() as {application: ApplicationState};
     if (state.application.errorList.length === 0) {
       const availabilitiesData = [...state.application.availability].map(
@@ -138,7 +140,7 @@ export const submitApplication = createAsyncThunk(
         competencies: competenceData,
       };
       console.log(data);
-      return await submitApplicationToBackEnd(data);
+      return await submitApplicationToBackEnd(data, dispatch);
     } else return false;
   }
 );
@@ -150,6 +152,7 @@ export const {
   setCompetenceYears,
   applicationValidator,
   cancelApplication,
+  setErrorList,
 } = applicationSlice.actions;
 
 export {ApplicationState, AvailabilityState, CompetenceState, initialState};

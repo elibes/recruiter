@@ -1,6 +1,8 @@
+import {handleError} from '../util/error_handler';
+
 /**
  * Function used for loading all user applications from the server.
- * @return The json-object from the server-response.
+ * @return The json-object from the server-response, containing all found applications.
  * @async
  * */
 async function applicationListModel() {
@@ -13,7 +15,11 @@ async function applicationListModel() {
       headers: {'Content-Type': 'application/json'},
       credentials: 'include',
     });
-    return await response.json();
+    if (!response.ok) {
+      handleError({response});
+    } else {
+      return await response.json();
+    }
   } catch (error) {
     console.error('Fetch operation failed:', error);
     throw new Error('Failed to load applications');

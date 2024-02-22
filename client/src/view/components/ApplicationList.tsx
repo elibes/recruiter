@@ -6,6 +6,11 @@ import {RootState, AppDispatch} from '../../store';
 import {setSorting} from '../../viewmodel/applicationListSlice';
 import ApplicationListItem from './ApplicationListItem';
 
+/**
+ * Returns a div containing a list of all applications in the state,
+ * and a drop-down list for sorting it.
+ * @return The div containing the list of applications and the drop-down menu.
+ * */
 const ApplicationList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {isLoaded, sorting, applications, error} = useSelector(

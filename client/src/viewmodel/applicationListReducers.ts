@@ -1,8 +1,13 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {ApplicationListState} from './applicationListSlice';
+/**
+ * @fileoverview this file contains reducers for changing the state of ApplicationListSlice.
+ * */
 
 /**
- * Reducer for sorting the lists of applications.
+ * Reducer for sorting the lists of applications based on sorting parameters.
+ * @param state The state containing the list of applications to be sorted.
+ * @param action The parameters that determine how the list will be sorted.
  * */
 export const sortingReducer = (
   state: ApplicationListState,
@@ -39,6 +44,8 @@ export const sortingReducer = (
 
 /**
  * Reducer for setting the state of isLoaded, in the Application List slice.
+ * @param state The state containing the isLoaded variable.
+ * @param action The new boolean value for isLoaded, true or false.
  * */
 export const isLoadedReducer = (
   state: ApplicationListState,
@@ -51,6 +58,8 @@ export const isLoadedReducer = (
  * Reducer for setting the state of applications, in the Application List slice. Uses the response
  * from the server after having requested applications. Instead sets error if the response states
  * that the request did not succeed.
+ * @param state The state containing the list of applications.
+ * @param action Contains a new list of applications to be set, or an error.
  * */
 export const getAllApplicationsReducer = (
   state: ApplicationListState,
