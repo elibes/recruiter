@@ -18,9 +18,10 @@ import Button from './Button';
 import {errorPlacer} from '../../util/error_handler';
 
 /**
- * Represents a registration form component allowing users to input their registration details.
- * It includes input fields for personal information and registration actions.
- * The form provides validation feedback for each field and displays a message upon registration completion or error.
+ * RegistrationForm component responsible for rendering a registration form and handling user interactions with the form
+ * related to user registration.
+ *
+ * @returns JSX.Element that renders the registration form.
  */
 const RegistrationForm = () => {
   const dispatch = useDispatch<AppDispatch>();

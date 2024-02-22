@@ -21,7 +21,7 @@ form {
 
 input[type="text"],
 input[type="password"] {
-  width: 100%;
+  width: 30%;
   padding: 10px;
   margin-top: 5px;
   border: 1px solid #cccccc;
@@ -31,7 +31,8 @@ input[type="password"] {
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
+  margin-top: 3px;
   color: #333333;
 }
 
@@ -42,10 +43,11 @@ label {
 }
 
 button {
-  width: 100%;
+  width: 30%;
   background-color: #007bff;
   color: white;
   padding: 10px;
+  margin-top: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;

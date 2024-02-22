@@ -14,6 +14,11 @@ import {useNavigate} from 'react-router-dom';
 import {errorPlacer} from '../../util/error_handler';
 import {setErrorList} from '../../viewmodel/applicationSlice';
 
+/**
+ * React component which is responsible for rendering a login form and handling user interactions with the form.
+ *
+ * @returns a JSX element that renders the login form
+ */
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
