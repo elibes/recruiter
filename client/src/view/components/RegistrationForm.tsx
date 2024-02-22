@@ -142,7 +142,7 @@ const RegistrationForm = () => {
           <strong>{errorPlacer('userName', backendError)}</strong>
           <InputField
             label="password"
-            type="text"
+            type="password"
             value={password}
             onChange={handlePasswordChange}
             className="form-input"
@@ -150,7 +150,7 @@ const RegistrationForm = () => {
           <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
             label="repeat password"
-            type="text"
+            type="password"
             value={passwordConfirm}
             onChange={handlePasswordConfirmChange}
             className="form-input"
