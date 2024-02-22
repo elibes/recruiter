@@ -1,19 +1,19 @@
 /* /path/to/RegistrationView.css */
-.registration-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: cornflowerblue;
+
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
 }
 
 form {
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  padding: 2rem;
   max-width: 400px;
-  width: 100%;
+  margin: 60px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .reg-inputs > div {
@@ -30,10 +30,11 @@ label {
 input[type="text"],
 input[type="password"],
 input[type="email"] {
-  width: 100%;
+  width: 30%;
   padding: 0.5em;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #dcdcdc;
+  border-radius: 4px;
   font-size: 1em;
   box-sizing: border-box;
 }
@@ -53,7 +54,7 @@ input[type="email"]:focus {
   padding: 0.5rem 1rem;
   margin-top: 1rem;
   cursor: pointer;
-  width: 100%;
+  width: 30%;
 }
 
 .action-btn:disabled {
@@ -106,3 +107,5 @@ h3 {
   font-size: 1.3rem;
   font-weight: bold;
 }
+
+

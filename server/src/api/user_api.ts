@@ -92,22 +92,13 @@ class UserApi {
     });
 
     this.router.get('/all', async (req: Request, res: Response) => {
-      // Extract the JWT token from the request
       const decodedToken = Authorization.getUserAuth(req);
-
-      // Extract the user id and role from the decoded token
       const {userId, roleId} = decodedToken;
-
-      // Pack the user info into a UserFromTokenDTO
       const userAuthDTO: UserAuthDTO = {
         userId: decodedToken.userId,
         roleId: decodedToken.roleId,
       };
-
-      // Send the DTO to the service layer function
       const result = await createUserService().handleListUsers(userAuthDTO);
-
-      // Send the result back to the client
       this.responseHandler.sendHttpResponse(res, 200, result, false);
       return;
     });

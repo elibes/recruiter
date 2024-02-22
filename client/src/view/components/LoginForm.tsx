@@ -12,6 +12,11 @@ import InputField from './InputField';
 import Button from './Button';
 import {useNavigate} from 'react-router-dom';
 
+/**
+ * React component which is responsible for rendering a login form and handling user interactions with the form.
+ *
+ * @returns a JSX element that renders the login form
+ */
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {userName, password, error, resultMsg, isLoggedIn, userRole} =

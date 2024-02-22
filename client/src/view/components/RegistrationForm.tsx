@@ -15,6 +15,13 @@ import {
   register,
 } from '../../viewmodel/userSlice';
 import Button from './Button';
+
+/**
+ * RegistrationForm component responsible for rendering a registration form and handling user interactions with the form
+ * related to user registration.
+ *
+ * @returns JSX.Element that renders the registration form.
+ */
 const RegistrationForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
