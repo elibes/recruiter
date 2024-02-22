@@ -21,7 +21,9 @@ async function registrationModel(
   email: string,
   dispatch: any
 ): Promise<any> {
-  const url = 'http://localhost:3001/user/register'; // API endpoint
+  const host: string =
+    process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+  const url: string = '' + host + '/user/register'; // API endpoint
   const payload = {
     firstName,
     lastName,

@@ -11,7 +11,7 @@ import * as express from 'express';
 
 import * as path from 'path';
 
-import * as dotenv from 'dotenv-safe';
+import {config} from 'dotenv-safe';
 
 import * as cors from 'cors';
 
@@ -26,10 +26,7 @@ require('express-async-errors');
 
 const SERVER_ROOT_DIR_PATH = path.join(__dirname, '..');
 
-dotenv.config({
-  path: path.join(SERVER_ROOT_DIR_PATH, '.env'),
-  example: path.join(SERVER_ROOT_DIR_PATH, '.env.example'),
-});
+config();
 
 const app = express();
 
@@ -57,7 +54,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CORS_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
@@ -72,10 +69,8 @@ if (process.env.PORT === undefined) {
   port = +process.env.PORT;
 }
 
-const host = process.env.HOST || 'localhost';
-
-app.listen(port, host, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
 });
 
 export {db};

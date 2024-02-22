@@ -14,18 +14,27 @@ import {useNavigate} from 'react-router-dom';
 
 const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const {userName, password, error, resultMsg, isLoggedIn, userRole} =
+    useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
-  const {userName, password, error, resultMsg, isLoggedIn} = useSelector(
-    (state: RootState) => state.user
-  );
 
   React.useEffect(() => {
     if (isLoggedIn) {
-      setTimeout(() => {
-        navigate('/application');
-      }, 500);
+      switch (userRole) {
+        case 'recruiter':
+          setTimeout(() => {
+            navigate('/recruiter');
+          }, 1000);
+          break;
+        case 'applicant':
+          setTimeout(() => {
+            navigate('/application');
+          }, 500);
+          break;
+        default:
+      }
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, userRole]);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setUsername(e.target.value));

@@ -3,7 +3,9 @@
  * @param payload the job application form data
  */
 export async function submitApplicationToBackEnd(payload: any) {
-  const url = 'http://localhost:3001/application/'; // API endpoint
+  const host: string =
+    process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+  const url: string = '' + host + '/application/'; // API endpoint
   try {
     const response = await fetch(url, {
       method: 'POST',

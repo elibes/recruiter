@@ -39,10 +39,10 @@ export function headerPreValidatorMiddleware(
     }
   } else if (req.method === 'GET') {
   }
-  next();
   if (errorList.length !== 0) {
     throw new MissingHeaderError(errorList.join(', '));
   }
+  next();
   return;
 }
 
@@ -154,5 +154,10 @@ export const applicationValidationSchema: any = {
  */
 export const userLoginValidator: any = {
   ...baseValidationSchema,
-  ...userNamePasswordValidationSchema,
+  userName: {
+    userNameValidator: {
+      custom: Validators.userNameValidator,
+      errorMessage: 'Must be shorter than 30 characters',
+    },
+  },
 };

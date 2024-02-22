@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev --respawn src/api/root_api.ts",
+    "start": "tsc && node build/src/server.js",
     "build": "tsc",
     "dev": "nodemon --exec ts-node --files src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",

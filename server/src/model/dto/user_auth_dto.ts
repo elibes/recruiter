@@ -1,7 +1,7 @@
 /**
- * A DTO for information gotten from a JWT token
+ * DTO for sending authentication info to the service layer
  */
 export interface UserAuthDTO {
-  userId: number;
-  roleId: number;
+  readonly userId: number;
+  readonly roleId: number;
 }

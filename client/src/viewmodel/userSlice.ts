@@ -16,7 +16,7 @@ import {
 import {loginModel} from '../model/loginModel';
 import {registrationModel} from '../model/RegistrationModel';
 
-interface UserState {
+export interface UserState {
   userName: string;
   password: string;
   passwordConfirm: string;
@@ -29,6 +29,7 @@ interface UserState {
   backendError: string[];
   isLoggedIn: boolean;
   resultMsg: string;
+  userRole: 'applicant' | 'recruiter' | 'unregistered';
 }
 
 const initialState: UserState = {
@@ -44,6 +45,7 @@ const initialState: UserState = {
   backendError: [],
   isLoggedIn: false,
   resultMsg: '',
+  userRole: 'unregistered',
 };
 export const userSlice = createSlice({
   name: 'user',

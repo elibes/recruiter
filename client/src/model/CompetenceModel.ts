@@ -2,7 +2,9 @@
  * This function calls the back-end server with a request to get all competencies (names + id).
  */
 export async function getAllCompetencies() {
-  const url = 'http://localhost:3001/competence/all'; // API endpoint
+  const host: string =
+    process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+  const url: string = '' + host + '/competence/all'; // API endpoint
   try {
     const response = await fetch(url, {
       method: 'GET',

@@ -10,6 +10,7 @@ import {
   userLoginValidator,
   userRegistrationValidationSchema,
 } from './validation_helper';
+import {UserAuthDTO} from '../model/dto/user_auth_dto';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -60,17 +61,26 @@ class UserApi {
         const loginData = this.loginDataPacker(req.body);
         const user = await userService.handleLogin(loginData);
         if (!user) {
-          this.responseHandler.sendHttpResponse(res, 401, 'Login failed', true);
+          this.responseHandler.sendHttpResponse(
+            res,
+            401,
+            [{message: 'Login failed', userRole: -1}],
+            true
+          );
           return;
         }
         Authorization.sendAuthCookie(user, res);
         this.responseHandler.sendHttpResponse(
           res,
           200,
-          'Login successful',
+          [
+            {
+              message: 'Login successful',
+              userRole: user.role,
+            },
+          ],
           false
         );
-        return;
       }
     );
 
@@ -78,6 +88,27 @@ class UserApi {
       const data = 'user API is up!';
       const httpStatusCode = 200;
       this.responseHandler.sendHttpResponse(res, httpStatusCode, data, false);
+      return;
+    });
+
+    this.router.get('/all', async (req: Request, res: Response) => {
+      // Extract the JWT token from the request
+      const decodedToken = Authorization.getUserAuth(req);
+
+      // Extract the user id and role from the decoded token
+      const {userId, roleId} = decodedToken;
+
+      // Pack the user info into a UserFromTokenDTO
+      const userAuthDTO: UserAuthDTO = {
+        userId: decodedToken.userId,
+        roleId: decodedToken.roleId,
+      };
+
+      // Send the DTO to the service layer function
+      const result = await createUserService().handleListUsers(userAuthDTO);
+
+      // Send the result back to the client
+      this.responseHandler.sendHttpResponse(res, 200, result, false);
       return;
     });
   }

@@ -1,7 +1,11 @@
+import {QueryTypes, Sequelize} from 'sequelize';
 import {User} from '../model/user';
 import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
+import {UserApplicationDTO} from '../model/dto/user_application_dto';
+import {Database} from './database';
+import {Availability} from '../model/availability';
 
 /**
  * The class responsible for communicating with the database regarding users.
@@ -127,6 +131,29 @@ class UserDAO {
         passwordHash: user.passwordHash,
         role: user.role,
       };
+    }
+  }
+
+  async getAllApplications(): Promise<UserApplicationDTO[]> {
+    try {
+      const usersWithApplications = await User.findAll({
+        include: {
+          model: Availability,
+          as: 'personInAvailability',
+          required: true,
+        },
+      });
+
+      // Map the data to a DTO and return
+      return usersWithApplications.map((user: any) => ({
+        userId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        status: user.status || 'unhandled',
+      }));
+    } catch (error) {
+      console.error('Error fetching applications:', error);
+      throw new Error('Could not fetch applications from the database');
     }
   }
 }

@@ -46,8 +46,8 @@ class Authorization {
     }
     const cookieOptions: CookieOptions = {
       httpOnly: true,
-      sameSite: 'lax',
-      secure: nodeEnv === 'production',
+      sameSite: 'none',
+      secure: true,
     };
     res.cookie(Authorization.AUTH_COOKIE_NAME, jwtToken, cookieOptions);
   }

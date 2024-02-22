@@ -8,11 +8,18 @@ import {
   validatePersonalNumber,
   validateUsername,
 } from '../util/validation';
+import {UserState} from './userSlice';
 
-export const userNameReducer = (state: any, action: PayloadAction<string>) => {
+export const userNameReducer = (
+  state: UserState,
+  action: PayloadAction<string>
+) => {
   state.userName = action.payload;
 };
-export const passwordReducer = (state: any, action: PayloadAction<string>) => {
+export const passwordReducer = (
+  state: UserState,
+  action: PayloadAction<string>
+) => {
   state.password = action.payload;
 };
 export const passwordConfirmReducer = (
@@ -21,13 +28,22 @@ export const passwordConfirmReducer = (
 ) => {
   state.passwordConfirm = action.payload;
 };
-export const firstnameReducer = (state: any, action: PayloadAction<string>) => {
+export const firstnameReducer = (
+  state: UserState,
+  action: PayloadAction<string>
+) => {
   state.firstname = action.payload;
 };
-export const lastnameReducer = (state: any, action: PayloadAction<string>) => {
+export const lastnameReducer = (
+  state: UserState,
+  action: PayloadAction<string>
+) => {
   state.lastname = action.payload;
 };
-export const emailReducer = (state: any, action: PayloadAction<string>) => {
+export const emailReducer = (
+  state: UserState,
+  action: PayloadAction<string>
+) => {
   state.email = action.payload;
 };
 
@@ -50,26 +66,36 @@ export const errorReducer = (state: any, action: PayloadAction<string[]>) => {
  * @param {string} action.payload.token - The token received upon successful login.
  * @param {string} action.payload.error - The error message, if any.
  */
-export const loginReducer = (state: any, action: any) => {
+export const loginReducer = (state: UserState, action: any) => {
   if (!action.payload) return;
   if (action.payload.success) {
     state.isLoggedIn = true;
-    state.resultMsg = [action.payload.data];
+    state.resultMsg = action.payload.data[0].message;
+    switch (action.payload.data[0].userRole as number) {
+      case 1:
+        state.userRole = 'recruiter';
+        break;
+      case 2:
+        state.userRole = 'applicant';
+        break;
+      default:
+        state.userRole = 'unregistered';
+    }
   } else {
     state.error = [action.payload.error.message];
   }
 };
-export const registerReducer = (state: any, action: any) => {
+export const registerReducer = (state: UserState, action: any) => {
   if (!action.payload) return;
   if (action.payload.success) {
     state.isLoggedIn = true;
-    state.resultMsg = [action.payload.data];
+    state.resultMsg = action.payload.data;
   } else {
     state.error = [action.payload.error.message];
   }
 };
 
-export const validateLoginReducer = (state: any) => {
+export const validateLoginReducer = (state: UserState) => {
   const errorList: string[] = [];
   if (validateUsername(state.userName)) {
     errorList.push(validateUsername(state.userName));
@@ -80,7 +106,7 @@ export const validateLoginReducer = (state: any) => {
   state.error = errorList;
 };
 
-export const validateRegistrationReducer = (state: any) => {
+export const validateRegistrationReducer = (state: UserState) => {
   const errorList: string[] = [];
   if (validateUsername(state.userName)) {
     errorList.push(validateUsername(state.userName));
