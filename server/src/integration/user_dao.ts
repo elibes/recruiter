@@ -134,6 +134,11 @@ class UserDAO {
     }
   }
 
+  /**
+   * Retrieves all user applications from the database who have associated `Availability` records.
+   * @returns A promise that resolves to an array of UserApplicationDTO objects.
+   * @throws An error if the applications cannot be fetched from the database.
+   */
   async getAllApplications(): Promise<UserApplicationDTO[]> {
     try {
       const usersWithApplications = await User.findAll({
@@ -144,7 +149,6 @@ class UserDAO {
         },
       });
 
-      // Map the data to a DTO and return
       return usersWithApplications.map((user: any) => ({
         userId: user.id,
         firstName: user.firstName,

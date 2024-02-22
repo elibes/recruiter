@@ -75,36 +75,33 @@ export class UserService {
     });
   }
 
+  /**
+   * Fetches a list of users and their applications from the database.
+   *
+   * @param userAuthDTO - The user authentication data.
+   * @returns A promise that resolves to an array of UserApplicationDTO objects representing the user applications.
+   * @throws {Error} Throws an 'Unauthorized' error if the user's role ID is not 1.
+   * @throws {Error} Throws the error if there is an issue fetching the users or their applications from the database.
+   */
   async handleListUsers(
     userAuthDTO: UserAuthDTO
   ): Promise<UserApplicationDTO[]> {
-    // Create a transaction
     const transaction = await Database.getInstance().database.transaction();
 
     try {
-      // Perform authorization check
       if (userAuthDTO.roleId !== 1) {
         throw new Error('Unauthorized');
       }
-
-      // Call UserDAO function to get the data
       const users = await UserDAO.getInstance().getAllApplications();
-
-      // Pack the data into a DTO
       const userListDTOs: UserApplicationDTO[] = users.map(user => ({
         userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
         status: user.status,
       }));
-
-      // Commit the transaction
       await transaction.commit();
-
-      // Return the DTOs to the API layer
       return userListDTOs;
     } catch (error) {
-      // Rollback the transaction in case of an error
       await transaction.rollback();
       throw error;
     }
