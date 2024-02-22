@@ -1,7 +1,9 @@
 import {
   ConflictError,
   InvalidRouteError,
+  LoginPasswordNotMatchError,
   MissingHeaderError,
+  UserNotFoundError,
 } from './custom_errors';
 import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
@@ -19,6 +21,7 @@ const ERROR_CODES = {
   DEFAULT_ERROR: 'DEFAULT_ERROR',
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
+  INVALID_LOGIN_ERROR: 'INVALID_LOGIN_ERROR',
 };
 
 /**
@@ -102,6 +105,18 @@ class ErrorHandler {
         httpStatusCode = 400;
         errorMessage.message = err.message;
         errorMessage.code = ERROR_CODES.MISSING_HEADER_ERROR;
+        break;
+
+      case LoginPasswordNotMatchError:
+        httpStatusCode = 401;
+        errorMessage.message = 'Invalid login';
+        errorMessage.code = ERROR_CODES.INVALID_LOGIN_ERROR;
+        break;
+
+      case UserNotFoundError:
+        httpStatusCode = 401;
+        errorMessage.message = 'Invalid login';
+        errorMessage.code = ERROR_CODES.INVALID_LOGIN_ERROR;
         break;
 
       default:

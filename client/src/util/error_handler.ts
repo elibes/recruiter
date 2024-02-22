@@ -14,6 +14,7 @@ const ERROR_CODES = {
   DEFAULT_ERROR: 'DEFAULT_ERROR',
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
+  INVALID_LOGIN_ERROR: 'INVALID_LOGIN_ERROR',
 };
 
 /**
@@ -53,6 +54,12 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
         }
         break;
       case 401:
+        if (errorData.code === ERROR_CODES.INVALID_LOGIN_ERROR) {
+          console.error(errorMsg);
+          alert(
+            'Login information does not match an existing account, try again'
+          );
+        }
         if (errorData.code === ERROR_CODES.JWT_ERROR) {
           console.error('Unauthorized: ', errorMsg);
           alert('You are not authorized. Please log in.');
