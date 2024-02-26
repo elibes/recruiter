@@ -1,4 +1,4 @@
-import {checkSchema} from 'express-validator';
+import {checkExact, checkSchema} from 'express-validator';
 import {createUserService} from '../service/user_service_factory';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {ResponseHandler} from './response_handler';
@@ -33,7 +33,7 @@ class UserApi {
   async setupRequestHandling() {
     this.router.post(
       '/register',
-      checkSchema(userRegistrationValidationSchema),
+      checkExact(checkSchema(userRegistrationValidationSchema)),
       async (req: Request, res: Response) => {
         handleExpressValidatorErrors(req);
         const userService = createUserService();

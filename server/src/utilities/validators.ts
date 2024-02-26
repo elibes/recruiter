@@ -12,22 +12,22 @@ class Validators {
   static defaultValidator(value: any) {
     if (typeof value === 'string') {
       return !validator.isEmpty(value) && validator.isLength(value, {max: 255});
-    } else {
-      return true;
-    }
+    } else return !!value;
   }
 
   /**
-   * This is a default sanitizer that can be used for most string data,
-   * it removes some unnecessary and unwanted characters and returns a string with these removed
+   * This is a default sanitizer that can be used for most data.
+   * If the data is not a string then it will attempt to convert it.
+   * It then removes some unnecessary and unwanted characters and returns a string with these removed
    * @param value the data to be validated
    */
   static defaultSanitizer(value: any) {
-    if (typeof value === 'string') {
-      value = validator.trim(value);
-      value = validator.stripLow(value);
-      value = validator.escape(value);
+    if (typeof value !== 'string') {
+      value = value.toString();
     }
+    value = validator.trim(value);
+    value = validator.stripLow(value, false);
+    value = validator.unescape(value);
     return value;
   }
 
@@ -54,11 +54,21 @@ class Validators {
   }
 
   /**
-   * This is a name validator, it does nothing currently.
+   * This sanitizer automatically capitalize the first letter of a name and lower cases the rest.
+   * @param s a name.
+   */
+  static nameSanitizer(s: string) {
+    const firstLetter = s.charAt(0).toUpperCase();
+    const rest = s.slice(1).toLowerCase();
+    return firstLetter + rest;
+  }
+
+  /**
+   * This is a name validator, it checks that the name contains only regular letters.
    * @param s the name to check.
    */
   static nameValidator(s: string) {
-    return true;
+    return validator.isAlpha(s);
   }
 
   /**
@@ -93,6 +103,130 @@ class Validators {
       return validator.isDate(date);
     }
     return false;
+  }
+
+  /**
+   * A validator for the various ids, which should be positive integers
+   * @param s a string representing the id to be validated
+   */
+  static idValidator(s: string) {
+    return validator.isInt(s, {gt: -1});
+  }
+
+  /**
+   * Checks that years of experience is a decimal number with max two digits at either side of the decimal marker,
+   * which should be a period: '.'
+   * @param s a string representation of years of experience.
+   */
+  static yearsOfExperienceValidator(s: string) {
+    if (validator.isDecimal(s, {decimal_digits: '0,2'})) {
+      const splitString = s.split('.');
+      return (
+        splitString.length === 2 &&
+        validator.isInt(splitString[0], {gt: -1, lt: 100})
+      );
+    }
+    return false;
+  }
+
+  /**
+   * Checks that a specific availability period are valid dates in chronological order.
+   * @param fromDate the first date as a string.
+   * @param toDate the second date as a string.
+   */
+  static availabilityPeriodValidator(fromDate: string, toDate: string) {
+    if (validator.isDate(fromDate) && validator.isDate(toDate)) {
+      return validator.isBefore(fromDate, toDate);
+    }
+    return false;
+  }
+
+  /**
+   * Checks an availability list, that it is a non-empty array containing objects with the correct shape
+   * ,that there are no duplicate periods and that each period is valid.
+   * @param availabilities the availability list to be checked.
+   */
+  static availabilityListValidator(availabilities: any[]) {
+    if (!Array.isArray(availabilities)) {
+      throw new Error('Must be an array');
+    }
+    if (availabilities.length === 0) {
+      throw new Error('Must contain at least on entry');
+    }
+
+    const periods = new Set();
+    let i = 0;
+    for (const availability of availabilities) {
+      if (
+        typeof availability !== 'object' ||
+        !availability.fromDate ||
+        !availability.toDate
+      ) {
+        throw new Error(
+          `item ${i} must be a object including from and to dates`
+        );
+      }
+
+      if (
+        !Validators.availabilityPeriodValidator(
+          availability.fromDate,
+          availability.toDate
+        )
+      ) {
+        throw new Error(
+          `period ${i} must contain valid dates in chronological order`
+        );
+      }
+
+      const periodKey = `${availability.fromDate}-${availability.toDate}`;
+      if (periods.has(periodKey)) {
+        throw new Error(`item ${i} must have a unique period`);
+      }
+      periods.add(periodKey);
+      i++;
+    }
+    return true;
+  }
+
+  /**
+   * This validator checks that the entire list of competencies is valid by checking that each id is unique,
+   * that the objects within are well-formed and that the values within are valid.
+   * However, a user may not have any competencies so an empty list is valid.
+   * @param competencies the competence list
+   */
+  static competenceListValidator(competencies: any[]) {
+    if (!competencies || !competencies.length) {
+      return true;
+    }
+
+    const uniqueCheck = new Set();
+    let i = 0;
+    for (const item of competencies) {
+      if (
+        typeof competencies !== 'object' ||
+        !item.competenceId ||
+        !item.yearsOfExperience
+      ) {
+        throw new Error(
+          `item ${i} must be a object including competence id and years of experience`
+        );
+      }
+
+      if (!Validators.idValidator(item.competenceId)) {
+        throw new Error(`item ${i} must have a positive integer competenceId`);
+      }
+      if (!Validators.yearsOfExperienceValidator(item.yearsOfExperience)) {
+        throw new Error(
+          `item ${i} must have a positive years of experience with the integer and fraction parts being of max 2 digits each'`
+        );
+      }
+      if (uniqueCheck.has(item.competenceId)) {
+        throw new Error(`item ${i} must have a unique competenceId`);
+      }
+      uniqueCheck.add(item.competenceId);
+      i++;
+    }
+    return true;
   }
 }
 
