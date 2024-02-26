@@ -195,8 +195,8 @@ class Validators {
    * @param competencies the competence list
    */
   static competenceListValidator(competencies: any[]) {
-    if (!competencies || !competencies.length) {
-      return true;
+    if (!Array.isArray(competencies)) {
+      throw new Error('must be an array');
     }
 
     const uniqueCheck = new Set();
