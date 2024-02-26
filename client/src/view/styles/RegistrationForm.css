@@ -1,7 +1,8 @@
 /* /path/to/RegistrationView.css */
 
 body, html {
-  height: 100%;
+  padding-top: 3rem;
+  /*height: 100%;*/
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0f2f5;
