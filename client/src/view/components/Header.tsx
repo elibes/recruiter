@@ -1,14 +1,23 @@
 import '../styles/Header.css';
 import * as React from 'react';
+import i18next from 'i18next';
 
 const Header = () => {
+  const changeLanguage = event => {
+    const newLanguage = event.target.value;
+    i18next.changeLanguage(newLanguage).then(() => {
+      console.log('changed the language');
+      console.log(i18next.resolvedLanguage);
+    });
+  };
   return (
     <header>
-      <span>Ammusement Park Recruitment System</span>
+      <span>Amusement Park Recruitment System</span>
       <div className="language-dropdown">
-        <select>
-          <option>🇬🇧English</option>
-          <option>🇸🇪Svenska</option>
+        <select onChange={changeLanguage}>
+          {i18next.languages.map(lang => (
+            <option>{lang}</option>
+          ))}
         </select>
       </div>
     </header>

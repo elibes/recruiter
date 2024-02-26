@@ -1,10 +1,13 @@
-import {FC} from 'react';
-import CompetenceList from './CompetenceList';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
+
+import {FC} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useSelector, useDispatch} from 'react-redux';
 import {DateRangePicker} from 'react-date-range';
 import {addYears, format} from 'date-fns';
-import {useSelector, useDispatch} from 'react-redux';
+import {enUS, sv} from 'date-fns/locale';
+import CompetenceList from './CompetenceList';
 
 import {
   applicationValidator,
@@ -33,6 +36,8 @@ const ApplicationForm: FC = () => {
   const resultMsg = useSelector(
     (state: RootState) => state.application.resultMsg
   );
+
+  const {t, i18n} = useTranslation();
 
   /**
    * This const converts the availability state to the Date format that DateRangePicker uses.
@@ -87,25 +92,45 @@ const ApplicationForm: FC = () => {
     dispatch(cancelApplication());
   };
 
+  /**
+   * This function returns the date-fns locale corresponding to the language chosen
+   * by the user, or enUS if language is unsupported by date-fns.
+   * */
+  const getLocale = () => {
+    switch (i18n.resolvedLanguage) {
+      case 'sv':
+        return sv;
+      case 'sv-SE':
+        return sv;
+      case 'en':
+        return enUS;
+      case 'en-US':
+        return enUS;
+      default:
+        return enUS;
+    }
+  };
+
   return (
     <div>
       <CompetenceList></CompetenceList>
-      <h3>Availabilities</h3>
+      <h3>{t('applicant.availabilities')}</h3>
       <DateRangePicker
+        locale={getLocale()}
         ranges={selectionList}
         minDate={new Date()}
         maxDate={addYears(new Date(), 1)}
         onChange={handleDateRangeSet}
       ></DateRangePicker>
       <button onClick={handleNewAvailabilityButton}>
-        Add another availability
+        {t('applicant.add-availability')}
       </button>
       <div>
         <button onClick={handleSubmitApplicationButton}>
-          Submit Application
+          {t('applicant.submit-application')}
         </button>
         <button onClick={handleCancelApplicationButton}>
-          Cancel Application
+          {t('applicant.cancel-application')}
         </button>
       </div>
       {errors.length > 0 ? <span>{errors}</span> : ''}

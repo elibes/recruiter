@@ -1,0 +1,46 @@
+{
+  "login": {
+    "login-page": "Login Page",
+    "login": "Login",
+    "username": "Username",
+    "password":"Password",
+    "no-account-question": "Don't have an account? ",
+    "register": "Register"
+  },
+  "registration": {
+    "registration": "Registration",
+    "first-name": "First Name",
+    "last-name": "Last Name",
+    "username": "Username",
+    "password": "Password",
+    "repeat-password": "Repeat Password",
+    "person-number": "Person Number",
+    "email": "Email",
+    "register": "Register",
+    "login-question": "Already registered? ",
+    "login": "Log in"
+  },
+  "recruiter": {
+    "recruiter-dashboard": "Recruiter Dashboard",
+    "load-applications": "Load applications",
+    "reload-applications": "Re-load applications",
+    "alpha-sort": "Alphabetic",
+    "status-sort": "Status",
+    "unhandled": "Unhandled",
+    "accepted": "Accepted",
+    "rejected": "Rejected"
+  },
+  "applicant": {
+    "application-page": "Application Page",
+    "competencies": "Competencies",
+    "ticket sales": "Ticket Sales",
+    "lotteries": "Lotteries",
+    "roller coaster operation": "Roller Coaster Operation",
+    "years-of-experience": "Years of experience: ",
+    "availabilities": "Availabilities",
+    "add-availability": "Add another availability",
+    "submit-application": "Submit Application",
+    "cancel-application": "Cancel Application"
+  }
+
+}

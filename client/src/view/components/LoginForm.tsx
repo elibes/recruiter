@@ -13,6 +13,7 @@ import Button from './Button';
 import {useNavigate} from 'react-router-dom';
 import {errorPlacer} from '../../util/error_handler';
 import {setErrorList} from '../../viewmodel/applicationSlice';
+import {useTranslation} from 'react-i18next';
 
 /**
  * React component which is responsible for rendering a login form and handling user interactions with the form.
@@ -64,13 +65,15 @@ const LoginForm = () => {
     dispatch(login());
   };
 
+  const {t, i18n} = useTranslation();
+
   return (
     <div>
       <div className="login-form">
         <div className="form-group">
           <InputField
             className="input"
-            label="Username"
+            label={t('login.username')}
             type="text"
             value={userName}
             onChange={handleUsernameChange}
@@ -80,18 +83,23 @@ const LoginForm = () => {
         <div className="form-group">
           <InputField
             className="input"
-            label="Password"
+            label={t('login.password')}
             type="password"
             value={password}
             onChange={handlePasswordChange}
           />
           <strong>{errorPlacer('password', backendError)}</strong>
         </div>
-        <Button text="Login" onClick={handleSubmit} className="login-button" />
+        <Button
+          text={t('login.login')}
+          onClick={handleSubmit}
+          className="login-button"
+        />
         {error ? <p>{error}</p> : ''}
         <span className="result-message">{resultMsg}</span>
         <div className="registered-user-link">
-          Need to register? <a href="/register">Register</a>
+          {t('login.no-account-question')}
+          <a href="/register">{t('login.register')}</a>
         </div>
       </div>
     </div>

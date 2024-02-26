@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState, AppDispatch} from '../store';
 import {
@@ -37,11 +38,15 @@ const RecruiterView = () => {
       });
   };
 
+  const {t, i18n} = useTranslation();
+
   return (
     <div>
-      <h1>Recruiter Dashboard</h1>
+      <h1>{t('recruiter.recruiter-dashboard')}</h1>
       <button onClick={getApplications}>
-        {isLoaded ? 'Re-load applications' : 'Load applications'}
+        {isLoaded
+          ? t('recruiter.reload-applications')
+          : t('recruiter.load-applications')}
       </button>
       <ApplicationList />
     </div>

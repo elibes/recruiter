@@ -1,0 +1,45 @@
+{
+  "login": {
+    "login-page": "Inloggningssida",
+    "login": "Logga in",
+    "username": "Användarnamn",
+    "password":"Lösenord",
+    "no-account-question": "Saknar du ett konto? ",
+    "register": "Registrera"
+  },
+  "registration": {
+    "registration": "Registrering",
+    "first-name": "Förnamn",
+    "last-name": "Efternamn",
+    "username": "Användarnamn",
+    "password": "Lösenord",
+    "repeat-password": "Upprepa Lösenord",
+    "person-number": "Personnummer",
+    "email": "E-post",
+    "register": "Registrera",
+    "login-question": "Har du redan ett konto? ",
+    "login": "Logga in"
+  },
+  "recruiter": {
+    "recruiter-dashboard": "Rekryterarpanelen",
+    "load-applications": "Läs in ansökningar",
+    "reload-applications": "Läs in ansökningar igen",
+    "alpha-sort": "Alfabetiskt",
+    "status-sort": "Status",
+    "unhandled": "Obehandlad",
+    "accepted": "Godkänd",
+    "rejected": "Avvisad"
+  },
+  "applicant": {
+    "application-page": "Ansökningssida",
+    "competencies": "Kompetenser",
+    "ticket sales": "Biljettförsäljning",
+    "lotteries": "Lotterier",
+    "roller coaster operation": "Drift av berg- och dalbana",
+    "years-of-experience": "År av erfarenhet: ",
+    "availabilities": "Tillgänglighet",
+    "add-availability": "Lägg till ytterligare tillgänglighet",
+    "submit-application": "Skicka in Ansökan",
+    "cancel-application": "Avbryt Ansökan"
+  }
+}

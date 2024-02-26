@@ -1,5 +1,7 @@
-import * as React from 'react';
 import '../styles/RegistrationForm.css';
+
+import * as React from 'react';
+import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
 import InputField from './InputField';
 import {AppDispatch, RootState} from '../../store';
@@ -37,6 +39,8 @@ const RegistrationForm = () => {
     error,
     backendError,
   } = useSelector((state: RootState) => state.user);
+
+  const {t, i18n} = useTranslation();
 
   /**
    * Handles changes to the firstname input field.
@@ -114,10 +118,10 @@ const RegistrationForm = () => {
   return (
     <div className="registration-container">
       <div>
-        <h2>Registration</h2>
+        <h2>{t('registration.registration')}</h2>
         <div className="reg-inputs">
           <InputField
-            label="first name"
+            label={t('registration.first-name')}
             type="text"
             value={firstname}
             onChange={handleFirstnameChange}
@@ -125,7 +129,7 @@ const RegistrationForm = () => {
           />
           <strong>{errorPlacer('firstName', backendError)}</strong>
           <InputField
-            label="last name"
+            label={t('registration.last-name')}
             type="text"
             value={lastname}
             onChange={handleLastnameChange}
@@ -133,7 +137,7 @@ const RegistrationForm = () => {
           />
           <strong>{errorPlacer('lastName', backendError)}</strong>
           <InputField
-            label="username"
+            label={t('registration.username')}
             type="text"
             value={userName}
             onChange={handleUserNameChange}
@@ -141,7 +145,7 @@ const RegistrationForm = () => {
           />
           <strong>{errorPlacer('userName', backendError)}</strong>
           <InputField
-            label="password"
+            label={t('registration.password')}
             type="password"
             value={password}
             onChange={handlePasswordChange}
@@ -149,7 +153,7 @@ const RegistrationForm = () => {
           />
           <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
-            label="repeat password"
+            label={t('registration.repeat-password')}
             type="password"
             value={passwordConfirm}
             onChange={handlePasswordConfirmChange}
@@ -157,7 +161,7 @@ const RegistrationForm = () => {
           />
           <strong>{errorPlacer('password', backendError)}</strong>
           <InputField
-            label="person number"
+            label={t('registration.person-number')}
             type="text"
             value={personalNumber}
             onChange={handlePersonalNumberChange}
@@ -165,7 +169,7 @@ const RegistrationForm = () => {
           />
           <strong>{errorPlacer('personalNumber', backendError)}</strong>
           <InputField
-            label="email"
+            label={t('registration.email')}
             type="text"
             value={email}
             onChange={handleEmailChange}
@@ -175,7 +179,7 @@ const RegistrationForm = () => {
         </div>
         <div className="form-buttons">
           <Button
-            text="Register"
+            text={t('registration.register')}
             onClick={handleRegister}
             className="action-btn"
           />
@@ -183,7 +187,8 @@ const RegistrationForm = () => {
         <span className="result-message">{resultMsg}</span>
         <span className="result-message">{error}</span>
         <div className="registered-user-link">
-          Already registered? <a href="/login">Log in</a>
+          {t('registration.login-question')}
+          <a href="/login">{t('registration.login')}</a>
         </div>
       </div>
     </div>
