@@ -133,8 +133,8 @@ const ApplicationForm: FC = () => {
           {t('applicant.cancel-application')}
         </button>
       </div>
-      {errors.length > 0 ? <span>{errors}</span> : ''}
-      <span>{resultMsg}</span>
+      {errors.length > 0 ? errors.map(error => <div>{error}</div>) : ''}
+      {resultMsg ? <div>{t('server-messages.' + resultMsg)}</div> : ''}
     </div>
   );
 };

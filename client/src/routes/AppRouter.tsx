@@ -23,7 +23,9 @@ const Header = React.lazy(() => import('../view/components/Header'));
 const AppRouter = () => {
   return (
     <Router>
-      <Header />
+      <React.Suspense fallback={<div />}>
+        <Header />
+      </React.Suspense>
       <Routes>
         <Route
           path="/login"

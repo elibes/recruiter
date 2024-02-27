@@ -78,7 +78,9 @@ const LoginForm = () => {
             value={userName}
             onChange={handleUsernameChange}
           />
-          <strong>{errorPlacer('userName', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('userName', backendError))}
+          </strong>
         </div>
         <div className="form-group">
           <InputField
@@ -88,15 +90,25 @@ const LoginForm = () => {
             value={password}
             onChange={handlePasswordChange}
           />
-          <strong>{errorPlacer('password', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('password', backendError))}
+          </strong>
         </div>
         <Button
           text={t('login.login')}
           onClick={handleSubmit}
           className="login-button"
         />
-        {error ? <p>{error}</p> : ''}
-        <span className="result-message">{resultMsg}</span>
+        {error.length > 0
+          ? error.map(e => <div className="result-message">{e}</div>)
+          : ''}
+        {resultMsg ? (
+          <div className="result-message">
+            {t('server-messages.' + resultMsg)}
+          </div>
+        ) : (
+          ''
+        )}
         <div className="registered-user-link">
           {t('login.no-account-question')}
           <a href="/register">{t('login.register')}</a>

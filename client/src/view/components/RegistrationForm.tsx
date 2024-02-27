@@ -127,7 +127,9 @@ const RegistrationForm = () => {
             onChange={handleFirstnameChange}
             className="form-input"
           />
-          <strong>{errorPlacer('firstName', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('firstName', backendError))}
+          </strong>
           <InputField
             label={t('registration.last-name')}
             type="text"
@@ -135,7 +137,9 @@ const RegistrationForm = () => {
             onChange={handleLastnameChange}
             className="form-input"
           />
-          <strong>{errorPlacer('lastName', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('lastName', backendError))}
+          </strong>
           <InputField
             label={t('registration.username')}
             type="text"
@@ -143,7 +147,9 @@ const RegistrationForm = () => {
             onChange={handleUserNameChange}
             className="form-input"
           />
-          <strong>{errorPlacer('userName', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('userName', backendError))}
+          </strong>
           <InputField
             label={t('registration.password')}
             type="password"
@@ -151,7 +157,9 @@ const RegistrationForm = () => {
             onChange={handlePasswordChange}
             className="form-input"
           />
-          <strong>{errorPlacer('password', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('password', backendError))}
+          </strong>
           <InputField
             label={t('registration.repeat-password')}
             type="password"
@@ -159,7 +167,9 @@ const RegistrationForm = () => {
             onChange={handlePasswordConfirmChange}
             className="form-input"
           />
-          <strong>{errorPlacer('password', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('password', backendError))}
+          </strong>
           <InputField
             label={t('registration.person-number')}
             type="text"
@@ -167,7 +177,11 @@ const RegistrationForm = () => {
             onChange={handlePersonalNumberChange}
             className="form-input"
           />
-          <strong>{errorPlacer('personalNumber', backendError)}</strong>
+          <strong>
+            {t(
+              'server-messages.' + errorPlacer('personalNumber', backendError)
+            )}
+          </strong>
           <InputField
             label={t('registration.email')}
             type="text"
@@ -175,7 +189,9 @@ const RegistrationForm = () => {
             onChange={handleEmailChange}
             className="form-input"
           />
-          <strong>{errorPlacer('email', backendError)}</strong>
+          <strong>
+            {t('server-messages.' + errorPlacer('email', backendError))}
+          </strong>
         </div>
         <div className="form-buttons">
           <Button
@@ -184,8 +200,12 @@ const RegistrationForm = () => {
             className="action-btn"
           />
         </div>
-        <span className="result-message">{resultMsg}</span>
-        <span className="result-message">{error}</span>
+        <span className="result-message">
+          {resultMsg ? t('server-messages.' + resultMsg) : ''}
+        </span>
+        <span className="result-message">
+          {error.length > 0 ? error.map(e => <div>{e}</div>) : ''}
+        </span>
         <div className="registered-user-link">
           {t('registration.login-question')}
           <a href="/login">{t('registration.login')}</a>

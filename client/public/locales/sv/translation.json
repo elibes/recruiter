@@ -41,5 +41,46 @@
     "add-availability": "Lägg till ytterligare tillgänglighet",
     "submit-application": "Skicka in Ansökan",
     "cancel-application": "Avbryt Ansökan"
+  },
+  "validation": {
+    "username-required": "Användarnamn krävs.",
+    "first-name-required": "Förnamn krävs.",
+    "last-name-required": "Efternamn krävs.",
+    "password-required": "Lösenord krävs.",
+    "email-required": "E-postadress krävs.",
+    "personal-number-required": "Personnummer krävs.",
+    "passwords-dont-match": "Lösenorden stämmer inte överens.",
+    "has-no-experience": " har ingen erfarenhet, ",
+    "specify-availability": "ange minst en tillgänglighetsperiod"
+  },
+  "error-handler": {
+    "unknown-error": "Okänt fel inträffade",
+    "missing-header": "HTTP-Rubrik Saknas: ",
+    "request-missing-header": "Din begäran saknar nödvändiga HTTP-rubriker.",
+    "login-nonexistent-account": "Inloggningsuppgifterna stämmer inte överens med något befintligt konto, försök igen.",
+    "unauthorized": "Ej Behörig: ",
+    "not-authorized": "Du är inte behörig. Vänligen logga in.",
+    "authorization-cookie-expired": "Din auktoriseringscookie har gått ut. Vänligen logga in.",
+    "route-missing": "Rutt Saknas: ",
+    "nonexistent-root": "Den rutten finns inte.",
+    "conflict": "Konflikt: ",
+    "conflict-detected": "Konflikt upptäckt. Vänligen försök igen.",
+    "server-error": "Serverfel: ",
+    "internal-error": "Ett internt serverfel har uppstått. Vänligen försök igen senare.",
+    "server-unavailable": "Server Ej Tillgänglig:",
+    "service-is-unavailable": "Tjänsten är för närvarande inte tillgänglig. Vänligen försök igen senare."
+  },
+  "server-messages": {
+    " Must not be empty or shorter than 255 characters": "Får inte vara tomt eller kortare än 255 tecken",
+    " Must be shorter than 30 characters": "Måste vara kortare än 30 tecken",
+    " Must be stronger - Needs to contain at least 8 total characters, one capital letter, one number, and one symbol": "Behöver vara starkare - Måste totalt innehålla minst 8 tecken, en versal, en siffra, och en symbol",
+    " Must be a valid email": "Måste vara en giltig e-postadress",
+    " Must be a valid personal number": "Måste vara ett giltigt personnummer",
+    " is invalid": "är ogiltig(t)",
+    "Registration successful": "Registreringen lyckades",
+    "Login failed": "Inloggning misslyckades",
+    "Login successful": "Inloggning lyckades",
+    "Application submission successful": "Inlämning av ansökan lyckades",
+    "undefined": ""
   }
 }

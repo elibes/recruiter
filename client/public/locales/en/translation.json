@@ -41,6 +41,47 @@
     "add-availability": "Add another availability",
     "submit-application": "Submit Application",
     "cancel-application": "Cancel Application"
+  },
+  "validation": {
+    "username-required": "Username is required.",
+    "first-name-required": "First name is required.",
+    "last-name-required": "Last name is required.",
+    "password-required": "Password is required.",
+    "email-required": "Email is required.",
+    "personal-number-required": "Personal number is required.",
+    "passwords-dont-match": "Passwords do not match.",
+    "has-no-experience": " has no experience, ",
+    "specify-availability": "specify at least one availability period"
+  },
+  "error-handler": {
+    "unknown-error": "Unknown error occurred",
+    "missing-header": "Missing Header: ",
+    "request-missing-header": "Your request is missing needed HTTP headers.",
+    "login-nonexistent-account": "Login information does not match an existing account, try again.",
+    "unauthorized": "Unauthorized: ",
+    "not-authorized": "You are not authorized. Please log in.",
+    "authorization-cookie-expired": "Your authorization cookie has expired. Please log in.",
+    "route-missing": "Route Missing: ",
+    "nonexistent-root": "That route does not exist.",
+    "conflict": "Conflict: ",
+    "conflict-detected": "Conflict detected. Please retry.",
+    "server-error": "Server Error: ",
+    "internal-error": "An internal server error has occurred. Please try again later.",
+    "server-unavailable": "Server Unavailable: ",
+    "service-is-unavailable": "Service is currently unavailable. Please try again later."
+  },
+  "server-messages": {
+    " Must not be empty or shorter than 255 characters": "Must not be empty or shorter than 255 characters",
+    " Must be shorter than 30 characters": "Must be shorter than 30 characters",
+    " Must be stronger - Needs to contain at least 8 total characters, one capital letter, one number, and one symbol": "Must be stronger - Needs to contain at least 8 total characters, one capital letter, one number, and one symbol",
+    " Must be a valid email": "Must be a valid email",
+    " Must be a valid personal number": "Must be a valid personal number",
+    " is invalid": "is invalid",
+    "Registration successful": "Registration successful",
+    "Login failed": "Login failed",
+    "Login successful": "Login successful",
+    "Application submission successful": "Application submission successful",
+    "undefined": ""
   }
 
 }

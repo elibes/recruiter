@@ -1,5 +1,5 @@
 // Function to validate username
-
+import i18next from 'i18next';
 import {
   CompetenceState,
   AvailabilityState,
@@ -7,14 +7,14 @@ import {
 
 export function validateUsername(username: string): string {
   if (!username) {
-    return 'Username is required.';
+    return i18next.t('validation.username-required');
   }
   return '';
 }
 
 export function validateFirstname(firstname: string): string {
   if (!firstname) {
-    return 'Firstname is required.';
+    return i18next.t('validation.first-name-required');
   }
   return '';
 }
@@ -29,7 +29,7 @@ export function validateYearsOfExperience(years: string) {
 
 export function validateLastname(lastname: string): string {
   if (!lastname) {
-    return 'Lastname is required.';
+    return i18next.t('validation.last-name-required');
   }
   return '';
 }
@@ -37,21 +37,21 @@ export function validateLastname(lastname: string): string {
 // Function to validate password
 export function validatePassword(username: string): string {
   if (!username) {
-    return 'Password is required.';
+    return i18next.t('validation.password-required');
   }
   return '';
 }
 
 export function validateEmail(email: string): string {
   if (!email) {
-    return 'Email is required.';
+    return i18next.t('validation.email-required');
   }
   return '';
 }
 
 export function validatePersonalNumber(personalNumber: string): string {
   if (!personalNumber) {
-    return 'Personal number is required.';
+    return i18next.t('validation.personal-number-required');
   }
   return '';
 }
@@ -61,7 +61,7 @@ export function validatePasswordConfirmation(
   passwordConfirmation: string
 ): string {
   if (password !== passwordConfirmation) {
-    return 'Passwords do not match.';
+    return i18next.t('validation.passwords-dont-match');
   }
   return '';
 }
@@ -72,7 +72,10 @@ export function validateCompetencies(
 ) {
   return competencies.reduce((acc: string[], currentValue: any) => {
     if (currentValue.hasCompetence && !currentValue.yearsOfExperience) {
-      acc.push(currentValue.competenceName + ' has no exp,');
+      acc.push(
+        i18next.t('applicant.' + currentValue.competenceName) +
+          i18next.t('validation.has-no-experience')
+      );
     }
     return acc;
   }, acc);
@@ -84,7 +87,7 @@ export function validateAvailabilities(
 ) {
   return availabilities.reduce((acc, currentValue) => {
     if (new Date(currentValue.endDate) <= new Date(currentValue.startDate)) {
-      acc.push('specify at least one availability period');
+      acc.push(i18next.t('validation.specify-availability'));
     }
     return acc;
   }, acc);
