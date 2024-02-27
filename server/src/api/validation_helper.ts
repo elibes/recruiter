@@ -86,8 +86,8 @@ const baseValidationSchema: any = {
 };
 
 const nameSchema: any = {
-  nameValidator: {
-    custom: Validators.nameValidator,
+  preNameValidator: {
+    custom: Validators.namePreValidator,
     errorMessage: 'can only contain letters',
   },
   nameSanitizer: {

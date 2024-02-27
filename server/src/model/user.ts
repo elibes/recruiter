@@ -130,7 +130,7 @@ class User extends Model {
             fn: (value: any) => {
               if (!Validators.defaultValidator(value)) {
                 throw new Error(
-                  'password validation failed at integration layer'
+                  'Password validation failed at integration layer'
                 );
               }
             },
@@ -147,7 +147,7 @@ class User extends Model {
                 !Validators.idValidator(value)
               ) {
                 throw new Error(
-                  'password validation failed at integration layer'
+                  'Role id validation failed at integration layer'
                 );
               }
             },

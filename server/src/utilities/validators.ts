@@ -64,11 +64,28 @@ class Validators {
   }
 
   /**
-   * This is a name validator, it checks that the name contains only regular letters.
+   * This is a validator to run initially on a name string in order to be safe in running nameSanitizer if it passes.
    * @param s the name to check.
    */
-  static nameValidator(s: string) {
+  static namePreValidator(s: string) {
     return validator.isAlpha(s);
+  }
+
+  /**
+   * This validator check that a name is fully correct, that it is a string with only letters and the first letter is
+   * uppercase and the rest are not.
+   * @param s the name string to check.
+   */
+  static nameValidator(s: string) {
+    if (Validators.namePreValidator(s)) {
+      if (
+        validator.isUppercase(s.charAt(0)) &&
+        !validator.isUppercase(s.slice(1))
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -193,8 +210,9 @@ class Validators {
    * that the objects within are well-formed and that the values within are valid.
    * However, a user may not have any competencies so an empty list is valid.
    * @param competencies the competence list
+   * @param inIntegration A boolean to tell the function if the validation is being run from the integration layer.
    */
-  static competenceListValidator(competencies: any[]) {
+  static competenceListValidator(competencies: any[], inIntegration = false) {
     if (!Array.isArray(competencies)) {
       throw new Error('must be an array');
     }
@@ -209,6 +227,12 @@ class Validators {
       ) {
         throw new Error(
           `item ${i} must be a object including competence id and years of experience`
+        );
+      }
+
+      if (inIntegration && !Validators.competencePersonIdValidator(item)) {
+        throw new Error(
+          `item ${i} must be include a positive integer person id (in integration)`
         );
       }
 
@@ -227,6 +251,26 @@ class Validators {
       i++;
     }
     return true;
+  }
+
+  /**
+   * This validator checks that object has a valid person id, to be used in the integration layer.
+   * @param data a competence object
+   */
+  static competencePersonIdValidator(data: any) {
+    if (typeof data !== 'object' || !data.personId) {
+      return false;
+    }
+    return Validators.idValidator(data.personId);
+  }
+
+  /**
+   * This method checks that object is superficially like a competenceProfileDTO, used as a pre-check before going
+   * further with validations.
+   * @param data the object to check.
+   */
+  static competenceProfileObjValidator(data: any) {
+    return !(typeof data !== 'object' || !data.competenceProfiles);
   }
 }
 

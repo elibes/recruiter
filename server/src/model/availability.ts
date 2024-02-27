@@ -1,4 +1,5 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
+import {Validators} from '../utilities/validators';
 
 /**
  * A specification of a time period a particular applicant are available to work.
@@ -31,6 +32,18 @@ class Availability extends Model {
             model: 'user',
             key: 'person_id',
           },
+          validate: {
+            fn: (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.idValidator(value)
+              ) {
+                throw new Error(
+                  'Person id validation failed at integration layer'
+                );
+              }
+            },
+          },
         },
         fromDate: {
           type: DataTypes.DATE,
@@ -48,6 +61,20 @@ class Availability extends Model {
         modelName: 'availability',
         tableName: 'availability',
         timestamps: false,
+        validate: {
+          fn() {
+            if (
+              !Validators.availabilityPeriodValidator(
+                this.fromDate as string,
+                this.toDate as string
+              )
+            ) {
+              throw new Error(
+                'Availability period validation failed at integration layer'
+              );
+            }
+          },
+        },
       }
     );
     return Availability;
