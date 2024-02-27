@@ -23,7 +23,7 @@ class User extends Model {
   }
 
   /**
-   * Creates a user model.
+   * Creates a user model, and sets validator functions to be used per attribute.
    * @param sequelize The Sequelize object.
    * @return A Sequelize model representing a user.
    * */
@@ -41,12 +41,14 @@ class User extends Model {
           allowNull: false,
           field: 'name',
           validate: {
-            fn: async (value: any) => {
+            fn: (value: any) => {
               if (
                 !Validators.defaultValidator(value) ||
                 !Validators.nameValidator(value)
               ) {
-                throw new Error('email validation failed on db insert');
+                throw new Error(
+                  'First name validation failed at integration layer'
+                );
               }
             },
           },
@@ -56,12 +58,14 @@ class User extends Model {
           allowNull: false,
           field: 'surname',
           validate: {
-            fn: async (value: any) => {
+            fn: (value: any) => {
               if (
                 !Validators.defaultValidator(value) ||
                 !Validators.nameValidator(value)
               ) {
-                throw new Error('email validation failed on db insert');
+                throw new Error(
+                  'Last name validation failed at integration layer'
+                );
               }
             },
           },
@@ -72,12 +76,12 @@ class User extends Model {
           unique: true,
           field: 'email',
           validate: {
-            fn: async (value: any) => {
+            fn: (value: any) => {
               if (
                 !Validators.defaultValidator(value) ||
                 !Validators.emailValidator(value)
               ) {
-                throw new Error('email validation failed on db insert');
+                throw new Error('Email validation failed at integration layer');
               }
             },
           },
@@ -88,12 +92,14 @@ class User extends Model {
           unique: true,
           field: 'pnr',
           validate: {
-            fn: async (value: any) => {
+            fn: (value: any) => {
               if (
                 !Validators.defaultValidator(value) ||
                 !Validators.personalNumberValidator(value)
               ) {
-                throw new Error('email validation failed on db insert');
+                throw new Error(
+                  'personalIdentificationNumber validation failed at integration layer'
+                );
               }
             },
           },
@@ -104,12 +110,14 @@ class User extends Model {
           unique: true,
           field: 'username',
           validate: {
-            fn: async (value: any) => {
+            fn: (value: any) => {
               if (
                 !Validators.defaultValidator(value) ||
                 !Validators.userNameValidator(value)
               ) {
-                throw new Error('username validation failed on db insert');
+                throw new Error(
+                  'Username validation failed at integration layer'
+                );
               }
             },
           },
@@ -119,9 +127,11 @@ class User extends Model {
           allowNull: false,
           field: 'password',
           validate: {
-            fn: async (value: any) => {
+            fn: (value: any) => {
               if (!Validators.defaultValidator(value)) {
-                throw new Error('password validation failed on db insert');
+                throw new Error(
+                  'password validation failed at integration layer'
+                );
               }
             },
           },
@@ -130,6 +140,18 @@ class User extends Model {
           type: DataTypes.INTEGER,
           allowNull: false,
           field: 'role_id',
+          validate: {
+            fn: (value: any) => {
+              if (
+                !Validators.defaultValidator(value) ||
+                !Validators.idValidator(value)
+              ) {
+                throw new Error(
+                  'password validation failed at integration layer'
+                );
+              }
+            },
+          },
         },
       },
       {
