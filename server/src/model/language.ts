@@ -2,7 +2,7 @@ import {DataTypes, Model, Sequelize} from 'sequelize';
 
 class Language extends Model {
   declare id: number;
-  declare name: string
+  declare code: string
 
   static createModel(sequelize: Sequelize) {
     Language.init(
@@ -13,10 +13,10 @@ class Language extends Model {
           primaryKey: true,
           field: 'language_id',
         },
-        name: {
+        code: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: 'name'
+          field: 'code'
         }
       },
       {

@@ -1,5 +1,5 @@
 import {Language} from "../model/language";
-import {LanguagesDTO} from "../model/dto/language_dto";
+import {LanguageDTO} from "../model/dto/language_dto";
 
 class LanguageDAO {
   private static instance: LanguageDAO;
@@ -13,25 +13,47 @@ class LanguageDAO {
 
   private constructor() {}
 
-  async getAllLanguages() {
+  async getLanguageByCode(code: string) {
     try {
-      const result = await Language.findAll();
-      return this.createLanguageDTO(result);
+      const language = await Language.findOne({
+        where: {code: code},
+      });
+
+      if(language === null) {
+        return null;
+      } else {
+        return this.createLanguageDTO(language);
+      }
     } catch (error) {
       console.error('Error fetching from the database:', error);
-      throw new Error('Could not findAll competencies in database!');
+      throw new Error('Could not language in database!');
     }
   }
 
-  createLanguageDTO(lang: Language[] | null): LanguagesDTO | null {
-    if (lang === null || lang.length === 0) {
+  async getLanguageById(id: number) {
+    try {
+      const language = await Language.findOne({
+        where: {id: id},
+      });
+
+      if(language === null) {
+        return null;
+      } else {
+        return this.createLanguageDTO(language);
+      }
+    } catch (error) {
+      console.error('Error fetching from the database:', error);
+      throw new Error('Could not language in database!');
+    }
+  }
+
+  createLanguageDTO(lang: Language | null): LanguageDTO | null {
+    if (lang === null) {
       return null;
     } else {
       return {
-        languages: lang.map(language => ({
-          id: language.id,
-          languageName: language.name,
-        })),
+          id: lang.id,
+          languageCode: lang.code,
       };
     }
   }

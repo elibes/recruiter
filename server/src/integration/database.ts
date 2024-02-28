@@ -4,6 +4,8 @@ import {Competence} from '../model/competence';
 import {CompetenceProfile} from '../model/competence_profile';
 import {Availability} from '../model/availability';
 import * as cls from 'cls-hooked';
+import {Translation} from "../model/translation";
+import {Language} from "../model/language";
 /**
  * The class responsible for creating the connection to the database.
  * Is used before retrieving data from the database.
@@ -67,6 +69,8 @@ class Database {
       Competence.createModel(this.database);
       CompetenceProfile.createModel(this.database);
       Availability.createModel(this.database);
+      Translation.createModel(this.database);
+      Language.createModel(this.database);
 
       User.hasMany(Availability, {
         foreignKey: 'person_id',
@@ -85,6 +89,18 @@ class Database {
         as: 'competence',
       });
       CompetenceProfile.belongsTo(Competence, {foreignKey: 'competence_id'});
+
+      Competence.hasMany(Translation, {
+        foreignKey: 'competence_id',
+        as: 'competenceInTranslation'
+      });
+      Translation.belongsTo(Competence, {foreignKey: 'competence_id'});
+
+      Language.hasMany(Translation, {
+        foreignKey: 'language_id',
+        as: 'languageInTranslation'
+      });
+      Translation.belongsTo(Language, {foreignKey: 'language_id'});
     } catch (error) {
       throw new Error('Error setting up database models:');
     }
