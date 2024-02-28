@@ -1,7 +1,6 @@
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
-
-import Backend from 'i18next-http-backend';
+import HttpBackend, {HttpBackendOptions} from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 export const supportedLngs = {
@@ -10,15 +9,19 @@ export const supportedLngs = {
 };
 
 i18n
-  .use(Backend)
+  .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
-  .init({
+  .init<HttpBackendOptions>({
     fallbackLng: 'en',
     supportedLngs: Object.keys(supportedLngs),
     debug: true,
     interpolation: {
       escapeValue: false,
+    },
+    backend: {
+      loadPath:
+        '' + process.env.REACT_APP_SERVER_URL + '/locales/{{lng}}/{{ns}}.json',
     },
   });
 
