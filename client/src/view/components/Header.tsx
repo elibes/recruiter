@@ -1,6 +1,7 @@
 import '../styles/Header.css';
 import * as React from 'react';
 import i18next from 'i18next';
+import {supportedLngs} from '../../util/i18n';
 
 const Header: React.FC = () => {
   const [currentLanguage, setCurrentLanguage] = React.useState<string>(
@@ -29,12 +30,11 @@ const Header: React.FC = () => {
       <span>Amusement Park Recruitment System</span>
       <div className="language-dropdown">
         <select value={currentLanguage} onChange={changeLanguage}>
-          <option key="en" value="en">
-            🇬🇧 English
-          </option>
-          <option key="sv" value="sv">
-            🇸🇪 Svenska
-          </option>
+          {Object.entries(supportedLngs).map(([code, name]) => (
+            <option value={code} key={code}>
+              {name}
+            </option>
+          ))}
         </select>
       </div>
     </header>
