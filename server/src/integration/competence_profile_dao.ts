@@ -29,10 +29,14 @@ class CompetenceProfileDAO {
    * @param data a DTO containing competence profiles conforming to the format in the database.
    */
   async createAllCompetenceProfiles(data: CompetenceProfilesDTO) {
-    if (!Validators.competenceProfileObjValidator(data)) {
-      throw new Error('Competence profile object is invalid in integration ');
+    if (!Validators.competenceProfilesObjValidator(data)) {
+      throw new Error('CompetenceProfiles object is invalid in integration ');
     } else {
-      Validators.competenceListValidator([...data.competenceProfiles]);
+      Validators.competenceListValidator(
+        [...data.competenceProfiles],
+        null,
+        true
+      );
     }
 
     for (const entry of data.competenceProfiles) {

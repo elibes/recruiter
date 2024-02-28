@@ -10,7 +10,6 @@ const ERROR_CODES = {
   JWT_ERROR: 'JWT_ERROR',
   TOKEN_EXPIRED_ERROR: 'TOKEN_EXPIRED_ERROR',
   CONNECTION_REFUSED_ERROR: 'CONNECTION_REFUSED_ERROR',
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
   DEFAULT_ERROR: 'DEFAULT_ERROR',
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
@@ -82,9 +81,6 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
         }
         break;
       case 500:
-        if (errorData.code === ERROR_CODES.VALIDATION_ERROR) {
-          dispatch(setBackendError([errorMsg]));
-        }
         if (errorData.code === ERROR_CODES.DEFAULT_ERROR) {
           console.error('Server Error', errorMsg);
           alert(

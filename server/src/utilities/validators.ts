@@ -1,4 +1,6 @@
 import validator from 'validator';
+import Decimal from 'decimal.js';
+import {addDays, differenceInDays, isFuture} from 'date-fns';
 
 /**
  * This class stores validation functions to be used across the application.
@@ -123,52 +125,98 @@ class Validators {
   }
 
   /**
-   * A validator for the various ids, which should be positive integers
-   * @param s a string representing the id to be validated
+   * A validator for various ids, which should be positive integers
+   * @param id the id to be validated.
    */
-  static idValidator(s: string) {
-    return validator.isInt(s, {gt: -1});
+  static idValidator(id: any) {
+    if (typeof id === 'number' && Number.isInteger(id) && id > 0) {
+      return true;
+    } else if (typeof id === 'string') {
+      return validator.isInt(id, {gt: -1});
+    } else {
+      return false;
+    }
   }
 
   /**
    * Checks that years of experience is a decimal number with max two digits at either side of the decimal marker,
    * which should be a period: '.'
-   * @param s a string representation of years of experience.
+   * @param yoe representation of years of experience.
    */
-  static yearsOfExperienceValidator(s: string) {
-    if (validator.isDecimal(s, {decimal_digits: '0,2'})) {
-      const splitString = s.split('.');
+  static yearsOfExperienceValidator(yoe: any) {
+    if (
+      typeof yoe === 'object' &&
+      yoe instanceof Decimal &&
+      yoe.decimalPlaces() <= 2 &&
+      yoe.d[0] > -1 &&
+      yoe.d[0] < 100
+    ) {
+      return true;
+    }
+    if (typeof yoe === 'string') {
+      if (validator.isInt(yoe, {gt: -1, lt: 100})) {
+        return true;
+      }
+      if (validator.isDecimal(yoe, {decimal_digits: '0,2'})) {
+        const splitString = yoe.split('.');
+        return (
+          splitString.length === 2 &&
+          validator.isInt(splitString[0], {gt: -1, lt: 100})
+        );
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Checks that a specific availability period are valid dates from now into the future, in chronological order
+   * with at least a full day difference as dates or strings.
+   * @param fromDate the first date
+   * @param toDate the second date
+   */
+  static availabilityPeriodValidator(fromDate: any, toDate: any) {
+    if (
+      typeof fromDate === 'object' &&
+      fromDate instanceof Date &&
+      typeof toDate === 'object' &&
+      toDate instanceof Date
+    ) {
       return (
-        splitString.length === 2 &&
-        validator.isInt(splitString[0], {gt: -1, lt: 100})
+        fromDate < toDate &&
+        differenceInDays(fromDate, toDate) &&
+        isFuture(addDays(fromDate, 1))
+      );
+    } else if (typeof fromDate === 'string' && typeof toDate === 'string') {
+      return (
+        validator.isDate(fromDate) &&
+        validator.isDate(toDate) &&
+        validator.isBefore(fromDate, toDate) &&
+        isFuture(addDays(new Date(fromDate), 1))
       );
     }
     return false;
   }
 
   /**
-   * Checks that a specific availability period are valid dates in chronological order.
-   * @param fromDate the first date as a string.
-   * @param toDate the second date as a string.
-   */
-  static availabilityPeriodValidator(fromDate: string, toDate: string) {
-    if (validator.isDate(fromDate) && validator.isDate(toDate)) {
-      return validator.isBefore(fromDate, toDate);
-    }
-    return false;
-  }
-
-  /**
-   * Checks an availability list, that it is a non-empty array containing objects with the correct shape
+   * Checks an availability list. That it is a non-empty array containing objects with the correct shape
    * ,that there are no duplicate periods and that each period is valid.
+   * However, it is not checked if there are overlapping periods as this is a non-vital and expensive check.
    * @param availabilities the availability list to be checked.
+   * @param req the express request, unused parameter only used to allow the third parameter to work correctly in express-validator
+   * @param inIntegration a boolean stating if the request is coming from the integration layer, in order to run some
+   * extra tests.
    */
-  static availabilityListValidator(availabilities: any[]) {
+  static availabilityListValidator(
+    availabilities: any[],
+    req: any,
+    inIntegration?: boolean
+  ) {
     if (!Array.isArray(availabilities)) {
       throw new Error('Must be an array');
     }
     if (availabilities.length === 0) {
-      throw new Error('Must contain at least on entry');
+      throw new Error('Must contain at least one entry');
     }
 
     const periods = new Set();
@@ -184,6 +232,12 @@ class Validators {
         );
       }
 
+      if (inIntegration && !Validators.objectPersonIdValidator(availability)) {
+        throw new Error(
+          `item ${i} must be a object including a positive integer person id (in integration)`
+        );
+      }
+
       if (
         !Validators.availabilityPeriodValidator(
           availability.fromDate,
@@ -191,14 +245,17 @@ class Validators {
         )
       ) {
         throw new Error(
-          `period ${i} must contain valid dates in chronological order`
+          `period ${i} must contain valid non-past and chronological dates`
         );
       }
 
       const periodKey = `${availability.fromDate}-${availability.toDate}`;
       if (periods.has(periodKey)) {
-        throw new Error(`item ${i} must have a unique period`);
+        throw new Error(
+          `item ${i} must have a unique period, with different start date`
+        );
       }
+
       periods.add(periodKey);
       i++;
     }
@@ -210,9 +267,15 @@ class Validators {
    * that the objects within are well-formed and that the values within are valid.
    * However, a user may not have any competencies so an empty list is valid.
    * @param competencies the competence list
-   * @param inIntegration A boolean to tell the function if the validation is being run from the integration layer.
+   * @param req the express request, unused parameter only used to allow the third parameter to work correctly in express-validator
+   * @param inIntegration a boolean stating if the request is coming from the integration layer, in order to run some
+   * extra tests.
    */
-  static competenceListValidator(competencies: any[], inIntegration = false) {
+  static competenceListValidator(
+    competencies: any[],
+    req: any,
+    inIntegration?: boolean
+  ) {
     if (!Array.isArray(competencies)) {
       throw new Error('must be an array');
     }
@@ -230,7 +293,7 @@ class Validators {
         );
       }
 
-      if (inIntegration && !Validators.competencePersonIdValidator(item)) {
+      if (inIntegration && !Validators.objectPersonIdValidator(item)) {
         throw new Error(
           `item ${i} must be include a positive integer person id (in integration)`
         );
@@ -257,7 +320,7 @@ class Validators {
    * This validator checks that object has a valid person id, to be used in the integration layer.
    * @param data a competence object
    */
-  static competencePersonIdValidator(data: any) {
+  static objectPersonIdValidator(data: any) {
     if (typeof data !== 'object' || !data.personId) {
       return false;
     }
@@ -265,12 +328,21 @@ class Validators {
   }
 
   /**
-   * This method checks that object is superficially like a competenceProfileDTO, used as a pre-check before going
+   * This method checks that object is superficially like a competenceProfilesDTO, used as a pre-check before going
    * further with validations.
    * @param data the object to check.
    */
-  static competenceProfileObjValidator(data: any) {
+  static competenceProfilesObjValidator(data: any) {
     return !(typeof data !== 'object' || !data.competenceProfiles);
+  }
+
+  /**
+   * This method checks that object is superficially like a availabilitiesDTO, used as a pre-check before going
+   * further with validations.
+   * @param data the object to check.
+   */
+  static availabilitiesObjValidator(data: any) {
+    return !(typeof data !== 'object' || !data.availabilities);
   }
 }
 

@@ -9,7 +9,7 @@ import {CustomValidationError} from './custom_errors';
 import {ResponseHandler} from '../api/response_handler';
 import {NextFunction, Request, Response} from 'express';
 import {JsonWebTokenError, TokenExpiredError} from 'jsonwebtoken';
-import {ConnectionRefusedError, ValidationError} from 'sequelize';
+import {ConnectionRefusedError} from 'sequelize';
 
 const ERROR_CODES = {
   CONFLICT_ERROR: 'CONFLICT_ERROR',
@@ -17,7 +17,6 @@ const ERROR_CODES = {
   JWT_ERROR: 'JWT_ERROR',
   TOKEN_EXPIRED_ERROR: 'TOKEN_EXPIRED_ERROR',
   CONNECTION_REFUSED_ERROR: 'CONNECTION_REFUSED_ERROR',
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
   DEFAULT_ERROR: 'DEFAULT_ERROR',
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
@@ -87,12 +86,6 @@ class ErrorHandler {
         httpStatusCode = 503;
         errorMessage.message = 'Service is currently unavailable';
         errorMessage.code = ERROR_CODES.CONNECTION_REFUSED_ERROR;
-        break;
-
-      case ValidationError:
-        httpStatusCode = 500;
-        errorMessage.message = 'Data is invalid';
-        errorMessage.code = ERROR_CODES.VALIDATION_ERROR;
         break;
 
       case InvalidRouteError:
