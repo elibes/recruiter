@@ -4,7 +4,7 @@ import 'react-date-range/dist/theme/default.css';
 import {FC} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
-import {DateRangePicker} from 'react-date-range';
+import {DateRange} from 'react-date-range';
 import {addYears, format} from 'date-fns';
 import {enUS, sv} from 'date-fns/locale';
 import CompetenceList from './CompetenceList';
@@ -40,7 +40,7 @@ const ApplicationForm: FC = () => {
   const {t, i18n} = useTranslation();
 
   /**
-   * This const converts the availability state to the Date format that DateRangePicker uses.
+   * This const converts the availability state to the Date format that DateRange uses.
    */
   const selectionList = ranges.map(range => {
     return {
@@ -51,7 +51,7 @@ const ApplicationForm: FC = () => {
   });
 
   /**
-   * This function handles the event when a user selects a data range in the DateRangePicker. It will
+   * This function handles the event when a user selects a data range in the DateRange. It will
    * convert the dates to string and then attempt to update corresponding state using dispatch.
    * @param range the date range from the picker,
    */
@@ -70,7 +70,7 @@ const ApplicationForm: FC = () => {
   };
 
   /**
-   * This function handles the event when a user wants to add another availability range in the DateRangePicker.
+   * This function handles the event when a user wants to add another availability range in the DateRange.
    */
   const handleNewAvailabilityButton = () => {
     dispatch(createNewAvailability());
@@ -115,16 +115,18 @@ const ApplicationForm: FC = () => {
     <div>
       <CompetenceList></CompetenceList>
       <h3>{t('applicant.availabilities')}</h3>
-      <DateRangePicker
+      <div>
+        <button onClick={handleNewAvailabilityButton}>
+          {t('applicant.add-availability')}
+        </button>
+      </div>
+      <DateRange
         locale={getLocale()}
         ranges={selectionList}
         minDate={new Date()}
         maxDate={addYears(new Date(), 1)}
         onChange={handleDateRangeSet}
-      ></DateRangePicker>
-      <button onClick={handleNewAvailabilityButton}>
-        {t('applicant.add-availability')}
-      </button>
+      ></DateRange>
       <div>
         <button onClick={handleSubmitApplicationButton}>
           {t('applicant.submit-application')}
