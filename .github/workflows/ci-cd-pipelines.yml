@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "ci-cd-pipelines.yml" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "ci-cd-pipelines.yml" ]
 
 jobs:
   client-job:
