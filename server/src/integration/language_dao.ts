@@ -30,23 +30,6 @@ class LanguageDAO {
     }
   }
 
-  async getLanguageById(id: number) {
-    try {
-      const language = await Language.findOne({
-        where: {id: id},
-      });
-
-      if(language === null) {
-        return null;
-      } else {
-        return this.createLanguageDTO(language);
-      }
-    } catch (error) {
-      console.error('Error fetching from the database:', error);
-      throw new Error('Could not language in database!');
-    }
-  }
-
   createLanguageDTO(lang: Language | null): LanguageDTO | null {
     if (lang === null) {
       return null;

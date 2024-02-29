@@ -85,3 +85,14 @@ export class MissingHeaderError extends Error {
     this.name = 'MissingHeaderError';
   }
 }
+
+/**
+ * This error shall be thrown when a requested language is not found in the database.
+ */
+export class LanguageNotFoundError extends Error {
+  static message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'LanguageNotFoundError';
+  }
+}

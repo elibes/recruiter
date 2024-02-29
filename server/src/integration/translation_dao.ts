@@ -1,5 +1,5 @@
-import {TranslationDTO} from "../model/dto/translation_dto";
 import {Translation} from "../model/translation";
+import {Competence} from "../model/competence";
 
 class TranslationDAO {
   private static instance: TranslationDAO;
@@ -10,19 +10,30 @@ class TranslationDAO {
     }
     return TranslationDAO.instance;
   }
+
+  /**
+   * Creates the DAO
+   * */
   private constructor() {}
 
-  async createTranslation(entry: TranslationDTO) {
+  async getTranslationNameByCompetenceId(languageId: number, competence: Competence): Promise<string> {
     try {
-      await Translation.create({
-        competenceId: entry.competenceId,
-        languageId: entry.languageId,
-        translationName: entry.translationName,
+      const translation = await Translation.findOne({
+        where: {
+          languageId: languageId,
+          competenceId: competence.id
+        },
       });
-      return true;
+
+      if(translation === null) {
+        console.log(`Translation not found for languageId: ${languageId}, competenceId: ${competence.id}`);
+        return competence.name;  // return the default name
+      } else {
+        return translation.name;
+      }
     } catch (error) {
-      console.error('Error updating the database:', error);
-      throw new Error(`Could not add translation: ${entry} to the database!`);
+      console.error('Error fetching from the database:', error);
+      throw new Error('Could not find that translation in database!');
     }
   }
 }
