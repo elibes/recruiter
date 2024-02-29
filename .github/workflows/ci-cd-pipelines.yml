@@ -1,1 +1,53 @@
-# cd/cd 
+name: CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  client-job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        env:
+          CI: false
+        run: npm run build
+      - name: Run linter
+        run: npm run lint
+      - name: Run tests
+        run: npm test
+
+  server-job:
+    runs-on: ubuntu-latest
+    needs: client-job
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        env:
+          CI: false
+        run: npm run build
+      - name: Run linter
+        run: npm run lint
+      - name: Run tests
+        run: npm test
