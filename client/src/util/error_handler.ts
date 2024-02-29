@@ -14,6 +14,7 @@ const ERROR_CODES = {
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
   INVALID_LOGIN_ERROR: 'INVALID_LOGIN_ERROR',
+  FORBIDDEN_ERROR: 'FORBIDDEN_ERROR',
 };
 
 /**
@@ -66,6 +67,12 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
         if (errorData.code === ERROR_CODES.TOKEN_EXPIRED_ERROR) {
           console.error('Unauthorized: ', errorMsg);
           alert('Your authorization cookie has expired. Please log in.');
+        }
+        break;
+      case 403:
+        if (errorData.code === ERROR_CODES.FORBIDDEN_ERROR) {
+          console.error('Forbidden: ', errorMsg);
+          alert('You are not authorized to perform this action');
         }
         break;
       case 404:

@@ -1,4 +1,5 @@
 import {
+  AuthorizationError,
   ConflictError,
   InvalidRouteError,
   LoginPasswordNotMatchError,
@@ -21,6 +22,7 @@ const ERROR_CODES = {
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
   INVALID_LOGIN_ERROR: 'INVALID_LOGIN_ERROR',
+  FORBIDDEN_ERROR: 'FORBIDDEN_ERROR',
 };
 
 /**
@@ -74,6 +76,12 @@ class ErrorHandler {
         httpStatusCode = 401;
         errorMessage.message = 'Unauthorized';
         errorMessage.code = ERROR_CODES.JWT_ERROR;
+        break;
+
+      case AuthorizationError:
+        httpStatusCode = 403;
+        errorMessage.message = 'Forbidden';
+        errorMessage.code = ERROR_CODES.FORBIDDEN_ERROR;
         break;
 
       case TokenExpiredError:
