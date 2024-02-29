@@ -21,6 +21,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
+        env:
+          CI: false
         run: npm run build
       - name: Run linter
         run: npm run lint
@@ -42,6 +44,8 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
+        env:
+          CI: false
         run: npm run build
       - name: Run linter
         run: npm run lint
