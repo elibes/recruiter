@@ -12,6 +12,7 @@ import {
 } from './validation_helper';
 import Authorization from './authorization';
 import {UserAuthDTO} from '../model/dto/user_auth_dto';
+import {APPLICANT_ROLE_ID} from '../utilities/configurations';
 
 /**
  * This class represents the api logic used for job application related requests.
@@ -32,7 +33,7 @@ class ApplicationApi {
       checkSchema(applicationValidationSchema),
       async (req: Request, res: Response) => {
         handleExpressValidatorErrors(req);
-        const userInfo = Authorization.getUserAuth(req);
+        const userInfo = Authorization.getUserAuth(req, APPLICANT_ROLE_ID);
         const applicationData = this.applicationDataPacker(req.body, userInfo);
         const result =
           await createApplicationService().handleApplication(applicationData);

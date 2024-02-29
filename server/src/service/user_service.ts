@@ -6,7 +6,6 @@ import {AuthenticationService} from './authentication_service';
 import {APPLICANT_ROLE_ID} from '../utilities/configurations';
 import {UserLoginDTO} from '../model/dto/user_login_dto';
 import {UserDTO} from '../model/dto/user_dto';
-import {UserAuthDTO} from '../model/dto/user_auth_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
 
 /**
@@ -78,20 +77,14 @@ export class UserService {
   /**
    * Fetches a list of users and their applications from the database.
    *
-   * @param userAuthDTO - The user authentication data.
    * @returns A promise that resolves to an array of UserApplicationDTO objects representing the user applications.
    * @throws {Error} Throws an 'Unauthorized' error if the user's role ID is not 1.
    * @throws {Error} Throws the error if there is an issue fetching the users or their applications from the database.
    */
-  async handleListUsers(
-    userAuthDTO: UserAuthDTO
-  ): Promise<UserApplicationDTO[]> {
+  async handleListUsers(): Promise<UserApplicationDTO[]> {
     const transaction = await Database.getInstance().database.transaction();
 
     try {
-      if (userAuthDTO.roleId !== 1) {
-        throw new Error('Unauthorized');
-      }
       const users = await UserDAO.getInstance().getAllApplications();
       const userListDTOs: UserApplicationDTO[] = users.map(user => ({
         userId: user.userId,

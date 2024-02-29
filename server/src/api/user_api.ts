@@ -10,7 +10,7 @@ import {
   userLoginValidator,
   userRegistrationValidationSchema,
 } from './validation_helper';
-import {UserAuthDTO} from '../model/dto/user_auth_dto';
+import {RECRUITER_ROLE_ID} from '../utilities/configurations';
 
 /**
  * This class represents the api logic used for user related requests.
@@ -92,13 +92,8 @@ class UserApi {
     });
 
     this.router.get('/all', async (req: Request, res: Response) => {
-      const decodedToken = Authorization.getUserAuth(req);
-      const {userId, roleId} = decodedToken;
-      const userAuthDTO: UserAuthDTO = {
-        userId: decodedToken.userId,
-        roleId: decodedToken.roleId,
-      };
-      const result = await createUserService().handleListUsers(userAuthDTO);
+      Authorization.getUserAuth(req, RECRUITER_ROLE_ID);
+      const result = await createUserService().handleListUsers();
       this.responseHandler.sendHttpResponse(res, 200, result, false);
       return;
     });

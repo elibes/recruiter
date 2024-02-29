@@ -3,7 +3,10 @@ import * as jwt from 'jsonwebtoken';
 import {UserDTO} from '../model/dto/user_dto';
 import {CookieOptions} from 'express';
 import validator from 'validator';
-import {CustomValidationError} from '../utilities/custom_errors';
+import {
+  AuthorizationError,
+  CustomValidationError,
+} from '../utilities/custom_errors';
 import {UserAuthDTO} from '../model/dto/user_auth_dto';
 interface CustomJwtPayload extends jwt.JwtPayload {
   roleId: string;
@@ -56,8 +59,9 @@ class Authorization {
    * This middleware function takes a request that includes a valid JWT user token and tries to verify it.
    * If successful it returns the userId and roleId, otherwise it will throw an error.
    * @param req a request containing a validated JWT token.
+   * @param authorizedRoleId a number representing the role the user needs for the server to continue with the request
    */
-  static getUserAuth(req: Request): UserAuthDTO {
+  static getUserAuth(req: Request, authorizedRoleId: number): UserAuthDTO {
     const authCookieName = this.AUTH_COOKIE_NAME;
     const authCookie = req.cookies[authCookieName];
     const jwtSecret = process.env.JWT_SECRET;
@@ -71,12 +75,18 @@ class Authorization {
       validator.isInt(payload.sub) &&
       validator.isInt(payload.roleId)
     ) {
-      return {
-        userId: validator.toInt(payload.sub),
-        roleId: validator.toInt(payload.roleId),
-      };
+      if (validator.toInt(payload.roleId) === authorizedRoleId) {
+        return {
+          userId: validator.toInt(payload.sub),
+          roleId: validator.toInt(payload.roleId),
+        };
+      } else {
+        throw new AuthorizationError(
+          `Only users with ${authorizedRoleId} are allowed to perform this operation, which user ${payload.sub} lacks.`
+        );
+      }
     } else {
-      throw new CustomValidationError('auth payload is invalid');
+      throw new CustomValidationError('Auth payload is invalid');
     }
   }
 }
