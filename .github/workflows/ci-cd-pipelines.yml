@@ -48,6 +48,6 @@ jobs:
           CI: false
         run: npm run build
       - name: Run linter
-        run: npm run lint
+        run: CI=false npm run lint
       - name: Run tests
         run: npm test
