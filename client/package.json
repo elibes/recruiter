@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/node": "20.8.2",
     "@types/react-date-range": "^1.4.9",
     "gts": "^5.2.0",
