@@ -333,7 +333,14 @@ class Validators {
    * @param data the object to check.
    */
   static competenceProfilesObjValidator(data: any) {
-    return !(typeof data !== 'object' || !data.competenceProfiles);
+    if (
+      typeof data !== 'object' ||
+      !data.competenceProfiles ||
+      !Array.isArray(data.competenceProfiles)
+    ) {
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -342,7 +349,14 @@ class Validators {
    * @param data the object to check.
    */
   static availabilitiesObjValidator(data: any) {
-    return !(typeof data !== 'object' || !data.availabilities);
+    if (
+      typeof data !== 'object' ||
+      !data.availabilities ||
+      !Array.isArray(data.availabilities)
+    ) {
+      return false;
+    }
+    return true;
   }
 }
 

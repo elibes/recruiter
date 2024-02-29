@@ -53,7 +53,7 @@ class ErrorHandler {
    */
   // eslint-disable-next-line
   handleError(err: Error, req: Request, res: Response, next: NextFunction) {
-    console.log(err);
+    console.log('Error was caught in error_handler:\n', err);
     let httpStatusCode;
     const errorMessage: ErrorMessage = {message: 'none'};
 
@@ -113,7 +113,6 @@ class ErrorHandler {
         break;
 
       default:
-        console.log(err);
         httpStatusCode = 500;
         errorMessage.message = 'Server error';
         errorMessage.code = ERROR_CODES.DEFAULT_ERROR;

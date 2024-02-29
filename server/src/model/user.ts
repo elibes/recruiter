@@ -73,7 +73,6 @@ class User extends Model {
         email: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true,
           field: 'email',
           validate: {
             fn: (value: any) => {
@@ -89,7 +88,6 @@ class User extends Model {
         personalIdentificationNumber: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true,
           field: 'pnr',
           validate: {
             fn: (value: any) => {
@@ -107,7 +105,6 @@ class User extends Model {
         username: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true,
           field: 'username',
           validate: {
             fn: (value: any) => {
