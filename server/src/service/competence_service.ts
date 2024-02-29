@@ -20,7 +20,7 @@ export class CompetenceService {
 
       const language = await languageDao.getLanguageByCode(languageCode);
       if(language === null) {
-        throw new LanguageNotFoundError(`Language with ${languageCode} code does not exit`);
+        throw new LanguageNotFoundError(`Language with ${languageCode} code does not exist`);
       }
       return await competenceDAO.getAllCompetencies(language.id);
     });
