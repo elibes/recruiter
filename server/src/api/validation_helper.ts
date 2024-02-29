@@ -37,8 +37,8 @@ export function headerPreValidatorMiddleware(
         'The content type header is required to be application/json for this request'
       );
     }
-  } else if (req.method === 'GET') {
-  }
+  } // else if (req.method === 'GET') { // TODO: causes linting error since its empty
+  // }
   if (errorList.length !== 0) {
     throw new MissingHeaderError(errorList.join(', '));
   }
