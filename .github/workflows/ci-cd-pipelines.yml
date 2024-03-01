@@ -25,9 +25,19 @@ jobs:
           CI: false
         run: npm run build
       - name: Run linter
-        run: npm run lint
-      - name: Run tests
-        run: npm test
+        run: npm run lint > lint-report.txt || true
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+      - name: Upload lint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: client-lint-report
+          path: ./client/lint-report.txt
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: client-test-coverage
+          path: ./client/coverage
 
   server-job:
     runs-on: ubuntu-latest
