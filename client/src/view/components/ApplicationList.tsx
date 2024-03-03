@@ -1,6 +1,7 @@
 import '../styles/ApplicationList.css';
 
 import * as React from 'react';
+import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState, AppDispatch} from '../../store';
 import {setSorting} from '../../viewmodel/applicationListSlice';
@@ -20,13 +21,16 @@ const ApplicationList = () => {
     const newSorting = event.target.value;
     dispatch(setSorting(newSorting));
   };
+
+  const {t, i18n} = useTranslation();
+
   return (
     <div>
       {isLoaded ? (
         <div>
           <select className="sort" value={sorting} onChange={changeSorting}>
-            <option value="a-z">Alphabetic</option>
-            <option value="status">Status</option>
+            <option value="a-z">{t('recruiter.alpha-sort')}</option>
+            <option value="status">{t('recruiter.status-sort')}</option>
           </select>
         </div>
       ) : (

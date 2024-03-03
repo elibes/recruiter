@@ -1,11 +1,12 @@
 import * as React from 'react';
+import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {useDispatch} from 'react-redux';
 import {
   setCompetence,
   setCompetenceYears,
 } from '../../viewmodel/applicationSlice';
 import {validateYearsOfExperience} from '../../util/validation';
-import {useState} from 'react';
 
 /**
  * This interface defines the shape of the competence data props, passed down by the higher level component.
@@ -33,6 +34,8 @@ const CompetenceItem: React.FC<ListItemProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState('');
+
+  const {t, i18n} = useTranslation();
 
   /**
    * This function handles the event when a user specifies that they have the competence.
@@ -76,14 +79,14 @@ const CompetenceItem: React.FC<ListItemProps> = ({
   return (
     <div>
       <label>
-        {competenceName}
+        {t('applicant.' + competenceName)}
         <input
           type={'checkbox'}
           id={`CompetenceCheckbox-${competenceId}`}
           checked={hasCompetence}
           onChange={handleCompetenceChecked}
         />
-        <span>{'   Years of experience: '}</span>
+        <span>{t('applicant.years-of-experience')}</span>
         <input
           type={'text'}
           id={`CompetenceInput-${competenceId}`}

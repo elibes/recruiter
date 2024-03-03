@@ -1,3 +1,6 @@
+import './styles/ApplicationView.css';
+
+import {useTranslation} from 'react-i18next';
 import ApplicationForm from './components/ApplicationForm';
 
 /**
@@ -5,9 +8,11 @@ import ApplicationForm from './components/ApplicationForm';
  * @component
  */
 const ApplicationView = () => {
+  const {t, i18n} = useTranslation();
+
   return (
     <>
-      <h1>Application Page</h1>
+      <h1>{t('applicant.application-page')}</h1>
       <ApplicationForm></ApplicationForm>
     </>
   );
