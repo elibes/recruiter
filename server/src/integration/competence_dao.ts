@@ -53,12 +53,7 @@ class CompetenceDAO {
       throw new Error('Could not findAll competencies in database!');
     }
   }
-
-  /**
-   * This helper function takes a list of Competence objects from the db and converts it into a DTO.
-   * @param comps the competence objects.
-   * @param languageId the language id.
-   */
+  
   /**
    * This helper function takes a list of Competence objects from the db and converts it into a DTO.
    * @param comps the competence objects.
