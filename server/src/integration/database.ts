@@ -94,13 +94,13 @@ class Database {
         foreignKey: 'competence_id',
         as: 'competenceInTranslation'
       });
-      Translation.belongsTo(Competence, {foreignKey: 'competence_id'});
+      Translation.belongsTo(Competence, {foreignKey: 'competence_id', as: 'competenceInTranslation'});
 
       Language.hasMany(Translation, {
         foreignKey: 'language_id',
         as: 'languageInTranslation'
       });
-      Translation.belongsTo(Language, {foreignKey: 'language_id'});
+      Translation.belongsTo(Language, {foreignKey: 'language_id', as: 'languageInTranslation' });
     } catch (error) {
       throw new Error('Error setting up database models:');
     }
