@@ -4,18 +4,32 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../store';
 
 /**
- * ProtectedRoute component that renders the given component if the user is authenticated,
- * otherwise redirects the user to the login page.
+ * `ProtectedRoute` is a higher-order component that wraps around protected components
+ * in the application to enforce authentication and role-based access control.
  *
- * @param {Object} props - The component props.
- * @param {React.ComponentType<any>} props.component - The component to be rendered if the user is authenticated.
- * @param {Object} [rest] - Any additional props that should be passed to the component being rendered.
- * @returns {React.ReactElement} The rendered component if authenticated, or a redirection to the login page.
+ * It redirects users based on their authentication status and role. If the user is not
+ * logged in, they are redirected to the login page. If the user is logged in but does
+ * not have the required role, they are redirected to the not found page. If the user
+ * meets the authentication and role requirements, they are granted access to the component.
+ *
+ * @param {React.ComponentType<any>} component - The component to render if the user passes the authentication and role check.
+ * @param {string} role - The role required to access the component.
+ * @param {Object} rest - Additional props to pass to the component if rendered.
+ *
+ * @returns {React.ReactElement} - A `<Navigate>` component redirecting to either the login or registration page, or the protected component if access conditions are met.
  */
-const ProtectedRoute = ({component: Component, ...rest}) => {
-  const {isLoggedIn} = useSelector((state: RootState) => state.user);
+const ProtectedRoute = ({component: Component, role, ...rest}) => {
+  const {isLoggedIn, userRole} = useSelector((state: RootState) => state.user);
 
-  return isLoggedIn ? <Component {...rest} /> : <Navigate to="/login" />;
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  }
+
+  if (isLoggedIn && userRole === role) {
+    return <Component {...rest} />;
+  }
+
+  return <Navigate to="*" />;
 };
 
 export default ProtectedRoute;

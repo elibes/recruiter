@@ -44,7 +44,7 @@ const AppRouter = () => {
           path="/recruiter"
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
-              <ProtectedRoute component={RecruiterView} />
+              <ProtectedRoute component={RecruiterView} role="recruiter" />
             </React.Suspense>
           }
         />
@@ -52,7 +52,7 @@ const AppRouter = () => {
           path="/application"
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
-              <ProtectedRoute component={ApplicationView} />
+              <ProtectedRoute component={ApplicationView} role="applicant" />
             </React.Suspense>
           }
         />
