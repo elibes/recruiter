@@ -157,7 +157,7 @@ TODO:
 copy the deploy hooks from **Settings > Build & Deploy** of the server and client on render, and store as [X] on github.
 
 ### Database Setup
-This project includes additional SQL scripts to create and populate the 'translation' and 'language' tables, which are crucial for the application's localization features. The database_script.sql file located at the root of the project contains the SQL commands needed to create the language and translation tables, along with the initial data for these tables. To run this script:
+This project includes additional SQL scripts to create and populate the "translation" and "language" tables, which are crucial for the application's localization features. The database_script.sql file located at the root of the project contains the SQL commands needed to create the language and translation tables, along with the initial data for these tables. To run this script:
 * Ensure you have a PostgreSQL database set up and accessible.
 * Open a terminal or command prompt.
 * Navigate to the root directory of the project where the database_script.sql file is located.
