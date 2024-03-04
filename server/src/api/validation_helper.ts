@@ -37,7 +37,6 @@ export function headerPreValidatorMiddleware(
         'The content type header is required to be application/json for this request'
       );
     }
-  } else if (req.method === 'GET') {
   }
   if (errorList.length !== 0) {
     throw new MissingHeaderError(errorList.join(', '));
@@ -99,7 +98,7 @@ const userNamePasswordValidationSchema: any = {
     passwordValidator: {
       custom: Validators.passwordValidator,
       errorMessage:
-        'Must be stronger: 8 or more characters and at least one each of number and symbol and capital letter',
+        'Must be stronger - Needs to contain at least 8 total characters, one capital letter, one number, and one symbol',
     },
   },
 };

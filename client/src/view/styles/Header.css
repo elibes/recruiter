@@ -1,0 +1,47 @@
+header {
+  background-color: #1e3264; /* Dark blue background color */
+  color: #ffffff; /* White text color */
+  padding: 1.25rem; /* Add some padding to the header */
+  text-align: center; /* Center-align the text */
+  font-size: 2rem; /* Set font size to 2rem */
+  font-weight: bold; /* Make the text bold */
+  position: fixed; /* Make the header fixed */
+  width: 100%; /* Set the width to 100% of the viewport */
+  top: 0; /* Align the header to the top of the viewport */
+  left: 0; /* Align the header to the left of the viewport */
+  z-index: 999; /* Set a high z-index to ensure the header stays on top */
+  margin-bottom: 3rem;
+  justify-content: space-between; /* Align items to the start and end of the header */
+  align-items: center; /* Center-align items vertically */
+  display: flex; /* Use flexbox for layout */
+}
+.language-dropdown {
+  margin-left: auto; /* Push the dropdown menu to the right */
+}
+
+.language-dropdown select {
+  background-color: #1e3264;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+/* Style the dropdown arrow */
+.language-dropdown select::-ms-expand {
+  display: none;
+}
+.language-dropdown select::selection {
+  display: none;
+}
+
+.language-dropdown select option {
+  background-color: #1e3264;
+  color: #ffffff;
+}
+
+.language-dropdown select:hover {
+  background-color: #0a1740;
+  color: #ffffff;
+}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useTranslation} from 'react-i18next';
 import LoginForm from './components/LoginForm';
 
 /**
@@ -9,9 +10,11 @@ import LoginForm from './components/LoginForm';
  * @returns {JSX.Element} The rendered login form component.
  */
 const LoginView = () => {
+  const {t, i18n} = useTranslation();
+
   return (
     <>
-      <h1>Login Page</h1>
+      <h1>{t('login.login-page')}</h1>
       <LoginForm />
       {/* NavigationButton to go back*/}
     </>
