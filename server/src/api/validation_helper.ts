@@ -70,7 +70,7 @@ export function handleExpressValidatorErrors(req: Request) {
 }
 
 /**
- * This is a schema that does some sanitization and validation on all fields (nested too) of the response body.
+ * This is a schema that does some basic sanitization and validation of input value.
  * If it does not pass this initial check then it quits immediately.
  */
 const baseValidationSchema: any = {
@@ -85,6 +85,9 @@ const baseValidationSchema: any = {
   },
 };
 
+/**
+ * This schema defines the validation and sanitization used for both first and last names.
+ */
 const nameSchema: any = {
   preNameValidator: {
     custom: Validators.namePreValidator,

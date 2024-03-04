@@ -14,6 +14,8 @@ class Validators {
   static defaultValidator(value: any) {
     if (typeof value === 'string') {
       return !validator.isEmpty(value) && validator.isLength(value, {max: 255});
+    } else if (typeof value === 'number' && value === 0) {
+      return true;
     } else return !!value;
   }
 
