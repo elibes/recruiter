@@ -1,4 +1,5 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
+import {Translation} from "./translation";
 
 /**
  * A named competence representing the name of the competence an applicant may have.
@@ -6,6 +7,7 @@ import {DataTypes, Model, Sequelize} from 'sequelize';
 class Competence extends Model {
   declare id: number;
   declare name: string;
+  declare competenceInTranslation?: Translation[];
 
   /**
    * Creates a competence model.

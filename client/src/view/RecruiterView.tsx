@@ -8,7 +8,6 @@ import {
   loadApplications,
 } from '../viewmodel/applicationListSlice';
 import ApplicationList from './components/ApplicationList';
-import {useNavigate} from 'react-router-dom';
 
 /**
  * Creates the main view for the recruiter. Has a button that loads all applications from
@@ -22,12 +21,7 @@ const RecruiterView = () => {
   const {isLoaded, sorting} = useSelector(
     (state: RootState) => state.applicationList
   );
-  const {userRole} = useSelector((state: RootState) => state.user);
-  const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if (userRole.valueOf() !== 'recruiter') navigate('/login');
-  }, [userRole]);
   const getApplications = () => {
     dispatch(loadApplications())
       .then(() => {

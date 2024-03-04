@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ProtectedRoute from './ProtectedRoute';
 
 import {
   BrowserRouter as Router,
@@ -47,7 +48,7 @@ const AppRouter = () => {
           path="/recruiter"
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
-              <RecruiterView />
+              <ProtectedRoute component={RecruiterView} role="recruiter" />
             </React.Suspense>
           }
         />
@@ -55,7 +56,7 @@ const AppRouter = () => {
           path="/application"
           element={
             <React.Suspense fallback={<div>Loading...</div>}>
-              <ApplicationView />
+              <ProtectedRoute component={ApplicationView} role="applicant" />
             </React.Suspense>
           }
         />
