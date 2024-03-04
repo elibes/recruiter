@@ -8,7 +8,7 @@ class Translation extends Model {
   declare id: number;
   declare competenceId: number;
   declare languageId: number;
-  declare name: string
+  declare name: string;
 
   /**
    * Initializes the Translation model and defines its schema and table configuration.
@@ -40,13 +40,13 @@ class Translation extends Model {
           references: {
             model: 'language',
             key: 'language_id',
-          }
+          },
         },
         name: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: 'name'
-        }
+          field: 'name',
+        },
       },
       {
         sequelize,

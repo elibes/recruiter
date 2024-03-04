@@ -1,5 +1,5 @@
 import {DataTypes, Model, Sequelize} from 'sequelize';
-import {Translation} from "./translation";
+import {Translation} from './translation';
 
 /**
  * A named competence representing the name of the competence an applicant may have.

@@ -23,7 +23,8 @@ class CompetenceApi {
   async setupRequestHandling() {
     this.router.get('/all', async (req: Request, res: Response) => {
       const languageCode = req.headers['accept-language'] as string;
-      const data = await createCompetenceService().getAllCompetencies(languageCode);
+      const data =
+        await createCompetenceService().getAllCompetencies(languageCode);
       this.responseHandler.sendHttpResponse(res, 200, data, false);
     });
   }

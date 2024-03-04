@@ -85,4 +85,3 @@ export class MissingHeaderError extends Error {
     this.name = 'MissingHeaderError';
   }
 }
-

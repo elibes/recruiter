@@ -1,7 +1,7 @@
 import {Competence} from '../model/competence';
 import {CompetenciesDTO} from '../model/dto/competencies_dto';
-import {Language} from "../model/language";
-import {Translation} from "../model/translation";
+import {Language} from '../model/language';
+import {Translation} from '../model/translation';
 
 /**
  * This DAO class handles operations on the competence table in the db.
@@ -33,27 +33,31 @@ class CompetenceDAO {
   async getAllCompetencies(languageCode: string) {
     try {
       const result = await Competence.findAll({
-        include: [{
-          model: Translation,
-          as: 'competenceInTranslation',
-          required: true,
-          include: [{
-            model: Language,
-            as: 'languageInTranslation',
-            where: {
-              code: languageCode
-            },
-            required: true
-          }]
-        }]
-      })
+        include: [
+          {
+            model: Translation,
+            as: 'competenceInTranslation',
+            required: true,
+            include: [
+              {
+                model: Language,
+                as: 'languageInTranslation',
+                where: {
+                  code: languageCode,
+                },
+                required: true,
+              },
+            ],
+          },
+        ],
+      });
       return this.createCompetenceDTO(result);
     } catch (error) {
       console.error('Error fetching from the database:', error);
       throw new Error('Could not findAll competencies in database!');
     }
   }
-  
+
   /**
    * This helper function takes a list of Competence objects from the db and converts it into a DTO.
    * @param comps the competence objects.
@@ -64,7 +68,8 @@ class CompetenceDAO {
     } else {
       return {
         competencies: comps.map(competence => {
-          const competenceName = competence.competenceInTranslation?.[0]?.name ?? competence.name;
+          const competenceName =
+            competence.competenceInTranslation?.[0]?.name ?? competence.name;
           return {
             id: competence.id,
             competenceName: competenceName,
@@ -75,6 +80,4 @@ class CompetenceDAO {
   }
 }
 
-
-
-  export {CompetenceDAO};
+export {CompetenceDAO};

@@ -6,7 +6,7 @@ import {DataTypes, Model, Sequelize} from 'sequelize';
  */
 class Language extends Model {
   declare id: number;
-  declare code: string
+  declare code: string;
 
   /**
    * Initializes the Language model and defines its schema and table configuration.
@@ -25,8 +25,8 @@ class Language extends Model {
         code: {
           type: DataTypes.STRING,
           allowNull: false,
-          field: 'code'
-        }
+          field: 'code',
+        },
       },
       {
         sequelize,
