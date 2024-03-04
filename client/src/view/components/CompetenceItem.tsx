@@ -79,7 +79,7 @@ const CompetenceItem: React.FC<ListItemProps> = ({
   return (
     <div>
       <label>
-        {t('applicant.' + competenceName)}
+        {competenceName}
         <input
           type={'checkbox'}
           id={`CompetenceCheckbox-${competenceId}`}

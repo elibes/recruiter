@@ -77,6 +77,7 @@
     " Must be a valid email": "Måste vara en giltig e-postadress",
     " Must be a valid personal number": "Måste vara ett giltigt personnummer",
     " is invalid": "är ogiltig(t)",
+    " can only contain letters": "Får endast innehålla bokstäver",
     "Registration successful": "Registreringen lyckades",
     "Login failed": "Inloggning misslyckades",
     "Login successful": "Inloggning lyckades",

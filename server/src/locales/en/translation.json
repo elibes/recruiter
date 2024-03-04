@@ -77,6 +77,7 @@
     " Must be a valid email": "Must be a valid email",
     " Must be a valid personal number": "Must be a valid personal number",
     " is invalid": "is invalid",
+    " can only contain letters": "Must only contain letters",
     "Registration successful": "Registration successful",
     "Login failed": "Login failed",
     "Login successful": "Login successful",
