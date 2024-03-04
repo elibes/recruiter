@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run linter
-        run: npm run lint > lint-report.txt 
+        run: npm run lint | tee lint-report.txt 
       - name: Build
         env:
           CI: false
@@ -54,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run linter
-        run: npm run lint > lint-report.txt 
+        run: npm run lint | tee lint-report.txt 
       - name: Build
         env:
           CI: false
