@@ -3,9 +3,7 @@ import {fullApplicationDTO} from '../model/dto/full_application_dto';
 import {AvailabilityDAO} from '../integration/availability_dao';
 import {CompetenceProfileDAO} from '../integration/competence_profile_dao';
 import {UserDAO} from '../integration/user_dao';
-import {AuthorizationError} from '../utilities/custom_errors';
 import {checkUser} from './error_helper';
-import {APPLICANT_ROLE_ID} from '../utilities/configurations';
 
 /**
  * This class contains methods to service requests related to job applications.
@@ -20,13 +18,6 @@ export class ApplicationService {
    */
   async handleApplication(application: fullApplicationDTO) {
     const db = Database.getInstance().getDatabase();
-    if (application.userRole !== APPLICANT_ROLE_ID) {
-      throw new AuthorizationError(
-        'Only regular users are allowed to post job applications, userId: ' +
-          application.userId +
-          ' is not a regular user'
-      );
-    }
     return await db.transaction(async transaction => {
       const userDAO = UserDAO.getInstance();
       const availabilityDAO = AvailabilityDAO.getInstance();

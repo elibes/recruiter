@@ -1,10 +1,8 @@
-import {QueryTypes, Sequelize} from 'sequelize';
 import {User} from '../model/user';
 import {ValidationError} from 'sequelize';
 import {UserDTO} from '../model/dto/user_dto';
 import {UserRegistrationDTO} from '../model/dto/user_registration_dto';
 import {UserApplicationDTO} from '../model/dto/user_application_dto';
-import {Database} from './database';
 import {Availability} from '../model/availability';
 
 /**

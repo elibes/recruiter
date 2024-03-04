@@ -40,6 +40,7 @@ class Database {
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_Port || '5432'),
       dialect: process.env.DB_DIALECT as Dialect,
+      logging: false,
     });
   }
 

@@ -11,11 +11,11 @@ const ERROR_CODES = {
   JWT_ERROR: 'JWT_ERROR',
   TOKEN_EXPIRED_ERROR: 'TOKEN_EXPIRED_ERROR',
   CONNECTION_REFUSED_ERROR: 'CONNECTION_REFUSED_ERROR',
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
   DEFAULT_ERROR: 'DEFAULT_ERROR',
   ROUTE_VALIDATION_ERROR: 'ROUTE_VALIDATION_ERROR',
   MISSING_HEADER_ERROR: 'MISSING_HEADER_ERROR',
   INVALID_LOGIN_ERROR: 'INVALID_LOGIN_ERROR',
+  FORBIDDEN_ERROR: 'FORBIDDEN_ERROR',
 };
 
 /**
@@ -69,6 +69,12 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
           alert(i18next.t('error-handler.authorization-cookie-expired'));
         }
         break;
+      case 403:
+        if (errorData.code === ERROR_CODES.FORBIDDEN_ERROR) {
+          console.error('Forbidden: ', errorMsg);
+          alert('You are not authorized to perform this action');
+        }
+        break;
       case 404:
         if (errorData.code === ERROR_CODES.ROUTE_VALIDATION_ERROR) {
           console.log(i18next.t('error-handler.route-missing'), errorMsg);
@@ -82,9 +88,6 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
         }
         break;
       case 500:
-        if (errorData.code === ERROR_CODES.VALIDATION_ERROR) {
-          dispatch(setBackendError([errorMsg]));
-        }
         if (errorData.code === ERROR_CODES.DEFAULT_ERROR) {
           console.error(i18next.t('error-handler.server-error'), errorMsg);
           alert(i18next.t('error-handler.internal-error'));

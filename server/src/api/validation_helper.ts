@@ -69,37 +69,32 @@ export function handleExpressValidatorErrors(req: Request) {
 }
 
 /**
- * This is a schema that does some sanitization and validation on all fields (nested too) of the response body.
+ * This is a schema that does some basic sanitization and validation of input value.
+ * If it does not pass this initial check then it quits immediately.
  */
 const baseValidationSchema: any = {
-  '**': {
-    in: ['body'],
-    defaultSanitizer: {
-      customSanitizer: Validators.defaultSanitizer,
-    },
-    defaultValidator: {
-      custom: Validators.defaultValidator,
-      errorMessage: 'Must not be empty or shorter than 255 characters',
-    },
+  in: ['body'],
+  defaultValidator: {
+    custom: Validators.defaultValidator,
+    bail: true,
+    errorMessage: 'Must not be empty or must be shorter than 255 characters',
+  },
+  defaultSanitizer: {
+    customSanitizer: Validators.defaultSanitizer,
   },
 };
 
 /**
- * This schema encapsulate shared validation on userName and password for both login and registration of a user.
+ * This schema defines the validation and sanitization used for both first and last names.
  */
-const userNamePasswordValidationSchema: any = {
-  userName: {
-    userNameValidator: {
-      custom: Validators.userNameValidator,
-      errorMessage: 'Must be shorter than 30 characters',
-    },
+const nameSchema: any = {
+  preNameValidator: {
+    custom: Validators.namePreValidator,
+    errorMessage: 'can only contain letters',
   },
-  password: {
-    passwordValidator: {
-      custom: Validators.passwordValidator,
-      errorMessage:
-        'Must be stronger - Needs to contain at least 8 total characters, one capital letter, one number, and one symbol',
-    },
+  nameSanitizer: {
+    customSanitizer: Validators.nameSanitizer,
+    optional: true,
   },
 };
 
@@ -107,30 +102,41 @@ const userNamePasswordValidationSchema: any = {
  * This schema is for validating all the form data associated with a user registration.
  */
 export const userRegistrationValidationSchema: any = {
-  ...baseValidationSchema,
-  ...userNamePasswordValidationSchema,
   email: {
+    ...baseValidationSchema,
     emailValidator: {
       custom: Validators.emailValidator,
       errorMessage: 'Must be a valid email',
     },
   },
   personalNumber: {
+    ...baseValidationSchema,
     personalNumberValidator: {
       custom: Validators.personalNumberValidator,
       errorMessage: 'Must be a valid personal number',
     },
   },
   firstName: {
-    firstNameValidator: {
-      custom: Validators.nameValidator,
-      errorMessage: 'is invalid',
-    },
+    ...baseValidationSchema,
+    ...nameSchema,
   },
   lastName: {
-    lastNameValidator: {
-      custom: Validators.nameValidator,
-      errorMessage: 'is invalid',
+    ...baseValidationSchema,
+    ...nameSchema,
+  },
+  password: {
+    ...baseValidationSchema,
+    passwordValidator: {
+      custom: Validators.passwordValidator,
+      errorMessage:
+        'Must be stronger - Needs to contain at least 8 total characters, one capital letter, one number, and one symbol',
+    },
+  },
+  userName: {
+    ...baseValidationSchema,
+    userNameValidator: {
+      custom: Validators.userNameValidator,
+      errorMessage: 'Must be shorter than 30 characters',
     },
   },
 };
@@ -139,11 +145,23 @@ export const userRegistrationValidationSchema: any = {
  * This schema is for validating all the form data associated with a job application submission request.
  */
 export const applicationValidationSchema: any = {
-  ...baseValidationSchema,
   recruiterAuth: {
     jsonWebTokenValidator: {
       custom: Validators.jsonWebTokenValidator,
+      bail: true,
       errorMessage: 'must be a valid JWT string',
+    },
+  },
+  competencies: {
+    competenciesValidator: {
+      custom: Validators.competenceListValidator,
+      bail: true,
+    },
+  },
+  availabilities: {
+    availabilitiesValidator: {
+      custom: Validators.availabilityListValidator,
+      bail: true,
     },
   },
 };
@@ -152,11 +170,10 @@ export const applicationValidationSchema: any = {
  * This schema is for validating a login request.
  */
 export const userLoginValidator: any = {
-  ...baseValidationSchema,
   userName: {
-    userNameValidator: {
-      custom: Validators.userNameValidator,
-      errorMessage: 'Must be shorter than 30 characters',
-    },
+    ...baseValidationSchema,
+  },
+  password: {
+    ...baseValidationSchema,
   },
 };

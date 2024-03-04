@@ -3,6 +3,7 @@ import {
   AvailabilityDTO,
 } from '../model/dto/availabilities_dto';
 import {Availability} from '../model/availability';
+import {Validators} from '../utilities/validators';
 
 /**
  * This class handles db operations on the availability table.
@@ -28,6 +29,15 @@ class AvailabilityDAO {
    * @param data the availabilities, with each entry formatted to the db table specification.
    */
   async createAllAvailabilities(data: AvailabilitiesDTO) {
+    if (!Validators.availabilitiesObjValidator(data)) {
+      throw new Error('Availabilities object is invalid in integration');
+    } else {
+      Validators.availabilityListValidator(
+        [...data.availabilities],
+        null,
+        true
+      );
+    }
     for (const entry of data.availabilities) {
       const result = await this.createAvailability(entry);
       if (result === null) {
