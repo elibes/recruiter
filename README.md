@@ -9,6 +9,8 @@ This is a Client-side-rendered application built for Amusement Park that will be
 
 #### User Interface Based on Role:
 * Upon login, applicants are directed to a submission page to apply, while recruiters are directed to view all applications stored in the database.
+* Rather than apply to a specific position, applicants can apply to all positions by simply inputing their availability period(s), competence (ies) and years of experience in the submission page.
+* Recruiters can then view these submission after login.
 * Restrictions prevent applicants from accessing the recruiter page and vice versa. The role of the user is stored in the client-side application state to enforce page access permissions.
 * A JSON Web Token (JWT) containing the user's role is used for server communication to ensure authorized access.
 
