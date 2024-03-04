@@ -16,6 +16,26 @@ The client supports localization for English and Swedish. The website uses Engli
 
 The application has been tested to work in Google Chrome, Mozilla Firefox, Microsoft Edge, and Apple Safari.
 
+## Architectural overview:
+
+The application is split into a front-end responsible for the UI, and a backend responsible for everything else.
+
+Front-end layers:
+
+* **View** - Containing the interfaces that the user interact with.
+* **ViewModel** - The brain of the front-end. Handling user input from the view layer and providing it with data from the model layer. 
+* **Model** - The data source, responsible for getting data from the back-end.
+* **Router** - Handles the concerns of navigation and flow control.
+* **Util** - For cross-cutting concerns, like error handling.
+
+Back-end layers:
+
+* **Api** - Responsible for functionality related to directly interacting with the outside and managing the HTTP request-response cycle.
+* **Service** - The brain of the application, Handling buinsess logic and decision making. Also handles data flow between api and integration.
+* **Integration** - Abstracts the logic required to access the database.
+* **Model** - Contains definitions of domain model objects.
+* **Utilities** - For cross-cutting concerns, like error handling and validation.
+
 ## Technologies used
 
 The application is split into a front-end and a back-end api both of which uses Typescript and Node.js.
