@@ -3,6 +3,7 @@ import {handleError} from '../util/error_handler';
 /**
  * This function calls the back-end server with a request to submit a job application form.
  * @param payload the job application form data
+ * @param {Function} dispatch - A Redux dispatch function used for state management and error handling.
  * @async
  */
 export async function submitApplicationToBackEnd(payload: any, dispatch: any) {

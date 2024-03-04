@@ -155,6 +155,9 @@ class Validators {
     ) {
       return true;
     }
+    if (typeof yoe === 'number') {
+      yoe = yoe.toString();
+    }
     if (typeof yoe === 'string') {
       if (validator.isInt(yoe, {gt: -1, lt: 100})) {
         return true;
