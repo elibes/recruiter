@@ -1,5 +1,5 @@
 # recruiter-iv1201
-This is a CSR application built for [Amusement Park] that will be used for recruiting new staff.
+This is a Client-side-rendered application built for Amusement Park that will be used for a recruitment process of new staff.
 
 ## Key functionality
 #### User Roles and Registration:
@@ -15,13 +15,13 @@ This is a CSR application built for [Amusement Park] that will be used for recru
 #### Security Features:
 * Passwords are encrypted by the server before storage in the database.
 * Implements CORS configuration for secure server-client communication, allowing specified HTTP requests.
-* Server allows GET, POST, PUT, and DELETE requests from specified origin.
+* Server allows GET and POST requests from specified origin.
 * The server's cookie options for JWT require same-site set to 'none' and secure set to 'true', facilitating cross-origin requests securely.
 
 #### Data Validation and Localization:
 * Basic client-side validation includes checks for necessary field completion and password match during account registration.
 * Advanced validation such as password strength and email format is performed server-side and communicated back to the client.
-* Supports localization for English and Swedish, with automatic language selection based on the browser's language or manually set by user preference. 
+* Supports localization for English and Swedish, with language detection based on the browser's language or manually set by user preference. 
 
 #### Compatibility:
 * Tested and compatible with major web browsers including Google Chrome, Mozilla Firefox, Microsoft Edge, and Apple Safari.
@@ -152,9 +152,8 @@ You will then need to specify the following environment variable:
 You can now click **Manual Deploy > deploy latest commit** to deploy the server.
 
 ### Automatically deploy client and server with CI/CD
-TODO:
 
-copy the deploy hooks from **Settings > Build & Deploy** of the server and client on render, and store as [X] on github.
+Copy the deploy hooks from **Setting > Build & Deploy** of the server and client on render and paste into **Settings > Secrets and variable > Actions > New Repository Secret** and store as separate SECRETS for client and server on GitHub.
 
 ### Database Setup
 This project includes additional SQL scripts to create and populate the "translation" and "language" tables, which are crucial for the application's localization features. The database_script.sql file located at the root of the project contains the SQL commands needed to create the language and translation tables, along with the initial data for these tables. To run this script:
