@@ -21,25 +21,25 @@ The application has been tested to work in Google Chrome, Mozilla Firefox, Micro
 The application is split into a front-end and a back-end api both of which uses Typescript and Node.js.
 
 ### Shared technologies:
-* npm - used to install, manage and share project dependencies.
-* ESLint, Prettier, Google typescript styleguide - a combination of tools to * enforce code quality and consistency.
-* nodemon - a utility that automatically restarts node.js when changes are * detected in the source files.
-* date-fns - a library for handling date and time manipulation.
-* dotenv-safe - a tool to load enviroment variables, to ensure sensitive * configuration is omitted from version control.
+* **npm** - Used to install, manage and share project dependencies.
+* **ESLint, Prettier, Google typescript styleguide** - A combination of tools to enforce code quality and consistency.
+* **nodemon** - A utility that automatically restarts node.js when changes are detected in the source files.
+* **date-fns** - A library for handling date and time manipulation.
+* **dotenv-safe** - A tool to load enviroment variables, to ensure sensitive configuration is omitted from version control.
 
 ### Back-end technologies:
-* Express (and various middleware) - The core web framework for building the API.
-* Sequelize - an ORM to simplify interaction with the database.
-* PostgresSQL - the DBMS used for the database.
-* Brcypt - a library for password salting and hashing, to ensure secure storage of passwords.
-* validator.js - a library containing various string validators.
-* decimal.js - a library to add a decimal type to javascript.
+* **Express (and various middleware)** - The core web framework for building the API.
+* **Sequelize** - An ORM to simplify interaction with the database.
+* **PostgresSQL** - The DBMS used for the database.
+* **Brcypt** - Hashes and salts passwords for secure storage.
+* **validator.js** - A library containing various string validators.
+* **decimal.js** - A library to add a decimal type to javascript.
 
 ### Front-end technologies:
-* React (via create react app) - A library for building interactive UI.
-* Redux (redux-toolkit) - for state management
-* i18next - A framework to aid in internationalization of web pages.
-* Fetch API - to communicate with the back-end server.
+* **React (via create react app)** - A library for building interactive UI.
+* **Redux (redux-toolkit)** - For state management
+* **i18next** - A framework to aide in internationalization of web pages.
+* **Fetch API** - To communicate with the back-end server.
 
 ## Building
 The application is separated into two parts: the server application, and the client application. The two parts are built and launched separately.
