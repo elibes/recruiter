@@ -17,22 +17,29 @@ The client supports localization for English and Swedish. The website uses Engli
 The application has been tested to work in Google Chrome, Mozilla Firefox, Microsoft Edge, and Apple Safari.
 
 ## Technologies used
-TODO:
 
-Express
+The application is split into a front-end and a back-end api both of which uses Typescript and Node.js.
 
-Sequelize
+### Shared technologies:
+* npm - used to install, manage and share project dependencies.
+* ESLint, Prettier, Google typescript styleguide - a combination of tools to * enforce code quality and consistency.
+* nodemon - a utility that automatically restarts node.js when changes are * detected in the source files.
+* date-fns - a library for handling date and time manipulation.
+* dotenv-safe - a tool to load enviroment variables, to ensure sensitive * configuration is omitted from version control.
 
-React
+### Back-end technologies:
+* Express (and various middleware) - The core web framework for building the API.
+* Sequelize - an ORM to simplify interaction with the database.
+* PostgresSQL - the DBMS used for the database.
+* Brcypt - a library for password salting and hashing, to ensure secure storage of passwords.
+* validator.js - a library containing various string validators.
+* decimal.js - a library to add a decimal type to javascript.
 
-Redux
-
-Google Typescript Styleguide
-
-i18next
-
-anything else?
-
+### Front-end technologies:
+* React (via create react app) - A library for building interactive UI.
+* Redux (redux-toolkit) - for state management
+* i18next - A framework to aid in internationalization of web pages.
+* Fetch API - to communicate with the back-end server.
 
 ## Building
 The application is separated into two parts: the server application, and the client application. The two parts are built and launched separately.
