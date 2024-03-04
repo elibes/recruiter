@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './ErrorBoundary.css';
+import i18next from 'i18next';
 
 /**
  * Type definition for the properties of the ErrorBoundary component.
@@ -72,12 +73,26 @@ class ErrorBoundary extends React.Component<
    */
   render() {
     if (this.state.hasError) {
+      let message;
+      switch (i18next.language) {
+        case 'sv':
+          message =
+            'Hoppsan! Något gick fel. Ladda om skärmen eller se konsolen\n ' +
+            'för tekniska detaljer.';
+          break;
+        case 'en':
+          message =
+            'Oops! Something went wrong. Please reload your screen or see the\n' +
+            'console for technical details.';
+          break;
+        default:
+          message =
+            'Oops! Something went wrong. Please reload your screen or see the\n' +
+            'console for technical details.';
+      }
       return (
         <div className="error-container">
-          <h2 style={{padding: '2em'}}>
-            Oops! Something went wrong. Please reload your screen or see the
-            console for technical details.
-          </h2>
+          <h2 style={{padding: '2em'}}>{message}</h2>
         </div>
       );
     }

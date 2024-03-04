@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import {setBackendError} from '../viewmodel/userSlice';
 import {setErrorList} from '../viewmodel/applicationSlice';
 
@@ -39,7 +40,8 @@ interface ErrorHandlerArguments {
 export function handleError({response, dispatch}: ErrorHandlerArguments) {
   response.json().then(error => {
     const errorData = error.error;
-    const errorMsg = errorData.message || 'Unknown error occurred';
+    const errorMsg =
+      errorData.message || i18next.t('error-handler.unknown-error');
     switch (response.status) {
       case 400:
         if (errorData.code === ERROR_CODES.CUSTOM_VALIDATION_ERROR) {
@@ -49,24 +51,22 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
           dispatch(setErrorList(formattedMessage));
         }
         if (errorData.code === ERROR_CODES.MISSING_HEADER_ERROR) {
-          console.error('Missing Header: ', errorMsg);
-          alert('Your request is missing needed HTTP headers.');
+          console.error(i18next.t('error-handler.missing-header'), errorMsg);
+          alert(i18next.t('error-handler.request-missing-header'));
         }
         break;
       case 401:
         if (errorData.code === ERROR_CODES.INVALID_LOGIN_ERROR) {
           console.error(errorMsg);
-          alert(
-            'Login information does not match an existing account, try again'
-          );
+          alert(i18next.t('error-handler.login-nonexistent-account'));
         }
         if (errorData.code === ERROR_CODES.JWT_ERROR) {
-          console.error('Unauthorized: ', errorMsg);
-          alert('You are not authorized. Please log in.');
+          console.error(i18next.t('error-handler.unauthorized'), errorMsg);
+          alert(i18next.t('error-handler.not-authorized'));
         }
         if (errorData.code === ERROR_CODES.TOKEN_EXPIRED_ERROR) {
-          console.error('Unauthorized: ', errorMsg);
-          alert('Your authorization cookie has expired. Please log in.');
+          console.error(i18next.t('error-handler.unauthorized'), errorMsg);
+          alert(i18next.t('error-handler.authorization-cookie-expired'));
         }
         break;
       case 403:
@@ -77,33 +77,34 @@ export function handleError({response, dispatch}: ErrorHandlerArguments) {
         break;
       case 404:
         if (errorData.code === ERROR_CODES.ROUTE_VALIDATION_ERROR) {
-          console.log('Route Missing: ', errorMsg);
-          alert('That route does not exist');
+          console.log(i18next.t('error-handler.route-missing'), errorMsg);
+          alert(i18next.t('error-handler.nonexistent-root'));
         }
         break;
       case 409:
         if (errorData.code === ERROR_CODES.CONFLICT_ERROR) {
-          console.error('Conflict: ', errorMsg);
-          alert('Conflict detected. Please retry.');
+          console.error(i18next.t('error-handler.conflict'), errorMsg);
+          alert(i18next.t('error-handler.conflict-detected'));
         }
         break;
       case 500:
         if (errorData.code === ERROR_CODES.DEFAULT_ERROR) {
-          console.error('Server Error', errorMsg);
-          alert(
-            'An internal server error has occurred. Please try again later.'
-          );
+          console.error(i18next.t('error-handler.server-error'), errorMsg);
+          alert(i18next.t('error-handler.internal-error'));
         }
         break;
       case 503:
         if (error.code === ERROR_CODES.CONNECTION_REFUSED_ERROR) {
-          console.error('Server Unavailable: ', errorMsg);
-          alert('Service is currently unavailable. Please try again later.');
+          console.error(
+            i18next.t('error-handler.server-unavailable'),
+            errorMsg
+          );
+          alert(i18next.t('error-handler.service-is-unavailable'));
         }
         break;
       default:
-        console.error('Server Error: ', errorMsg);
-        alert('An internal server error has occurred. Please try again later.');
+        console.error(i18next.t('error-handler.server-error'), errorMsg);
+        alert(i18next.t('error-handler.internal-error'));
         break;
     }
   });
@@ -134,6 +135,7 @@ export const errorPlacer = (field: string, errors: string[]) => {
   for (const errorString of errors) {
     const errorParts = errorString.split(':');
     if (field === errorParts[0]) {
+      console.log(errorParts[1]);
       return errorParts[1];
     }
   }

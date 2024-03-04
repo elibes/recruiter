@@ -2,11 +2,13 @@ import {ResponseHandler} from './response_handler';
 import * as express from 'express';
 import {RootApi} from './root_api';
 import {UserApi} from './user_api';
+import {TranslationApi} from './translation_api';
 import {ErrorHandler} from '../utilities/error_handler';
 import {
   APPLICATION_API_ROUTE,
   COMPETENCE_API_ROUTE,
   ROOT_API_ROUTE,
+  TRANSLATION_API_ROUTE,
 } from '../utilities/configurations';
 import {USER_API_ROUTE} from '../utilities/configurations';
 import {NextFunction, Request, Response} from 'express';
@@ -59,6 +61,7 @@ class ApiManager {
     this.apiList.push({route: USER_API_ROUTE, class: UserApi});
     this.apiList.push({route: APPLICATION_API_ROUTE, class: ApplicationApi});
     this.apiList.push({route: COMPETENCE_API_ROUTE, class: CompetenceApi});
+    this.apiList.push({route: TRANSLATION_API_ROUTE, class: TranslationApi});
   }
 
   /**

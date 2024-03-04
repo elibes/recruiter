@@ -1,10 +1,13 @@
-import {FC} from 'react';
-import CompetenceList from './CompetenceList';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css';
-import {DateRangePicker} from 'react-date-range';
-import {addYears, format} from 'date-fns';
+
+import {FC} from 'react';
+import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
+import {DateRange} from 'react-date-range';
+import {addYears, format} from 'date-fns';
+import {enUS, sv} from 'date-fns/locale';
+import CompetenceList from './CompetenceList';
 
 import {
   applicationValidator,
@@ -34,8 +37,10 @@ const ApplicationForm: FC = () => {
     (state: RootState) => state.application.resultMsg
   );
 
+  const {t, i18n} = useTranslation();
+
   /**
-   * This const converts the availability state to the Date format that DateRangePicker uses.
+   * This const converts the availability state to the Date format that DateRange uses.
    */
   const selectionList = ranges.map(range => {
     return {
@@ -46,7 +51,7 @@ const ApplicationForm: FC = () => {
   });
 
   /**
-   * This function handles the event when a user selects a data range in the DateRangePicker. It will
+   * This function handles the event when a user selects a data range in the DateRange. It will
    * convert the dates to string and then attempt to update corresponding state using dispatch.
    * @param range the date range from the picker,
    */
@@ -65,7 +70,7 @@ const ApplicationForm: FC = () => {
   };
 
   /**
-   * This function handles the event when a user wants to add another availability range in the DateRangePicker.
+   * This function handles the event when a user wants to add another availability range in the DateRange.
    */
   const handleNewAvailabilityButton = () => {
     dispatch(createNewAvailability());
@@ -87,29 +92,51 @@ const ApplicationForm: FC = () => {
     dispatch(cancelApplication());
   };
 
+  /**
+   * This function returns the date-fns locale corresponding to the language chosen
+   * by the user, or enUS if language is unsupported by date-fns.
+   * */
+  const getLocale = () => {
+    switch (i18n.resolvedLanguage) {
+      case 'sv':
+        return sv;
+      case 'sv-SE':
+        return sv;
+      case 'en':
+        return enUS;
+      case 'en-US':
+        return enUS;
+      default:
+        return enUS;
+    }
+  };
+
   return (
     <div>
       <CompetenceList></CompetenceList>
-      <h3>Availabilities</h3>
-      <DateRangePicker
+      <h3>{t('applicant.availabilities')}</h3>
+      <div>
+        <button onClick={handleNewAvailabilityButton}>
+          {t('applicant.add-availability')}
+        </button>
+      </div>
+      <DateRange
+        locale={getLocale()}
         ranges={selectionList}
         minDate={new Date()}
         maxDate={addYears(new Date(), 1)}
         onChange={handleDateRangeSet}
-      ></DateRangePicker>
-      <button onClick={handleNewAvailabilityButton}>
-        Add another availability
-      </button>
+      ></DateRange>
       <div>
         <button onClick={handleSubmitApplicationButton}>
-          Submit Application
+          {t('applicant.submit-application')}
         </button>
         <button onClick={handleCancelApplicationButton}>
-          Cancel Application
+          {t('applicant.cancel-application')}
         </button>
       </div>
-      {errors.length > 0 ? <span>{errors}</span> : ''}
-      <span>{resultMsg}</span>
+      {errors.length > 0 ? errors.map(error => <div>{error}</div>) : ''}
+      {resultMsg ? <div>{t('server-messages.' + resultMsg)}</div> : ''}
     </div>
   );
 };
