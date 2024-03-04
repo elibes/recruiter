@@ -25,7 +25,7 @@ jobs:
           CI: false
         run: npm run build
       - name: Run linter
-        run: npm run lint > lint-report.txt || true
+        run: npm run lint > lint-report.txt 
       - name: Run tests with coverage
         run: npm test -- --coverage
       - name: Upload lint report
@@ -58,7 +58,7 @@ jobs:
           CI: false
         run: npm run build
       - name: Run linter
-        run: CI=false npm run lint > lint-report.txt || true
+        run: CI=false npm run lint > lint-report.txt 
       - name: Run tests with coverage
         run: npm test -- --coverage
       - name: Upload lint report
