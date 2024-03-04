@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {AppDispatch, RootState} from '../../store';
 import CompetenceItem from './CompetenceItem';
 import {getCompetencies} from '../../viewmodel/applicationSlice';
+import i18next from 'i18next';
 
 /**
  * This component is responsible for displaying a list of competencies.
@@ -13,10 +14,11 @@ import {getCompetencies} from '../../viewmodel/applicationSlice';
  */
 const CompetenceList: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const languageCode = i18next.resolvedLanguage || 'en';
 
   useEffect(() => {
     dispatch(getCompetencies());
-  }, [dispatch]);
+  }, [dispatch, languageCode]);
 
   const competencies = useSelector(
     (state: RootState) => state.application.competencies
